@@ -1,2 +1,3 @@
 # Quick script that lets you check the lines of code you have
 wc -l *
+# Test line
