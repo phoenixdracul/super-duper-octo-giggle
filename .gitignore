@@ -1,5 +1,8 @@
+branches/
 hooks/
 o/
+objects/
+refs/
 
 DEADJOE
 nohup.out

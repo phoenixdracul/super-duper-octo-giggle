@@ -32,6 +32,7 @@
  +--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--*/
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <limits.h>
 #include <sys/cdefs.h>
 #include <sys/time.h>
@@ -1692,15 +1693,15 @@ typedef enum
  * Bits for 'affected_by'.
  * Used in #MOBILES.
  */
-#define AFF_NONE                  0 
- 
+#define AFF_NONE                  0
+
 #define AFF_BLIND		  BV00
 #define AFF_INVISIBLE		  BV01
 #define AFF_DETECT_EVIL		  BV02
 #define AFF_DETECT_INVIS	  BV03
 #define AFF_DETECT_MAGIC	  BV04
 #define AFF_DETECT_HIDDEN	  BV05
-#define AFF_WEAKEN		  BV06		
+#define AFF_WEAKEN		  BV06
 #define AFF_SANCTUARY		  BV07
 #define AFF_FAERIE_FIRE		  BV08
 #define AFF_INFRARED		  BV09
@@ -1734,6 +1735,19 @@ typedef enum
 /* Postponed for when it's needed */
 #define AFF_NOAMBUSH		BV00
 
+/* Damage types for new combat. -- Kasji */
+#define DAM_GENERIC		0	// Just a placeholder damage type until in game weapons are properly set.
+#define DAM_ENERGY		1	// Blasters, lightsabers
+#define DAM_FIRE		2
+#define DAM_COLD		3
+#define DAM_EXPLOSIVE		4
+#define DAM_ELECTRIC		5
+#define DAM_POISON		6
+#define DAM_ACID		7
+#define DAM_FORCE		8
+#define DAM_BLUNT		9	// Blunt physical
+#define DAM_SHARP		10	// Sharp physical
+
 /*
  * Resistant Immune Susceptible flags
  */
@@ -1761,7 +1775,7 @@ typedef enum
 #define RIS_PARALYSIS		  BV21
 /* 21 RIS's*/
 
-/* 
+/*
  * Attack types
  */
 #define ATCK_BITE		  BV00
@@ -2632,7 +2646,7 @@ struct fighting_data
     sh_int		timeskilled;
 };
 
-struct	extracted_char_data
+struct extracted_char_data
 {
     EXTRACT_CHAR_DATA *	next;
     CHAR_DATA *		ch;
@@ -2646,7 +2660,7 @@ struct	extracted_char_data
  * (Shouldn't most of that build interface stuff use substate, dest_buf,
  * spare_ptr and tempnum?  Seems a little redundant)
  */
-struct	char_data
+struct char_data
 {
     CHAR_DATA *		next;
     CHAR_DATA *		prev;
@@ -2657,7 +2671,7 @@ struct	char_data
     FIGHT_DATA *	fighting;
     CHAR_DATA *		reply;
     char * 		owner;
-    ROOM_INDEX_DATA *	home;    
+    ROOM_INDEX_DATA *	home;
     CHAR_DATA *		switched;
     BUG_DATA *		first_bug;
     BUG_DATA *		last_bug;
@@ -2675,7 +2689,7 @@ struct	char_data
     char *              spec_funname2;
     MPROG_ACT_LIST *	mpact;
     int			mpactnum;
-    int buzzed;
+    int			buzzed;
     int			buzzedfrom;
     sh_int		mpscriptpos;
     sh_int		colors[MAX_COLORS];
@@ -2724,7 +2738,7 @@ struct	char_data
     sh_int		wait;
     sh_int		hit;
     sh_int		max_hit;
-	int                 force_skill[MAX_FORCE_SKILL];
+    int                 force_skill[MAX_FORCE_SKILL];
     sh_int              force_control;
     sh_int              force_sense;
     sh_int              force_alter;
@@ -2734,11 +2748,11 @@ struct	char_data
     sh_int              force_align;
     sh_int              force_converted;
     sh_int              force_type;
-    char                *force_master;
-    char                *force_temp_master;
-    char                *force_disguise;
+    char *		force_master;
+    char *		force_temp_master;
+    char *		force_disguise;
     int                 force_disguise_count;
-	int			wait_state;
+    int			wait_state;
     sh_int		mana;
     sh_int		max_mana;
     sh_int		move;
@@ -2797,32 +2811,32 @@ struct	char_data
     sh_int		mod_frc;
     sh_int		mental_state;		/* simplified */
     sh_int		emotional_state;	/* simplified */
-    int			pagelen;                        /* BUILD INTERFACE */
-    sh_int		inter_page;                     /* BUILD INTERFACE */
-    sh_int		inter_type;                     /* BUILD INTERFACE */
-    char  		*inter_editing;                 /* BUILD INTERFACE */
-    int			inter_editing_vnum;             /* BUILD INTERFACE */
-    sh_int		inter_substate;                 /* BUILD INTERFACE */
+    int			pagelen;		/* BUILD INTERFACE */
+    sh_int		inter_page;		/* BUILD INTERFACE */
+    sh_int		inter_type;		/* BUILD INTERFACE */
+    char  		*inter_editing;		/* BUILD INTERFACE */
+    int			inter_editing_vnum;	/* BUILD INTERFACE */
+    sh_int		inter_substate;		/* BUILD INTERFACE */
     int			retran;
     int			regoto;
-    sh_int		mobinvis;	/* Mobinvis level SB */
+    sh_int		mobinvis;		/* Mobinvis level SB */
     int                 vip_flags;
-    sh_int              backup_wait;	/* reinforcements */
-    int                 backup_mob;     /* reinforcements */
+    sh_int              backup_wait;		/* reinforcements */
+    int                 backup_mob;		/* reinforcements */
     sh_int              was_stunned;
-    char            *   mob_clan;    /* for spec_clan_guard.. set by postguard */
-    GUARD_DATA      *   guard_data;
+    char *		mob_clan;		/* for spec_clan_guard.. set by postguard */
+    GUARD_DATA *	guard_data;
     sh_int              main_ability;
     sh_int		secondary_ability;
     sh_int		rppoints;
-    char * comfreq;
-    char * rank;
-    int pheight, build;
-    CHAR_DATA * aiming_at;
-    int home_vnum;  /* hotboot tracker */
-    char		*textcolor;
-    char		*emotecolor;
-	char		*afk_msg;		/* Afk message string - Added by Boran */
+    char *		comfreq;
+    char *		rank;
+    int 		pheight, build;
+    CHAR_DATA *		aiming_at;
+    int			home_vnum;		/* hotboot tracker */
+    char *		textcolor;
+    char *		emotecolor;
+    char *		afk_msg;		/* Afk message string - Added by Boran */
 };
 
 
@@ -3055,22 +3069,22 @@ struct	obj_data
     sh_int		item_type;
     sh_int		mpscriptpos;
     int			extra_flags;
-    int			magic_flags; /*Need more bitvectors for spells - Scryn*/
-    int			wear_flags; 
+    int			magic_flags;	/*Need more bitvectors for spells - Scryn*/
+    int			wear_flags;
     int                 blaster_setting;
     MPROG_ACT_LIST *	mpact;		/* mudprogs */
     int			mpactnum;	/* mudprogs */
     sh_int		wear_loc;
     sh_int		weight;
-    char	*	killer;		/* This serves one real purpose. When making a corpse we assign the killers name to it. */
+    char *		killer;		/* This serves one real purpose. When making a corpse we assign the killers name to it. */
     int			cost;
     sh_int		level;
     sh_int		timer;
-    int			value	[6];
+    int			value	[7];	// Added one more -- Kasji
     sh_int		count;		/* support for object grouping */
     int			serial;		/* serial number	       */
-    int         room_vnum;
-	int			damplus;
+    int			room_vnum;
+    int			damplus;
 };
 
 
@@ -3233,7 +3247,7 @@ struct	system_data
     bool	WAIT_FOR_AUTH;		/* New players must be auth'ed */
     sh_int 	newbie_purge; /* Level to auto-purge newbies at - Samson 12-27-98 */
     sh_int  	regular_purge; /* Level to purge normal players at - Samson 12-27-98 */
-    bool	CLEANPFILES; /* Should the mud clean up pfiles daily? - Samson 12-27-98 */    
+    bool	CLEANPFILES; /* Should the mud clean up pfiles daily? - Samson 12-27-98 */
     sh_int	read_all_mail;		/* Read all player mail(was 54)*/
     sh_int	read_mail_free;		/* Read mail for free (was 51) */
     sh_int	write_mail_free;	/* Write mail for free(was 51) */
@@ -3256,7 +3270,7 @@ struct	system_data
     sh_int	wizlock;
     sh_int	max_sn;			/* Max skills */
     char       *guild_overseer;         /* Pointer to char containing the name of the */
-    char       *guild_advisor;		/* guild overseer and advisor. */ 
+    char       *guild_advisor;		/* guild overseer and advisor. */
     int		save_flags;		/* Toggles for saving conditions */
     sh_int	save_frequency;		/* How old to autosave someone */
     bool        ECOPYOVER;

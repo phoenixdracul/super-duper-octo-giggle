@@ -23,15 +23,17 @@ ifdef USECARGO
 endif
 
 
-C_FILES =  11.c       account.c act_comm.c     act_info.c    act_move.c    act_obj.c    act_wiz.c   blueprint.c      boards.c \
-       bounty.c         build.c      changes.c       clans.c      color.c       comm.c    comments.c      finger.c \
-        const.c      copyover.c           db.c      editor.c      fight.c      finfo.c       force.c \
-      fskills.c     functions.c     gboard.c       handler.c     hashstr.c     hunter.c      ideas.c  interp.c         keb.c  lottery.c \
-        magic.c      makeobjs.c     marriage.c         md5.c       mccp.c       misc.c    mud_comm.c \
-     mud_prog.c      newarena.c       pfiles.c     planets.c     player.c     pshops.c	  renumber.c       reset.c  roulette.c \
-         save.c         shell.c	       ships.c       shops.c     skills.c       slay.c     slicers.c       slotm.c \
-        space.c       special.c     swskills.c      tables.c       tech.c      track.c      update.c	      mentor.c \
-    act_comm2.c          dice.c     color256.c      ext_bv.c\
+C_FILES =  11.c       account.c     act_comm.c    act_info.c   act_move.c    act_obj.c     act_wiz.c   blueprint.c      boards.c \
+       bounty.c         build.c      changes.c       clans.c      color.c       comm.c    comments.c      finger.c 		 \
+        const.c      copyover.c           db.c      editor.c      fight.c      finfo.c       force.c 				 \
+      fskills.c     functions.c       gboard.c     handler.c    hashstr.c     hunter.c       ideas.c  interp.c  keb.c  lottery.c \
+        magic.c      makeobjs.c     marriage.c         md5.c       mccp.c       misc.c    mud_comm.c 				 \
+     mud_prog.c      newarena.c       pfiles.c     planets.c     player.c     pshops.c	  renumber.c   reset.c  roulette.c 	 \
+         save.c         shell.c	       ships.c       shops.c     skills.c       slay.c     slicers.c       slotm.c 		 \
+        space.c       special.c     swskills.c      tables.c       tech.c      track.c      update.c	      mentor.c 		 \
+    act_comm2.c          dice.c     color256.c      ext_bv.c 									 \
+    \
+    mod/misc/guage.c
 
 
 O_FILES := $(patsubst %.c,o/%.o,$(C_FILES))
