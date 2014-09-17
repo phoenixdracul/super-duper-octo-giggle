@@ -2195,7 +2195,8 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload, bool hotboot )
 			}
 			KEY( "Trust", ch->trust, fread_number( fp ) );
 			/* Let no character be trusted higher than one below maxlevel -- Narn */
-			ch->trust = UMIN( ch->trust, MAX_LEVEL - 1 );
+			/* Edited by Boran - changed to MaxLevel */
+			ch->trust = UMIN( ch->trust, MAX_LEVEL);
 
 			if ( !str_cmp( word, "Title" ) )
 			{
