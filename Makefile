@@ -32,8 +32,7 @@ C_FILES =  11.c       account.c     act_comm.c    act_info.c   act_move.c    act
          save.c         shell.c	       ships.c       shops.c     skills.c       slay.c     slicers.c       slotm.c 		 \
         space.c       special.c     swskills.c      tables.c       tech.c      track.c      update.c	      mentor.c 		 \
     act_comm2.c          dice.c     color256.c      ext_bv.c 									 \
-    \
-    mod/misc/guage.c
+    mod/misc/gauge.c
 
 
 O_FILES := $(patsubst %.c,o/%.o,$(C_FILES))
