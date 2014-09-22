@@ -3245,6 +3245,7 @@ struct	system_data
     bool	NO_NAME_RESOLVING;	/* Hostnames are not resolved  */
     bool    	DENY_NEW_PLAYERS;	/* New players cannot connect  */
     bool	WAIT_FOR_AUTH;		/* New players must be auth'ed */
+    sh_int	forceroll;		/* Percentage chance to roll force - Boran */
     sh_int 	newbie_purge; /* Level to auto-purge newbies at - Samson 12-27-98 */
     sh_int  	regular_purge; /* Level to purge normal players at - Samson 12-27-98 */
     bool	CLEANPFILES; /* Should the mud clean up pfiles daily? - Samson 12-27-98 */

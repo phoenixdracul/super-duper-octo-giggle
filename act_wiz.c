@@ -5594,6 +5594,7 @@ void cset_help( CHAR_DATA *ch)
 			"&Wdam_pvm            &z-- &wSets the percent damage plr vs. mob\n\r"
 			"&Wdam_pvp            &z-- &wSets the percent damage plr vs. plr\n\r"
 			"&Wforcepc            &z-- &wThe minimum imm level that can force a player\n\r"
+			"&Wforceroll          &z-- &wThe percent chance of new characters rolling force\n\r"
 			"&Wget_notake         &z-- &wSets the min level you can get an object without a take flag\n\r"
 			"&Wguild_advisor      &z-- &wSets the Guild Advisor\n\r"
 			"&Wguild_overseer     &z-- &wSets the Guild Overseer\n\r"
@@ -5645,6 +5646,8 @@ void do_cset( CHAR_DATA *ch, char *argument )
 		ch_printf(ch, "&zOther:\n\r  &wForce on players: &W%d\n\r  ", sysdata.level_forcepc);
 		ch_printf(ch, "&wGoto Private Room Override: &W%d\n\r", sysdata.level_override_private);
 		ch_printf(ch, "  &wWalking Private Room Override: &W%d\n\r\n\r", sysdata.privwoverride);
+		
+		ch_printf(ch, "  &wChance to roll force: &W%d\%\n\r", sysdata.forceroll);
 		ch_printf(ch, "  &wPenalty to regular stun chance: &W%d  ", sysdata.stun_regular );
 		ch_printf(ch, "&wPenalty to stun plr vs. plr: &W%d\n\r", sysdata.stun_plr_vs_plr );
 		ch_printf(ch, "  &wPercent damage plr vs. plr: &W%3d  ", sysdata.dam_plr_vs_plr );
@@ -5943,6 +5946,12 @@ void do_cset( CHAR_DATA *ch, char *argument )
 		send_to_char("Ok.\n\r", ch);
 		return;
 	}
+	if (!str_cmp(arg, "forceroll"))
+	{
+		sysdata.forceroll = level;
+		send_to_char("Ok.\n\r", ch);
+		return;
+	}
 	if (!str_cmp(arg, "forcepc"))
 	{
 		sysdata.level_forcepc = level;
@@ -5982,6 +5991,8 @@ void do_fstat(CHAR_DATA *ch, char *argument)
 	{
 		ch_printf(ch, " &pForce Stats for &W%s&p:\n\r", victim->name);
 		ch_printf(ch, "    &Pactive&p: %s\n\r", victim->force_identified > 0 ? "&GYes" : "&RNo");
+		if(victim->force_identified == 0)
+			ch_printf(ch, "    &PChance to roll force&p: &W%d\n\r", victim->force_chance);
 		ch_printf(ch, "    &PMana&p: &W%d&z/&w%d\n\r", victim->mana, victim->max_mana);
 		ch_printf(ch, "    &PControl&p: &W%-3d    &PSense&p: &W%-3d    &PAlter&p: &W%d\n\r",
 				victim->force_control, victim->force_sense, victim->force_alter);

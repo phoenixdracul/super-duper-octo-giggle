@@ -550,7 +550,7 @@ bool check_social( CHAR_DATA *ch, char *command, char *argument )
 	if (!IS_NPC(ch) && IS_SET(ch->pcdata->flags, PCFLAG_NOIR))
 		color = AT_WHITE;
 	else
-		color = AT_SOCIAL;
+		color = AT_CYAN;
 
 	if ( arg[0] == '\0' )
 	{

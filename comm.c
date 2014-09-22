@@ -2331,6 +2331,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 
 						}
 					}
+					ch->force_chance = sysdata.forceroll;	// Added by Boran
 				}
 				else
 				{

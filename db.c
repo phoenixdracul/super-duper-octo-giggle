@@ -507,8 +507,9 @@ void boot_db( bool fCopyOver )
 	log_string( "Loading sysdata configuration..." );
 
 	/* default values */
-	sysdata.read_all_mail		= LEVEL_DEMI;
-	sysdata.read_mail_free 		= LEVEL_IMMORTAL;
+	sysdata.forceroll			= 10;
+	sysdata.read_all_mail			= LEVEL_DEMI;
+	sysdata.read_mail_free 			= LEVEL_IMMORTAL;
 	sysdata.write_mail_free 		= LEVEL_IMMORTAL;
 	sysdata.take_others_mail		= LEVEL_DEMI;
 	sysdata.muse_level			= LEVEL_DEMI;
@@ -516,20 +517,20 @@ void boot_db( bool fCopyOver )
 	sysdata.build_level			= LEVEL_DEMI;
 	sysdata.log_level			= LEVEL_LOG;
 	sysdata.level_modify_proto		= LEVEL_LESSER;
-	sysdata.level_override_private	= LEVEL_GREATER;
+	sysdata.level_override_private		= LEVEL_GREATER;
 	sysdata.level_mset_player		= LEVEL_LESSER;
-	sysdata.stun_plr_vs_plr		= 15;
-	sysdata.stun_regular		= 15;
-	sysdata.dam_plr_vs_plr		= 100;
-	sysdata.dam_plr_vs_mob		= 100;
-	sysdata.dam_mob_vs_plr		= 100;
-	sysdata.dam_mob_vs_mob		= 100;
+	sysdata.stun_plr_vs_plr			= 15;
+	sysdata.stun_regular			= 15;
+	sysdata.dam_plr_vs_plr			= 100;
+	sysdata.dam_plr_vs_mob			= 100;
+	sysdata.dam_mob_vs_plr			= 100;
+	sysdata.dam_mob_vs_mob			= 100;
 	sysdata.level_getobjnotake 		= LEVEL_GREATER;
-	sysdata.save_frequency		= 20;	/* minutes */
+	sysdata.save_frequency			= 20;	/* minutes */
 	sysdata.save_flags			= SV_DEATH | SV_PASSCHG | SV_AUTO
-			| SV_PUT | SV_DROP | SV_GIVE
-			| SV_AUCTION | SV_ZAPDROP | SV_IDLE;
-	sysdata.bank_interest = 0.01;
+						| SV_PUT | SV_DROP | SV_GIVE
+						| SV_AUCTION | SV_ZAPDROP | SV_IDLE;
+	sysdata.bank_interest 			= 0.01;
 	if ( !load_systemdata(&sysdata) )
 	{
 		log_string( "Not found.  Creating new configuration." );
@@ -6524,6 +6525,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 		 fprintf( fp, "Dammobvsplr    %d\n", sys.dam_mob_vs_plr		);
 		 fprintf( fp, "Dammobvsmob    %d\n", sys.dam_mob_vs_mob		);
 		 fprintf( fp, "Forcepc        %d\n", sys.level_forcepc		);
+		 fprintf( fp, "Forceroll      %d\n", sys.forceroll		);
 		 fprintf( fp, "Guildoverseer  %s~\n", sys.guild_overseer	);
 		 fprintf( fp, "Guildadvisor   %s~\n", sys.guild_advisor		);
 		 fprintf( fp, "Saveflags      %d\n", sys.save_flags		);
@@ -6589,6 +6591,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 
 		 case 'F':
 			 KEY( "Forcepc",	   sys->level_forcepc,	  fread_number( fp ) );
+			 KEY( "Forceroll",         sys->forceroll,        fread_number( fp ) );
 			 break;
 
 		 case 'G':
