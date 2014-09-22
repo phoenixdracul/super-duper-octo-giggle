@@ -1919,18 +1919,12 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 		{
 			start_fearing( victim, ch );
 			stop_hunting( victim );
-			//do_flee( victim, "" );
+			do_flee( victim, "" );
 		}
 	}
 
-	/* player wimpy deprecated in FotE.
-
-    if ( !npcvict
-    &&   victim->hit > 0
-    &&   victim->hit <= victim->wimpy
-    &&   victim->wait == 0 )
-	do_flee( victim, "" );
-	 */
+	if ( !npcvict &&   victim->hit > 0 &&   victim->hit <= victim->wimpy  &&   victim->wait == 0 )
+		do_flee( victim, "" );
 
 	tail_chain( );
 	return rNONE;
@@ -3040,12 +3034,12 @@ void do_flee( CHAR_DATA *ch, char *argument )
 		REMOVE_BIT   ( ch->affected_by, AFF_SNEAK );
 		if ( ch->mount && ch->mount->fighting )
 			stop_fighting( ch->mount, TRUE );
+		ch->in_room = was_in;
+		act( AT_FLEE, "$n runs for cover!", ch, NULL, NULL, TO_ROOM );
 		move_char( ch, pexit, 0 );
 		if ( ( now_in = ch->in_room ) == was_in )
 			continue;
-
-		ch->in_room = was_in;
-		act( AT_FLEE, "$n runs for cover!", ch, NULL, NULL, TO_ROOM );
+		
 		ch->in_room = now_in;
 		act( AT_FLEE, "$n glances around for signs of pursuit.", ch, NULL, NULL, TO_ROOM );
 		sprintf(buf, "You run for cover!");

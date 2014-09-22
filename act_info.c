@@ -3602,8 +3602,22 @@ void do_wimpy( CHAR_DATA *ch, char *argument )
 		send_to_char( "Your courage exceeds your wisdom.\n\r", ch );
 		return;
 	}
-
-	if ( wimpy > ch->max_hit )
+	else if (wimpy == 0)
+	{
+		if(ch->wimpy > 0)
+		{
+			send_to_char("You turn your back on your wimpish ways.\n\r", ch);
+			ch->wimpy	= 0;
+			return;
+		}
+		else
+		{
+			send_to_char("You are no wimp.\n\r", ch);
+			return;
+		}
+		
+	}
+	else if ( wimpy > ch->max_hit )
 	{
 		send_to_char( "Such cowardice ill becomes you.\n\r", ch );
 		return;
