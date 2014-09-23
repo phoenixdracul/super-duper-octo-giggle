@@ -894,6 +894,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 		dam = wield->damplus;
 		for (dice = 0; dice++; dice < wield->value[1])
 		{
+			// Eventually we should transition to this using d6? -- Kasji
 //			dam += number_range(1, wield->value[2]);
 		}
 		dam = number_range( wield->value[1], wield->value[2] );
@@ -928,6 +929,9 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 
 	if ( wield )
 	{
+		dam = get_res( victim, dam, wield->dam_type ); // New RIS method by Kasji!!!
+		dam = UMAX(1, dam);
+
 		if ( IS_SET( wield->extra_flags, ITEM_MAGIC ) )
 			dam = ris_damage( victim, dam, RIS_MAGIC );
 		else
@@ -939,7 +943,12 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 		plusris = obj_hitroll( wield );
 	}
 	else
+	{
+		// Consider changing this for races that may have natural melee? -- Kasji
+		dam = get_res( victim, dam, RES_BLUNT );
+		dam = UMAX(1, dam);
 		dam = ris_damage( victim, dam, RIS_NONMAGIC );
+	}
 
 	/* check for RIS_PLUSx 					-Thoric */
 	if ( dam )
@@ -1293,6 +1302,764 @@ sh_int ris_damage( CHAR_DATA *ch, sh_int dam, int ris )
 	return (dam * modifier) / 10;
 }
 
+// HA! You call that RIS, Thoric? I'll give you RIS! -- Kasji
+int get_res( CHAR_DATA * ch, int dam, int r)
+{
+    int x;
+    float f;
+    OBJ_DATA * list[MAX_WEAR];
+    OBJ_DATA * obj;
+    AFFECT_DATA * af;
+
+    for (x = 0; x < MAX_WEAR; x++)
+	list[x] = NULL;
+
+    f = ch->base_res[r] / 100.0;
+    // Add resistance affects to armor and calculate resistance stacking here.
+    for (obj = ch->first_carrying; obj; obj = obj->next_content)
+    {
+	if (obj->wear_loc != WEAR_NONE)
+	    list[obj->wear_loc] = obj;
+    }
+    r += APPLY_RES_1;
+    x = 1;
+    if (list[WEAR_SHIELD])
+    {
+	for (af = list[WEAR_SHIELD]->first_affect; af; af = af->next)
+	    if (af->location == r)
+		break;
+	if (af)
+	{
+	    f += (af->modifier / 100.0 / x);
+	    x++;
+	}
+    }
+    if (list[WEAR_BODY])
+    {
+        for (af = list[WEAR_BODY]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_LEGS])
+    {
+        for (af = list[WEAR_LEGS]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_ABOUT])
+    {
+        for (af = list[WEAR_ABOUT]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_BACK])
+    {
+        for (af = list[WEAR_BACK]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_FEET])
+    {
+        for (af = list[WEAR_FEET]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_HEAD])
+    {
+        for (af = list[WEAR_HEAD]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_WAIST])
+    {
+        for (af = list[WEAR_WAIST]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_ARMS])
+    {
+        for (af = list[WEAR_ARMS]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_BOTH_WRISTS])
+    {
+        for (af = list[WEAR_BOTH_WRISTS]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_WRIST_L])
+    {
+        for (af = list[WEAR_WRIST_L]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_WRIST_R])
+    {
+        for (af = list[WEAR_WRIST_R]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_HANDS])
+    {
+        for (af = list[WEAR_HANDS]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+/*    if (list[WEAR_FACE])
+    {
+        for (af = list[WEAR_FACE]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    } */
+    if (list[WEAR_NECK_1])
+    {
+        for (af = list[WEAR_NECK_1]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_NECK_2])
+    {
+        for (af = list[WEAR_NECK_2]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_EARS])
+    {
+        for (af = list[WEAR_EARS]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_EYES])
+    {
+        for (af = list[WEAR_EYES]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+/*    if (list[WEAR_MOUTH])
+    {
+        for (af = list[WEAR_MOUTH]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_ANKLE_L])
+    {
+        for (af = list[WEAR_ANKLE_L]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_ANKLE_R])
+    {
+        for (af = list[WEAR_ANKLE_R]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    } */
+    if (list[WEAR_FINGER_L])
+    {
+        for (af = list[WEAR_FINGER_L]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_FINGER_R])
+    {
+        for (af = list[WEAR_FINGER_R]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_HOLSTER_L])
+    {
+        for (af = list[WEAR_HOLSTER_L]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_HOLSTER_R])
+    {
+        for (af = list[WEAR_HOLSTER_R]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+/*    if (list[WEAR_HOLSTER_B])
+    {
+        for (af = list[WEAR_HOLSTER_B]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    } */
+    if (list[WEAR_HOLD])
+    {
+        for (af = list[WEAR_HOLD]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+/*    if (list[WEAR_BADGE])
+    {
+        for (af = list[WEAR_BADGE]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    } */
+    if (list[WEAR_WIELD])
+    {
+        for (af = list[WEAR_WIELD]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_DUAL_WIELD])
+    {
+        for (af = list[WEAR_DUAL_WIELD]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_MISSILE_WIELD])
+    {
+        for (af = list[WEAR_MISSILE_WIELD]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+    if (list[WEAR_LIGHT])
+    {
+        for (af = list[WEAR_LIGHT]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / 100.0 / x);
+            x++;
+        }
+    }
+
+    f = URANGE(0.0, f, 0.999);
+
+    x = dam * (1.0 - f);
+
+    return x;
+}
+
+float calc_res( CHAR_DATA * ch, int r)
+{
+    int x;
+    float f;
+    OBJ_DATA * list[MAX_WEAR];
+    OBJ_DATA * obj;
+    AFFECT_DATA * af;
+
+    for (x = 0; x < MAX_WEAR; x++)
+	list[x] = NULL;
+
+    f = ch->base_res[r];
+    // Add resistance affects to armor and calculate resistance stacking here.
+    for (obj = ch->first_carrying; obj; obj = obj->next_content)
+    {
+	if (obj->wear_loc != WEAR_NONE)
+	    list[obj->wear_loc] = obj;
+    }
+    r += APPLY_RES_1;
+    x = 1;
+    if (list[WEAR_SHIELD])
+    {
+	for (af = list[WEAR_SHIELD]->first_affect; af; af = af->next)
+	    if (af->location == r)
+		break;
+	if (af)
+	{
+	    f += (af->modifier / x);
+	    x++;
+	}
+    }
+    if (list[WEAR_BODY])
+    {
+        for (af = list[WEAR_BODY]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_LEGS])
+    {
+        for (af = list[WEAR_LEGS]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_ABOUT])
+    {
+        for (af = list[WEAR_ABOUT]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_BACK])
+    {
+        for (af = list[WEAR_BACK]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_FEET])
+    {
+        for (af = list[WEAR_FEET]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_HEAD])
+    {
+        for (af = list[WEAR_HEAD]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_WAIST])
+    {
+        for (af = list[WEAR_WAIST]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_ARMS])
+    {
+        for (af = list[WEAR_ARMS]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_BOTH_WRISTS])
+    {
+        for (af = list[WEAR_BOTH_WRISTS]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_WRIST_L])
+    {
+        for (af = list[WEAR_WRIST_L]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_WRIST_R])
+    {
+        for (af = list[WEAR_WRIST_R]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_HANDS])
+    {
+        for (af = list[WEAR_HANDS]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+/*    if (list[WEAR_FACE])
+    {
+        for (af = list[WEAR_FACE]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    } */
+    if (list[WEAR_NECK_1])
+    {
+        for (af = list[WEAR_NECK_1]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_NECK_2])
+    {
+        for (af = list[WEAR_NECK_2]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_EARS])
+    {
+        for (af = list[WEAR_EARS]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_EYES])
+    {
+        for (af = list[WEAR_EYES]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+/*    if (list[WEAR_MOUTH])
+    {
+        for (af = list[WEAR_MOUTH]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_ANKLE_L])
+    {
+        for (af = list[WEAR_ANKLE_L]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_ANKLE_R])
+    {
+        for (af = list[WEAR_ANKLE_R]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    } */
+    if (list[WEAR_FINGER_L])
+    {
+        for (af = list[WEAR_FINGER_L]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_FINGER_R])
+    {
+        for (af = list[WEAR_FINGER_R]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_HOLSTER_L])
+    {
+        for (af = list[WEAR_HOLSTER_L]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_HOLSTER_R])
+    {
+        for (af = list[WEAR_HOLSTER_R]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+/*    if (list[WEAR_HOLSTER_B])
+    {
+        for (af = list[WEAR_HOLSTER_B]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    } */
+    if (list[WEAR_HOLD])
+    {
+        for (af = list[WEAR_HOLD]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+/*    if (list[WEAR_BADGE])
+    {
+        for (af = list[WEAR_BADGE]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    } */
+    if (list[WEAR_WIELD])
+    {
+        for (af = list[WEAR_WIELD]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_DUAL_WIELD])
+    {
+        for (af = list[WEAR_DUAL_WIELD]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_MISSILE_WIELD])
+    {
+        for (af = list[WEAR_MISSILE_WIELD]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+    if (list[WEAR_LIGHT])
+    {
+        for (af = list[WEAR_LIGHT]->first_affect; af; af = af->next)
+            if (af->location == r)
+                break;
+        if (af)
+        {
+            f += (af->modifier / x);
+            x++;
+        }
+    }
+
+    f = URANGE(0.0, f, 99.9);
+
+    return f;
+}
 
 /*
  * Inflict damage from a hit.

@@ -359,7 +359,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
   CHAR_DATA *chkchar = NULL;
   OBJ_DATA *chkobj = NULL;
   int lhsvl, rhsvl;
-  
+
   if ( !*point )
   {
     progbug( "Null ifcheck", mob );
@@ -392,7 +392,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
       *pchck++ = *point++;
   point++;
   *pchck = '\0';
-  
+
   while ( *point == ' ' )
     point++;
   if ( !*point )
@@ -412,7 +412,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
       else
         *pchck++ = *point++;
     *pchck = '\0';
-    
+
     while ( *point == ' ' )
       point++;
     pchck = rval;
@@ -420,7 +420,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
       *pchck++ = *point++;
     *pchck = '\0';
   }
-  
+
   /* chck contains check, cvar is the variable in the (), opr is the
    * operator if there is one, and rval is the value if there was an
    * operator.
@@ -451,7 +451,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
   {
     int idx = atoi(cvar);
     ROOM_INDEX_DATA *room;
-    
+
     if ( !idx )
     {
       if ( !mob->in_room )
@@ -477,7 +477,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
     int vnum = atoi(cvar);
     int lhsvl;
     CHAR_DATA *oMob;
-    
+
     if ( vnum < 1 || vnum > MAX_VNUMS )
     {
       progbug( "Bad vnum to 'mobinroom'", mob );
@@ -497,7 +497,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
   if ( !str_cmp(chck, "timeskilled") )
   {
     MOB_INDEX_DATA *pMob;
-    
+
     if ( chkchar )
       pMob = chkchar->pIndexData;
     else if ( !(pMob = get_mob_index(atoi(cvar))) )
@@ -511,7 +511,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
   {
     OBJ_DATA *pObj;
     int vnum = atoi(cvar);
-    
+
     if ( vnum < 1 || vnum > MAX_VNUMS )
     {
       progbug("OvnumHere: bad vnum", mob);
@@ -536,7 +536,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
   {
     OBJ_DATA *pObj;
     int type;
-    
+
     if ( is_number(cvar) )
       type = atoi(cvar);
     else
@@ -565,7 +565,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
   {
     OBJ_DATA *pObj;
     int vnum = atoi(cvar);
-    
+
     if ( vnum < 1 || vnum > MAX_VNUMS )
     {
       progbug("OvnumRoom: bad vnum", mob);
@@ -587,7 +587,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
   {
     OBJ_DATA *pObj;
     int type;
-    
+
     if ( is_number(cvar) )
       type = atoi(cvar);
     else
@@ -613,7 +613,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
   {
     OBJ_DATA *pObj;
     int vnum = atoi(cvar);
-    
+
     if ( vnum < 1 || vnum > MAX_VNUMS )
     {
       progbug("OvnumCarry: bad vnum", mob);
@@ -634,7 +634,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
   {
     OBJ_DATA *pObj;
     int type;
-    
+
     if ( is_number(cvar) )
       type = atoi(cvar);
     else
@@ -659,7 +659,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
   {
     OBJ_DATA *pObj;
     int vnum = atoi(cvar);
-    
+
     if ( vnum < 1 || vnum > MAX_VNUMS )
     {
       progbug("OvnumWear: bad vnum", mob);
@@ -692,7 +692,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
   {
     OBJ_DATA *pObj;
     int type;
-    
+
     if ( is_number(cvar) )
       type = atoi(cvar);
     else
@@ -718,7 +718,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
   {
     OBJ_DATA *pObj;
     int vnum = atoi(cvar);
-    
+
     if ( vnum < 1 || vnum > MAX_VNUMS )
     {
       progbug("OvnumInv: bad vnum", mob);
@@ -740,7 +740,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
   {
     OBJ_DATA *pObj;
     int type;
-    
+
     if ( is_number(cvar) )
       type = atoi(cvar);
     else
@@ -824,7 +824,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
     if ( !str_cmp(chck, "isaffected") )
     {
 	int value = get_aflag(rval);
-      
+
 	if ( value < 0 || value > 31 )
 	{
 	    progbug("Unknown affect being checked", mob);
@@ -864,7 +864,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
     if ( !str_cmp(chck, "ishelled") )
     {
       return IS_NPC(actor) ? FALSE :
-          mprog_veval(chkchar->pcdata->release_date, opr, atoi(rval), mob);  
+          mprog_veval(chkchar->pcdata->release_date, opr, atoi(rval), mob);
     }
 
     if ( !str_cmp(chck, "level") )
@@ -891,7 +891,7 @@ int mprog_do_ifcheck( char *ifcheck, CHAR_DATA *mob, CHAR_DATA *actor,
     if ( !str_cmp(chck, "council") ||  !str_cmp(chck, "senator") )
     {
       SENATE_DATA *senator;
-      
+
       if ( IS_NPC(chkchar) )
         return FALSE;
       if ( IS_IMMORTAL(chkchar) )

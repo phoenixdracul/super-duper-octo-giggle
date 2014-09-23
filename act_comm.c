@@ -48,6 +48,7 @@ void send_room_page_to_char(CHAR_DATA * ch, ROOM_INDEX_DATA * idx, char page);
 void send_page_to_char(CHAR_DATA * ch, MOB_INDEX_DATA * idx, char page);
 void send_control_page_to_char(CHAR_DATA * ch, char page);
 void sportschan(char *);
+void  account_save args( ( ACCOUNT_DATA *account ) );
 
 /*
  * Local functions.
@@ -754,7 +755,7 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
 			case CHANNEL_CLANTALK:
                                 if( ch->rank[0] == '\0' )
                                 sprintf( buf, "&G&z(&pClan Network&z) $n&z sends:&P %s%s", color_str(AT_CLAN, vch), (char *)txt);
-                                else 
+                                else
 				sprintf( buf, "&G&z(&pClan Network&z) %s&z $n&z sends:&P %s%s", ch->rank, color_str(AT_CLAN, vch), (char *)txt);
 				break;
 
@@ -785,7 +786,7 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
 
 			case CHANNEL_NEWBIE:
 				if(ch->pcdata && ch->pcdata->account && ch->pcdata->account->chatname)
-					sprintf( buf, "(NEWBIE) &W@%s: $t" , ch->pcdata->account->chatname);
+					sprintf( buf, "(NEWBIE) &W@%s: $t" , ch->pcdata->account->name);
 				else
 					sprintf( buf, "(NEWBIE) $n: $t" );
 				break;
@@ -1674,7 +1675,7 @@ void do_say_to_char( CHAR_DATA *ch, char *argument )
 
 	argument = one_argument( argument, arg );
 
-	if( !arg || arg[0] == '\0' || !argument || argument[0] == '\0' )
+	if( arg[0] == '\0' || !argument || argument[0] == '\0' )
 	{
 		send_to_char( "Say what to whom?\n\r", ch );
 		return;
@@ -1712,10 +1713,11 @@ void do_say_to_char( CHAR_DATA *ch, char *argument )
 
 	sbuf = argument;
 
-	/* Check to see if character is ignoring speaker
+/*
+	// Check to see if character is ignoring speaker
    if( is_ignoring( victim, ch ) )
    {
-      /* continue unless speaker is an immortal
+      // continue unless speaker is an immortal
       if( !IS_IMMORTAL(ch) || get_trust(victim) > get_trust(ch) )
 	 return;
       else
@@ -1724,8 +1726,7 @@ void do_say_to_char( CHAR_DATA *ch, char *argument )
 	 ch_printf( victim, "You attempt to ignore %s, but are unable to do so.\n\r", ch->name );
       }
    }
-	 */
-	/*
+
 #ifndef SCRAMBLE
    if( speaking != -1 && (!IS_NPC(ch) || ch->speaking) )
    {
@@ -1738,7 +1739,7 @@ void do_say_to_char( CHAR_DATA *ch, char *argument )
       sbuf = scramble( argument, ch->speaking );
 #endif
    sbuf = drunk_speech( sbuf, ch );
-	 */
+*/
 	ch->act = actflags;
 	MOBtrigger = FALSE;
 
@@ -3489,7 +3490,7 @@ char *itoa(int foo)
 void do_group( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
-	CHAR_DATA *victim;
+	CHAR_DATA *victim = NULL;
 
 	one_argument( argument, arg );
 

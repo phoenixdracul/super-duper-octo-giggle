@@ -370,7 +370,7 @@ void do_get( CHAR_DATA *ch, char *argument )
 			if(IS_SET(container->extra_flags, ITEM_UNIQUE))
 			{
 				OBJ_DATA *pObj;
-				bool canGet = TRUE;
+//				bool canGet = TRUE;
 				for ( pObj = ch->first_carrying; pObj; pObj = pObj->next_content )
 					if ( can_see_obj(ch, pObj) && pObj->pIndexData->vnum == container->pIndexData->vnum )
 					{
@@ -410,7 +410,7 @@ void do_get( CHAR_DATA *ch, char *argument )
 			if(IS_SET(obj->extra_flags, ITEM_UNIQUE))
 			{
 				OBJ_DATA *pObj;
-				bool canGet = TRUE;
+//				bool canGet = TRUE;
 				for ( pObj = ch->first_carrying; pObj; pObj = pObj->next_content )
 					if ( can_see_obj(ch, pObj) && pObj->pIndexData->vnum == obj->pIndexData->vnum )
 					{

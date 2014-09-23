@@ -54,7 +54,7 @@ CHAR_DATA * find_keeper  args( ( CHAR_DATA *ch ) );
 
 extern int      top_affect;
 
-const	char *	sector_name	[SECT_MAX]	=
+const	char * const	sector_name	[SECT_MAX]	=
 {
 		"inside", "city", "field", "forest", "hills", "mountain", "water swim", "water noswim",
 		"underwater", "air", "desert", "unknown", "ocean floor", "underground",

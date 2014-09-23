@@ -46,8 +46,11 @@
 
 #define RESTORE_INTERVAL 21600
 
-char * const save_flag[] =
+const char * const save_flag[] =
 { "death", "kill", "passwd", "drop", "put", "give", "auto", "zap", "auction", "get", "receive", "idle", "backup", "r13", "r14", "r15", "r16", "r17", "r18", "r19", "r20", "r21", "r22", "r23", "r24", "r25", "r26", "r27", "r28", "r29", "r30", "r31" };
+
+const char * const dam_type_table[RES_MAX] =
+{ "Plasma", "Ionic", "Lightsaber", "Fire", "Cold", "Blunt", "Pierce", "Slash", "Explosive", "Acid", "Poison", "Force", "Disruptor" };
 
 char *ext_flag_string( EXT_BV * bitvector, const char *const flagarray[] );
 
@@ -1883,6 +1886,10 @@ void do_oldmstat( CHAR_DATA *ch, char *argument )
 					paf->duration,
 					affect_bit_name( paf->bitvector )
 			);
+	ch_printf( ch, "              Base Res:        Applied Res:\n\r" );
+	for (x = 0; x < RES_MAX; x++)
+		ch_printf( ch, "  %10s: %2.3f%%           %2.3f%%\n\r", dam_type_table[x], victim->base_res[x],
+			calc_res(victim, x));
 	return;
 }
 
@@ -5646,7 +5653,7 @@ void do_cset( CHAR_DATA *ch, char *argument )
 		ch_printf(ch, "&zOther:\n\r  &wForce on players: &W%d\n\r  ", sysdata.level_forcepc);
 		ch_printf(ch, "&wGoto Private Room Override: &W%d\n\r", sysdata.level_override_private);
 		ch_printf(ch, "  &wWalking Private Room Override: &W%d\n\r\n\r", sysdata.privwoverride);
-		
+
 		ch_printf(ch, "  &wChance to roll force: &W%d\%\n\r", sysdata.forceroll);
 		ch_printf(ch, "  &wPenalty to regular stun chance: &W%d  ", sysdata.stun_regular );
 		ch_printf(ch, "&wPenalty to stun plr vs. plr: &W%d\n\r", sysdata.stun_plr_vs_plr );
@@ -7230,6 +7237,7 @@ void ostat_plus( CHAR_DATA *ch, OBJ_DATA *obj)
 			ch_printf( ch, "&WLightsaber&W\n\r"       );
 		else ch_printf( ch, "&WNo Current Weapon Type Set&W\n\r");
 
+		ch_printf( ch, "&GValue[&W-&G] Damage Type: &W%s&W\n\r", dam_type_table[obj->dam_type]);
 		ch_printf( ch, "&GValue[&W-&G] Low Damage:  &W%d\n\r", obj->value[1]);
 		ch_printf( ch, "&GValue[&W-&G] Max Damage:  &W%d\n\r", obj->value[2]);
 		ch_printf( ch, "&GValue[&W-&G] Ave Damage:  &W%d\n\r", (obj->value[1]+obj->value[2])/2 );

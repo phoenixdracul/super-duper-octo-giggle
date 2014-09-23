@@ -45,7 +45,7 @@ extern int top_area;
 extern int top_r_vnum;
 void write_area_list();
 void write_starsystem_list();
-extern const   char *  sector_name     [SECT_MAX];
+extern const   char * const  sector_name     [SECT_MAX];
 
 PLANET_DATA * first_planet;
 PLANET_DATA * last_planet;
@@ -59,7 +59,7 @@ bool	load_planet_file	args( ( char *planetfile ) );
 void	write_planet_list	args( ( void ) );
 
 #ifdef USECARGO
-char * const cargo_names[CARGO_MAX] =
+const char * const cargo_names[CARGO_MAX] =
 {
   "None", "Lommite","Meleenium","Neutronium","Zersium",
   "Steel", "Rhyll","Alazhi", "Carbonite", "Titanium",

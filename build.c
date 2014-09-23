@@ -41,11 +41,14 @@
 #include <unistd.h>
 #include "mud.h"
 
+ACCOUNT_CHARACTER_DATA *account_get_character( ACCOUNT_DATA *account, char *name );
 
 extern int	top_affect;
 extern int	top_reset;
 extern int	top_ed;
 extern bool	fBootDb;
+
+extern char * const dam_type_table[RES_MAX];
 
 int  generate_hp    args( ( int level, int num, int size, int plus ) );
 char *sprint_reset  args( ( RESET_DATA *pReset, short *num) );
@@ -59,7 +62,7 @@ REL_DATA *last_relation = NULL;
 
 /* planet constants for vip and wanted flags */
 
-char *  const   planet_flags [] =
+const char *  const   planet_flags [] =
 {
 		"coruscant", "yavin iv", "tatooine", "kashyyyk", "mon calamari",
 		"endor", "ord mantell", "nal hutta", "corellia", "bakura", "hoth", "empty1",
@@ -72,7 +75,7 @@ const char *  const npc_sex[] = {
 };
 
 
-char *  const   weapon_table    [13] =
+const char *  const   weapon_table    [13] =
 {
 		"none",
 		"vibro-axe",  "vibro-blade",  "lightsaber", "whip", "claw",
@@ -80,25 +83,25 @@ char *  const   weapon_table    [13] =
 		"force pike", "dualsaber"
 };
 
-char *  const   spice_table    [] =
+const char *  const   spice_table    [] =
 {
 		"glitterstim", "carsanum", "ryll","andris","s4","s5","s6","s7","s8","s9"
 };
 
-char *  const   crystal_table    [8] =
+const char *  const   crystal_table    [8] =
 {
 		"non-adegan", "kathracite", "relacite", "danite", "mephite", "ponite", "illum", "corusca"
 };
 
 
-char *  const   ex_flags [] = 
-{ 
+const char *  const   ex_flags [] =
+{
 		"isdoor", "closed", "locked", "secret", "swim", "pickproof", "fly", "climb",
 		"dig", "r1", "nopassdoor", "hidden", "passage", "portal", "r2", "r3",
 		"can_climb", "can_enter", "can_leave", "auto", "r4", "searchable",
 		"bashed", "bashproof", "nomob", "window", "can_look", "keypad" };
 
-char *	const	r_flags	[] =
+const char *	const	r_flags	[] =
 {
 		"dark", "reserved", "nomob", "indoors", "can_land", "can_fly", "no_drive",
 		"nomagic", "bank", "private", "safe", "remove_this_flag", "petshop", "norecall",
@@ -107,7 +110,7 @@ char *	const	r_flags	[] =
 		"republic_recruit", "empire_recruit", "spacecraft", "prototype", "auction"
 };
 
-char * const	r_flags2 [] =
+const char * const	r_flags2 [] =
 {
 		"emptyshop", "pshop", "shipyard", "garage", "barracks", "control",
 		"clanland", "arena", "clanjail", "blackmarket", "hiddenpad", "slots",
@@ -115,7 +118,7 @@ char * const	r_flags2 [] =
 		"r24", "r25", "r26", "r27", "r28", "r29", "r30", "r31"
 };
 
-char *	const	o_flags	[] =
+const char *	const	o_flags	[] =
 {
 		"glow", "hum", "dark", "hutt_size", "contraband", "invis", "magic", "nodrop", "bless",
 		"antigood", "antievil", "unique", "noremove", "inventory",
@@ -124,13 +127,13 @@ char *	const	o_flags	[] =
 		"hidden", "poisoned", "covering", "deathrot", "burried", "prototype", "human_size"
 };
 
-char *	const	mag_flags	[] =
+const char *	const	mag_flags	[] =
 {
 		"returning", "backstabber", "bane", "loyal", "haste", "drain",
 		"lightning_blade"
 };
 
-char *	const	w_flags	[] =
+const char *	const	w_flags	[] =
 {
 		"take", "finger", "neck", "body", "head", "legs", "feet", "hands", "arms",
 		"shield", "about", "waist", "wrist", "wield", "hold", "_dual_", "ears", "eyes",
@@ -138,7 +141,7 @@ char *	const	w_flags	[] =
 		"r25","r26","r27","r28","r29","r30","r31"
 };
 
-char *	const	area_flags	[] =
+const char *	const	area_flags	[] =
 {
 		"nopkill", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8",
 		"r9", "r10", "r11", "r12", "r13", "r14", "r15", "r16", "r17",
@@ -146,7 +149,7 @@ char *	const	area_flags	[] =
 		"r25","r26","r27","r28","r29","r30","r31"
 };
 
-char *	const	o_types	[] =
+const char *	const	o_types	[] =
 {
 		"none", "light", "_scroll", "_wand", "staff", "weapon", "_fireweapon", "missile",
 		"treasure", "armor", "potion", "_worn", "furniture", "trash", "_oldtrap",
@@ -164,7 +167,7 @@ char *	const	o_types	[] =
 		"binders", "goggles", "shipbomb", "empgrenade", "blueprint", "crystal_ore"	// TODO
 };
 
-char *	const	a_types	[] =
+const char *	const	a_types	[] =
 {
 		"none", "strength", "dexterity", "intelligence", "wisdom", "constitution",
 		"sex", "null", "level", "age", "height", "weight", "force", "hit", "move",
@@ -174,7 +177,13 @@ char *	const	a_types	[] =
 		"steal", "sneak", "hide", "palm", "detrap", "dodge", "peek", "scan", "gouge",
 		"search", "mount", "disarm", "kick", "parry", "bash", "stun", "punch", "climb",
 		"grip", "scribe", "cover_trail", "wearspell", "removespell", "mentalstate", "emotion",
-		"stripsn", "remove", "dig", "full", "thirst", "drunk", "blood"
+		"stripsn", "remove", "dig", "full", "thirst", "drunk", "blood",
+
+		"res_plasma", "res_ionic", "res_lightsaber", "res_fire", "res_cold", "res_blunt",
+		"res_pierce", "res_slash", "res_explosive", "res_acid", "res_poison", "res_force",
+		"res_disruptor",
+
+		"extra_attack"
 };
 
 const char *const npc_position[POS_MAX] = {
@@ -183,21 +192,29 @@ const char *const npc_position[POS_MAX] = {
 };
 
 
-char *const furniture_flags[] = 
-{ 
+const char * const furniture_flags[] =
+{
 		"sit_on", "sit_in", "sit_at",
 		"stand_on", "stand_in", "stand_at",
 		"sleep_on", "sleep_in", "sleep_at",
 		"rest_on", "rest_in", "rest_at"
 };
-char *	const	a_flags [] =
+
+const char *	const	a_flags [] =
 {
 		"blind", "invisible", "detect_evil", "detect_invis", "detect_magic",
 		"detect_hidden", "weaken", "sanctuary", "faerie_fire", "infrared", "curse",
 		"cover_trail", "poison", "protect", "paralysis", "sneak", "hide", "sleep",
 		"charm", "flying", "pass_door", "floating", "truesight", "detect_traps",
 		"scrying", "fireshield", "shockshield", "fastheal", "iceshield", "possess",
-		"berserk", "aqua_breath" };
+		"berserk", "aqua_breath",
+
+		"res_plasma", "res_ionic", "res_lightsaber", "res_fire", "res_cold", "res_blunt",
+		"res_pierce", "res_slash", "res_explosive", "res_acid", "res_poison", "res_force",
+		"res_disruptor",
+
+		"extra_attack"
+};
 
 const char *	const	act_flags [] =
 {
@@ -207,7 +224,7 @@ const char *	const	act_flags [] =
 		"secretive", "polymorphed", "mobinvis", "noassist", "nokill", "droid", "nocorpse",
 		"r28", "r29", "prototype", "r31" };
 
-char *	const	pc_flags [] =
+const char *	const	pc_flags [] =
 {
 		"r0", "r1", "unauthed", "norecall", "nointro", "gag", "retired", "guest",
 		"nosummon", "pageron", "notitled", "room", "r12", "buildwalk",
@@ -215,7 +232,7 @@ char *	const	pc_flags [] =
 		"r25", "r26", "r27", "r28", "r29", "r30", "r31"
 };
 
-char *	const	plr_flags [] =
+const char *	const	plr_flags [] =
 {
 		"npc", "boughtpet", "shovedrag", "autoexits", "autoloot", "autosac", "blank",
 		"outcast", "brief", "combine", "prompt", "telnet_ga", "holylight",
@@ -224,22 +241,22 @@ char *	const	plr_flags [] =
 		"flee" ,"autocred", "automap", "afk"
 };
 
-char *const trap_flags[] = {
+const char * const trap_flags[] = {
 		"room", "obj", "enter", "leave", "open", "close", "get", "put", "pick",
 		"unlock", "north", "south", "east", "west", "up", "down", "examine",
 		"northeast", "northwest", "southeast", "southwest", "r6", "r7", "r8",
 		"r9", "r10", "r11", "r12", "r13", "r14", "r15"
 };
 
-char *  const   wear_locs [] = 
-{ 
+const char *  const   wear_locs [] = 
+{
 		"light", "finger1", "finger2", "neck1", "neck2", "body", "head", "legs",
 		"feet", "hands", "arms", "shield", "about", "waist", "wrist1", "wrist2",
 		"wield", "hold", "dual_wield", "ears", "eyes", "missile_wield", "back",
 		"holster1", "holster2", "bothwrists", "cloak"
-}; 
+};
 
-char *	const	ris_flags [] =
+const char *	const	ris_flags [] =
 {
 		"fire", "cold", "electricity", "energy", "blunt", "pierce", "slash", "acid",
 		"poison", "drain", "sleep", "charm", "hold", "nonmagic", "plus1", "plus2",
@@ -247,7 +264,7 @@ char *	const	ris_flags [] =
 		"r4", "r5", "r6", "r7", "r8", "r9", "r10"
 };
 
-char *	const	trig_flags [] =
+const char *	const	trig_flags [] =
 {
 		"up", "unlock", "lock", "d_north", "d_south", "d_east", "d_west", "d_up",
 		"d_down", "door", "container", "open", "close", "passage", "oload", "mload",
@@ -256,7 +273,7 @@ char *	const	trig_flags [] =
 		"showroomdesc", "autoreturn", "r2", "r3"
 };
 
-char *	const	part_flags [] =
+const char *	const	part_flags [] =
 {
 		"head", "arms", "legs", "heart", "brains", "guts", "hands", "feet", "fingers",
 		"ear", "eye", "long_tongue", "eyestalks", "tentacles", "fins", "wings",
@@ -265,7 +282,7 @@ char *	const	part_flags [] =
 		"r1", "r2"
 };
 
-char *	const	attack_flags [] =
+const char *	const	attack_flags [] =
 {
 		"bite", "claws", "tail", "sting", "punch", "kick",
 		"trip", "r7", "r8", "r9", "backstab", "bash", "stun", "gouge", "r14", "r15", "r16", "r17",
@@ -273,7 +290,7 @@ char *	const	attack_flags [] =
 		"r30", "r31"
 };
 
-char *	const	defense_flags [] =
+const char *	const	defense_flags [] =
 {
 		"parry", "dodge", "r2", "r3", "r4" ,"r5",
 		"r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15", "r16", "r17",
@@ -292,9 +309,9 @@ char *	const	defense_flags [] =
  * Something to consider: some of these triggers can be grouped together,
  * and differentiated by different arguments... for example:
  *  hour and time, rand and randiw, speech and speechiw
- * 
+ *
  */
-char *	const	mprog_flags [] =
+const char *	const	mprog_flags [] =
 {
 		"act", "speech", "rand", "fight", "death", "hitprcnt", "entry", "greet",
 		"allgreet", "give", "bribe", "hour", "time", "wear", "remove", "sac",
@@ -303,7 +320,7 @@ char *	const	mprog_flags [] =
 };
 
 
-char *flag_string( int bitvector, char * const flagarray[] )
+char *flag_string( int bitvector, const char * const flagarray[] )
 {
 	static char buf[MAX_STRING_LENGTH];
 	int x;
@@ -1018,7 +1035,7 @@ void stop_editing( CHAR_DATA *ch )
 	 argument = one_argument( argument, arg2 );
 
 	 Start = atoi( arg1 );	End = atoi( arg2 );
-	 if ( arg1 == 0 || arg2 == 0)
+	 if ( Start <= 0 || End <= 0)
 	 {
 		 send_to_char( "Syntax: makefree <starting vnum> <ending vnum>\n\r", ch );
 		 return;
@@ -1571,6 +1588,35 @@ void stop_editing( CHAR_DATA *ch )
 		 return;
 	 }
 
+	 if (!str_cmp(arg2, "baseres"))
+	 {
+		int x;
+		float f;
+		if (!can_mmodify(ch, victim))
+		    return;
+
+		argument = one_argument(argument, arg3);
+		for (x = 0; x < RES_MAX; x++)
+		    if (!str_cmp(arg3, dam_type_table[x]))
+			break;
+		if (x >= RES_MAX)
+		{
+		    send_to_char("Invalid resistance type.\n\r", ch);
+		    send_to_char("Valid types: ", ch);
+		    for (x = 0; x < RES_MAX; x++)
+			ch_printf(ch, "%s  ", dam_type_table[x]);
+		    send_to_char("\n\r", ch);
+		    return;
+		}
+		f = atof(argument);
+		f = URANGE(0.0, f, 100.0);
+		victim->base_res[x] = f;
+		if( IS_NPC( victim ) && xIS_SET( victim->act, ACT_PROTOTYPE ) )
+		    victim->pIndexData->base_res[x] = f;
+		send_to_char("Done.\n\r", ch);
+		return;
+	 }
+
 	 if( !str_cmp( arg2, "armor" ) )
 	 {
 		 if( !can_mmodify( ch, victim ) )
@@ -1881,11 +1927,12 @@ void stop_editing( CHAR_DATA *ch )
 
 	 if( !str_cmp( arg2, "name" ) )
 	 {
-		 if( !arg3 || arg3[0] == '\0' )
+/*		 if( arg3[0] == '\0' )
 		 {
 			 ch_printf(ch, "You cannot leave this blank.\n\r" );
 			 return;
-		 }
+		 } */
+
 		 if( !can_mmodify( ch, victim ) )
 			 return;
 		 if( !IS_NPC( victim ) )
@@ -1894,7 +1941,7 @@ void stop_editing( CHAR_DATA *ch )
 			 return;
 		 }
 
-		 if( !arg3 || arg3[0] == '\0' )
+		 if( arg3[0] == '\0' )
 		 {
 			 send_to_char( "Names can not be set to an empty string.\r\n", ch );
 			 return;
@@ -1954,7 +2001,7 @@ void stop_editing( CHAR_DATA *ch )
 			 return;
 		 }
 
-		 if( !arg3 || arg3[0] == '\0' )
+		 if( arg3[0] == '\0' )
 		 {
 			 if( victim->pcdata->clan == NULL )
 				 return;
@@ -1993,7 +2040,7 @@ void stop_editing( CHAR_DATA *ch )
 
 	 if( !str_cmp( arg2, "short" ) )
 	 {
-		 if( !arg3 || arg3[0] == '\0' )
+		 if( arg3[0] == '\0' )
 		 {
 			 ch_printf(ch, "You cannot leave this blank.\n\r" );
 			 return;
@@ -3362,7 +3409,7 @@ void stop_editing( CHAR_DATA *ch )
 
 	 if( !str_cmp( arg2, "name" ) )
 	 {
-		 if( !arg3 || arg3[0] == '\0' )
+		 if( arg3[0] == '\0' )
 		 {
 			 ch_printf(ch, "You cannot leave this blank.\n\r" );
 			 return;
@@ -3382,7 +3429,7 @@ void stop_editing( CHAR_DATA *ch )
 
 	 if( !str_cmp( arg2, "short" ) )
 	 {
-		 if( !arg3 || arg3[0] == '\0' )
+		 if( arg3[0] == '\0' )
 		 {
 			 ch_printf(ch, "You cannot leave this blank.\n\r" );
 			 return;
@@ -3465,7 +3512,7 @@ void stop_editing( CHAR_DATA *ch )
 		 int bitv;
 
 		 argument = one_argument( argument, arg2 );
-		 if( !arg2 || arg2[0] == '\0' || !argument || argument[0] == 0 )
+		 if( arg2[0] == '\0' || !argument || argument[0] == 0 )
 		 {
 			 send_to_char( "Usage: oset <object> affect <field> <value>\r\n", ch );
 			 send_to_char( "Affect Fields:\r\n", ch );
@@ -3613,7 +3660,7 @@ void stop_editing( CHAR_DATA *ch )
 
 	 if( !str_cmp( arg2, "ed" ) )
 	 {
-		 if( !arg3 || arg3[0] == '\0' )
+		 if( arg3[0] == '\0' )
 		 {
 			 send_to_char( "Syntax: oset <object> ed <keywords>\r\n", ch );
 			 return;
@@ -3685,7 +3732,7 @@ void stop_editing( CHAR_DATA *ch )
 
 	 if( !str_cmp( arg2, "rmed" ) )
 	 {
-		 if( !arg3 || arg3[0] == '\0' )
+		 if( arg3[0] == '\0' )
 		 {
 			 send_to_char( "Syntax: oset <object> rmed <keywords>\r\n", ch );
 			 return;
@@ -3773,6 +3820,25 @@ void stop_editing( CHAR_DATA *ch )
 	 switch ( obj->item_type )
 	 {
 	 case ITEM_WEAPON:
+		 if (!str_cmp(arg2, "damtype"))
+		 {
+		    int x;
+		    argument = one_argument(argument, arg3);
+		    for (x = 0; x < sizeof( dam_type_table ) / sizeof(dam_type_table[0]); x++)
+			if (!str_cmp(arg3, dam_type_table[x]))
+			    break;
+		    if (x >= RES_MAX)
+			send_to_char("Invalid damage type.\n\r", ch);
+		    else
+		    {
+			obj->dam_type = x;
+			if( IS_OBJ_STAT( obj, ITEM_PROTOTYPE ) )
+			    obj->pIndexData->dam_type = x;
+			send_to_char("Done.\n\r", ch);
+		    }
+		    return;
+		 }
+
 		 if( !str_cmp( arg2, "weapontype" ) )
 		 {
 			 int x;
@@ -4032,7 +4098,7 @@ void stop_editing( CHAR_DATA *ch )
   */
  int get_dir( char *txt )
  {
-	 int edir;
+	 int edir = 0;
 	 char c1,c2;
 
 	 if ( !str_cmp( txt, "northeast" ) )
@@ -4088,12 +4154,12 @@ void stop_editing( CHAR_DATA *ch )
 	 char arg2[MAX_INPUT_LENGTH];
 	 char arg3[MAX_INPUT_LENGTH];
 	 char buf[MAX_STRING_LENGTH];
-	 ROOM_INDEX_DATA *location, *tmp;
-	 EXTRA_DESCR_DATA *ed;
-	 char dir;
-	 EXIT_DATA *xit, *texit;
-	 int value;
-	 int edir, ekey, evnum;
+	 ROOM_INDEX_DATA *location = NULL, *tmp = NULL;
+	 EXTRA_DESCR_DATA *ed = NULL;
+	 char dir = 0;
+	 EXIT_DATA *xit = NULL, *texit = NULL;
+	 int value = 0;
+	 int edir = 0, ekey = 0, evnum = 0;
 	 char *origarg = argument;
 
 	 if( !ch->desc )
@@ -4627,7 +4693,7 @@ void stop_editing( CHAR_DATA *ch )
 
 		 argument = one_argument( argument, arg2 );
 		 argument = one_argument( argument, arg3 );
-		 if( !arg2 || arg2[0] == '\0' )
+		 if( arg2[0] == '\0' )
 		 {
 			 send_to_char( "Create, change or remove an exit.\r\n", ch );
 			 send_to_char( "Usage: redit exit <dir> [room] [flags] [key] [keywords]\r\n", ch );
@@ -4648,7 +4714,7 @@ void stop_editing( CHAR_DATA *ch )
 			 numnotdir = TRUE;
 			 break;
 		 }
-		 if( !arg3 || arg3[0] == '\0' )
+		 if( arg3[0] == '\0' )
 			 evnum = 0;
 		 else
 			 evnum = atoi( arg3 );
@@ -4721,7 +4787,7 @@ void stop_editing( CHAR_DATA *ch )
 			 }
 		 }
 		 argument = one_argument( argument, arg3 );
-		 if( arg3 && arg3[0] != '\0' )
+		 if( arg3[0] != '\0' )
 			 xit->exit_info = atoi( arg3 );
 		 if( argument && argument[0] != '\0' )
 		 {
@@ -4757,7 +4823,7 @@ void stop_editing( CHAR_DATA *ch )
 
 		 argument = one_argument( argument, arg2 );
 		 argument = one_argument( argument, arg3 );
-		 if( !arg2 || arg2[0] == '\0' )
+		 if( arg2[0] == '\0' )
 		 {
 			 send_to_char( "Create, change or remove a two-way exit.\r\n", ch );
 			 send_to_char( "Usage: redit bexit <dir> [room] [flags] [key] [keywords]\r\n", ch );
@@ -4826,7 +4892,7 @@ void stop_editing( CHAR_DATA *ch )
 	 if( !str_cmp( arg, "exdistance" ) )
 	 {
 		 argument = one_argument( argument, arg2 );
-		 if( !arg2 || arg2[0] == '\0' )
+		 if( arg2[0] == '\0' )
 		 {
 			 send_to_char( "Set the distance (in rooms) between this room, and the destination room.\r\n", ch );
 			 send_to_char( "Usage: redit exdistance <dir> [distance]\r\n", ch );
@@ -4855,7 +4921,7 @@ void stop_editing( CHAR_DATA *ch )
 	 if( !str_cmp( arg, "exdesc" ) )
 	 {
 		 argument = one_argument( argument, arg2 );
-		 if( !arg2 || arg2[0] == '\0' )
+		 if( arg2[0] == '\0' )
 		 {
 			 send_to_char( "Create or clear a description for an exit.\r\n", ch );
 			 send_to_char( "Usage: redit exdesc <dir> [description]\r\n", ch );
@@ -5893,6 +5959,12 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 					 pMobIndex->susceptible,
 					 pMobIndex->attacks,
 					 pMobIndex->defenses );
+			 { // I did this because for loops can't declare variables unless compiled in C99 -- Kasji
+				int x;
+				for (x = 0; x < RES_MAX; x++)
+					fprintf( fpout, "%f ", pMobIndex->base_res[x]);
+				fprintf( fpout, "\n");
+			 }
 			 fprintf( fpout, "%d 0 0 0 0 0 0 0\n",
 					 pMobIndex->vip_flags );
 		 }
@@ -5972,6 +6044,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 				 pObjIndex->cost,
 				 pObjIndex->rent ? pObjIndex->rent :
 		 (int) (pObjIndex->cost / 10)		);
+		 fprintf( fpout, "%d\n", pObjIndex->dam_type );
 
 		 for ( ed = pObjIndex->first_extradesc; ed; ed = ed->next )
 			 fprintf( fpout, "E\n%s~\n%s~\n",

@@ -63,6 +63,8 @@ int		 cur_obj_serial;
 bool		 cur_obj_extracted;
 obj_ret		 global_objcode;
 
+void account_menu( DESCRIPTOR_DATA * d );
+
 bool is_wizvis( CHAR_DATA *ch , CHAR_DATA *victim );
 
 OBJ_DATA *group_object( OBJ_DATA *obj1, OBJ_DATA *obj2 );
@@ -627,6 +629,22 @@ void affect_modify( CHAR_DATA *ch, AFFECT_DATA *paf, bool fAdd )
 	default:
 		bug( "Affect_modify: unknown location %d.", paf->location );
 		return;
+
+	case APPLY_EXTRA_ATTACK:	ch->numattacks += mod;	break;
+
+	case APPLY_RES_1:
+	case APPLY_RES_2:
+	case APPLY_RES_3:
+	case APPLY_RES_4:
+	case APPLY_RES_5:
+	case APPLY_RES_6:
+	case APPLY_RES_7:
+	case APPLY_RES_8:
+	case APPLY_RES_9:
+	case APPLY_RES_10:
+	case APPLY_RES_11:
+	case APPLY_RES_12:
+	case APPLY_RES_13: 	break;
 
 	case APPLY_NONE:						break;
 	case APPLY_STR:           ch->mod_str		+= mod;	break;
@@ -2532,7 +2550,7 @@ bool can_drop_obj( CHAR_DATA *ch, OBJ_DATA *obj )
 /*
  * Return ascii name of an item type.
  */
-char *item_type_name( OBJ_DATA *obj )
+const char * item_type_name( OBJ_DATA *obj )
 {
 	if ( obj->item_type < 1 || obj->item_type > MAX_ITEM_TYPE )
 	{
@@ -2618,6 +2636,20 @@ char *affect_loc_name( int location )
 	case APPLY_THIRST:		return "thirst";
 	case APPLY_DRUNK:		return "drunk";
 	case APPLY_BLOOD:		return "blood";
+	case APPLY_RES_1:		return "Resist: Plasma";
+	case APPLY_RES_2:		return "Resist: Ionic";
+	case APPLY_RES_3:		return "Resist: Lightsaber";
+	case APPLY_RES_4:		return "Resist: Fire";
+	case APPLY_RES_5:		return "Resist: Cold";
+	case APPLY_RES_6:		return "Resist: Blunt";
+	case APPLY_RES_7:		return "Resist: Piercing";
+	case APPLY_RES_8:		return "Resist: Slashing";
+	case APPLY_RES_9:		return "Resist: Explosive";
+	case APPLY_RES_10:		return "Resist: Acid";
+	case APPLY_RES_11:		return "Resist: Poison";
+	case APPLY_RES_12:		return "Resist: Force";
+	case APPLY_RES_13:		return "Resist: Disruptor";
+	case APPLY_EXTRA_ATTACK:	return "Extra Attacks";
 	}
 
 	bug( "Affect_location_name: unknown location %d.", location );

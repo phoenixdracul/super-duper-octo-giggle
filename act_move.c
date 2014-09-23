@@ -1290,13 +1290,11 @@ void do_build_walk( CHAR_DATA *ch, char *argument )
 {
 	char                    arg[MIL];
 	char                    buf[MAX_STRING_LENGTH];
-	ROOM_INDEX_DATA        *location,
-	*ch_location;
-	AREA_DATA              *pArea;
-	int                     vnum,
-	edir;
+	ROOM_INDEX_DATA        *location = NULL, *ch_location = NULL;
+	AREA_DATA              *pArea = NULL;
+	int                     vnum = 0, edir = 0;
 	char                    tmpcmd[MAX_INPUT_LENGTH];
-	EXIT_DATA              *xit;
+	EXIT_DATA              *xit = NULL;
 
 
 	if ( IS_IMMORTAL( ch ) && IS_SET( ch->pcdata->flags, PCFLAG_BUILDWALK ) )

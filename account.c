@@ -634,7 +634,7 @@ void do_accountstat( CHAR_DATA *ch, char *argument )
 {
 	char arg[MSL];
 	CHAR_DATA *victim;
-	DESCRIPTOR_DATA *d;
+//	DESCRIPTOR_DATA *d;
 	ACCOUNT_CHARACTER_DATA *ach;
 	int count = 1;
 

@@ -560,6 +560,20 @@ tiny_affect_loc_name(int location)
 	case APPLY_THIRST:		return " THIRST";
 	case APPLY_DRUNK:		return " DRUNK ";
 	case APPLY_BLOOD:		return " BLOOD ";
+	case APPLY_RES_1:           	return "Resist: Plasma";
+	case APPLY_RES_2:           	return "Resist: Ionic";
+	case APPLY_RES_3:           	return "Resist: Lightsaber";
+	case APPLY_RES_4:           	return "Resist: Fire";
+	case APPLY_RES_5:           	return "Resist: Cold";
+	case APPLY_RES_6:           	return "Resist: Blunt";
+	case APPLY_RES_7:           	return "Resist: Piercing";
+	case APPLY_RES_8:           	return "Resist: Slashing";
+	case APPLY_RES_9:           	return "Resist: Explosive";
+	case APPLY_RES_10:          	return "Resist: Acid";
+	case APPLY_RES_11:          	return "Resist: Poison";
+	case APPLY_RES_12:          	return "Resist: Force";
+	case APPLY_RES_13:          	return "Resist: Disruptor";
+	case APPLY_EXTRA_ATTACK:	return "Extra Attacks";
 	}
 
 	bug("Affect_location_name: unknown location %d.", location);

@@ -47,6 +47,8 @@
 #include <math.h>
 #include "mud.h"
 
+int get_actflag( char *flag );
+
 extern	int	_filbuf		args( (FILE *) );
 
 #if defined(KEY)
@@ -1292,7 +1294,7 @@ void load_mobiles( AREA_DATA *tarea, FILE *fp )
       {
          actflags = one_argument( actflags, flag );
          value = get_actflag( flag );
-         
+
          if( value < 0 || value >= MAX_BITS )
             bug( "Unknown actflag: %s\r\n", flag );
          else
@@ -1376,6 +1378,8 @@ void load_mobiles( AREA_DATA *tarea, FILE *fp )
 			pMobIndex->susceptible	= x6;
 			pMobIndex->attacks		= x7;
 			pMobIndex->defenses		= x8;
+//			for (x1 = 0; x1 < RES_MAX; x1++) // note: just re-using x1, since it's done being used.
+//				pMobIndex->base_res[x1] = fread_float(fp);
 		}
 		else
 		{
@@ -1540,6 +1544,7 @@ void load_objects( AREA_DATA *tarea, FILE *fp )
 		pObjIndex->weight = UMAX( 1, pObjIndex->weight );
 		pObjIndex->cost			= fread_number( fp );
 		pObjIndex->rent		  	= fread_number( fp ); /* unused */
+//		pObjIndex->dam_type		= fread_number( fp );
 
 		for ( ; ; )
 		{
@@ -2713,6 +2718,7 @@ OBJ_DATA *create_object( OBJ_INDEX_DATA *pObjIndex, int level )
 	obj->value[5]	= pObjIndex->value[5];
 	obj->weight		= pObjIndex->weight;
 	obj->cost		= pObjIndex->cost;
+	obj->dam_type	= pObjIndex->dam_type;
 	/*
     obj->cost		= number_fuzzy( 10 )
 	 * number_fuzzy( level ) * number_fuzzy( level );

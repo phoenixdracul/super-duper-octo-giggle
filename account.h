@@ -58,7 +58,7 @@ struct account_data
         char *last_played;
         char *password;
         char *email;
-        time_t *last_changes;
+        time_t last_changes;
         time_t timer;
         bool multiplay;
         bool chatname;	/* If TRUE, account name will be used for ooc chats. */

@@ -67,7 +67,9 @@
 void bt_sig_handler(int signal);
 
 #define MAX_NEST	100
+#ifndef WAIT_ANY
 #define WAIT_ANY     -1		// Added for Cygwin support
+#endif // WAIT_ANY
 static	OBJ_DATA *	rgObjNest	[MAX_NEST];
 
 
@@ -149,7 +151,7 @@ void	set_pager_input		args( ( DESCRIPTOR_DATA *d,
 		char *argument ) );
 bool	pager_output		args( ( DESCRIPTOR_DATA *d ) );
 
-static void SegVio (void);
+static void SegVio (int signum);
 
 void	mail_count		args( ( CHAR_DATA *ch ) );
 void account_dispose args( ( ACCOUNT_DATA *account ) );
@@ -183,9 +185,7 @@ int main( int argc, char **argv )
 	sigsegv.sa_flags = 0;
 
 	if(sigaction( SIGSEGV, &sigsegv, NULL) == 0)
-	{
 		log_string("SIGACTION ARMED");
-	}
 	else
 		log_string("SIGACTION NOT_ARMED");
 
@@ -486,7 +486,7 @@ void accept_new( int ctrl )
 
 void emergency_copyover( void );
 
-static void SegVio()
+static void SegVio(int signum)
 {
 	char buf[MAX_STRING_LENGTH];
 	char bufB[MAX_STRING_LENGTH];
@@ -946,7 +946,7 @@ void new_descriptor( int new_desc )
 	char *hostname;
 	struct sockaddr_in sock;
 	size_t desc;
-	size_t size;
+	socklen_t size;
 
 	set_alarm( 20 );
 	size = sizeof(sock);

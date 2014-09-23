@@ -97,14 +97,14 @@ void do_copyover (CHAR_DATA *ch, char * argument)
 			copyover_set = FALSE;
 			//sprintf(buffer, "&W--- &YCopyover Aborted. Calm down... &W---");
 			sprintf(buffer, "&z--- &RCopyover Aborted. Calm down... &z---");
-			echo_to_all("AT_YELLOW", buffer, ECHOTAR_ALL);
+			echo_to_all(AT_YELLOW, buffer, ECHOTAR_ALL);
 		}
 		return;
 	}
 
         if( !str_cmp( argument, "warn" ) )
         {
-           echo_to_all( "AT_RED", "Copyover Warning", ECHOTAR_ALL );
+           echo_to_all( AT_RED, "Copyover Warning", ECHOTAR_ALL );
            return;
         }
 
@@ -119,7 +119,7 @@ void do_copyover (CHAR_DATA *ch, char * argument)
 		copytimer_seconds = atoi(argument);
 		copyover_ch = ch;
 		sprintf(buffer, "&z--- &RCopyover in &w%i &Rseconds. &z---", copytimer_seconds);
-		echo_to_all("AT_YELLOW", buffer, ECHOTAR_ALL);
+		echo_to_all(AT_YELLOW, buffer, ECHOTAR_ALL);
 		return;
 	}
 	fp = fopen (COPYOVER_FILE, "w");

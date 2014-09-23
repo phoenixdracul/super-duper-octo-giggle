@@ -66,6 +66,7 @@ int file_ver;
  * Externals
  */
 void fwrite_comments( CHAR_DATA *ch, FILE *fp );
+char * fread_flagstring( FILE * fp );
 void fread_comment( CHAR_DATA *ch, FILE *fp );
 ACCOUNT_DATA *account_fread( char *name );
 void separate_obj(OBJ_DATA *obj);
@@ -121,8 +122,8 @@ void load_home( CHAR_DATA * ch )
 	 char filename[256];
          FILE *fph;
          ROOM_INDEX_DATA *storeroom = ch->plr_home;
-         OBJ_DATA *obj;
-         OBJ_DATA *obj_next;
+//         OBJ_DATA *obj;
+//         OBJ_DATA *obj_next;
 
 /*         for ( obj = storeroom->first_content; obj; obj = obj_next )
 	 {
@@ -732,6 +733,15 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 	fprintf( fp, "MGlory       %d\n",   ch->pcdata->quest_accum );
 	fprintf( fp, "Hitroll      %d\n",	ch->hitroll		);
 	fprintf( fp, "Damroll      %d\n",	ch->damroll		);
+
+	{
+		int x;
+		fprintf( fp, "BaseRes     " );
+		for (x = 0; x < RES_MAX; ++x)
+			fprintf( fp, " %f", ch->base_res[x] );
+		fprintf( fp, "\n" );
+	}
+
 	fprintf( fp, "Armor        %d\n",	ch->armor		);
 	if ( ch->rppoints )
 		fprintf( fp, "Rppoints   %d\n",	ch->rppoints		);
@@ -1051,6 +1061,8 @@ void fwrite_obj( CHAR_DATA *ch, OBJ_DATA *obj, FILE *fp, int iNest, short os_typ
 		fprintf( fp, "Timer        %d\n", obj->timer );
 	if( obj->cost != obj->pIndexData->cost )
 		fprintf( fp, "Cost         %d\n", obj->cost );
+	if( obj->item_type == ITEM_WEAPON )
+		fprintf( fp, "Damtype      %d\n", obj->dam_type );
 	if( obj->value[0] || obj->value[1] || obj->value[2] || obj->value[3] || obj->value[4] || obj->value[5] )
 		fprintf( fp, "Values       %d %d %d %d %d %d\n",
 				obj->value[0], obj->value[1], obj->value[2], obj->value[3], obj->value[4], obj->value[5] );
@@ -1181,6 +1193,8 @@ bool load_char_obj( DESCRIPTOR_DATA * d, char *name, bool preload, bool hotboot 
 	ch->plr_home = NULL;
 	ch->pheight = 0;
 	ch->build = 0;
+	for (i = 0; i < RES_MAX; i++)
+		ch->base_res[i] = 0.0;
 	ch->pcdata->hotboot = FALSE; /* Never changed except when PC is saved during hotboot save */
 #ifdef IMC
 	imc_initchar( ch );
@@ -1567,6 +1581,15 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload, bool hotboot )
 			break;
 
 		case 'B':
+			if (!str_cmp(word, "BaseRes"))
+			{
+				int x;
+				for (x = 0; x < RES_MAX; x++)
+				    ch->base_res[x] = fread_float(fp);
+				fMatch = TRUE;
+				break;
+			}
+
 			if (!str_cmp(word, "Bugged")){
 				BUG_DATA *bug;
 				CREATE(bug, BUG_DATA, 1);
@@ -2345,6 +2368,7 @@ void fread_obj( CHAR_DATA *ch, FILE *fp, sh_int os_type )
 			break;
 
 		case 'D':
+			KEY( "Damtype",		obj->dam_type,		fread_number( fp ) );
 			KEY( "Description",	obj->description,	fread_string( fp ) );
 			break;
 
