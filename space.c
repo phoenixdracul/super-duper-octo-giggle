@@ -17111,7 +17111,7 @@ bool check_grav_positions( SHIP_DATA * ship, bool Out )
      return TRUE;
  }
 
-CMDF( do_engage_grav )
+void do_engage_grav( CHAR_DATA *ch, char *argument)
  {
     SHIP_DATA *ship;
     char arg[MAX_INPUT_LENGTH];
