@@ -193,7 +193,7 @@ void do_score( CHAR_DATA *ch, char *argument )
 	  ch_printf(ch, "&R&r| &CYour lottery number is: &W%3d                              &r|&W\n\r", ch->pcdata->lottery_number);
   ch_printf(ch,  "&r| &CCurrent Board: &W%-41s &r|\n\r", ch->pcdata->board ? ch->pcdata->board->short_name : "(none)");
   send_to_char("&r+==========================================================+&W\n\r", ch);
-  send_to_char("&r|  &CFor more Information see lang, aff, group               &r|\n\r", ch);
+  send_to_char("&r|  &CFor more Information see lang, aff, armor, group        &r|\n\r", ch);
   send_to_char("&r+==========================================================+&W\n\r", ch);
 
   if(IS_IMMORTAL(ch))
