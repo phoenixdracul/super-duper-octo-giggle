@@ -3062,9 +3062,11 @@ void fread_ship( SHIP_DATA *ship, FILE *fp )
 					ship->cargotype = CARGO_NONE;
 #endif
 
-				if (ship->shipstate != SHIP_DISABLED)
+				// Only capital ships and space stations can stay in space during copyovers
+				// TODO: Change this
+				if (ship->shipstate != SHIP_DISABLED && ship->class <= SHIP_CORVETTE)
 					ship->shipstate = SHIP_DOCKED;
-
+				
 				ship->primaryState = LASER_READY;
 				ship->secondaryState = LASER_READY;
 				ship->tertiaryState = LASER_READY;
@@ -3275,8 +3277,7 @@ bool load_ship_file( char *shipfile )
 	bool found;
 	ROOM_INDEX_DATA *pRoomIndex;
 	CLAN_DATA *clan;
-
-
+	
 	CREATE( ship, SHIP_DATA, 1 );
 
 	found = FALSE;
@@ -3327,7 +3328,7 @@ bool load_ship_file( char *shipfile )
 	if ( !(found) )
 		DISPOSE( ship );
 	else
-	{
+	{		
 		LINK( ship, first_ship, last_ship, next, prev );
 		if ( !str_cmp("Public",ship->owner) || ship->type == MOB_SHIP )
 		{
@@ -3351,7 +3352,7 @@ bool load_ship_file( char *shipfile )
 			if ( IS_SET(ship->flags, XSHIP_ION_HYPER) )
 			{
 				REMOVE_BIT(ship->flags, XSHIP_ION_HYPER);
-				ship->shipstate = LASER_READY;
+				ship->shipstate = SHIP_READY;
 
 			}
 
@@ -3479,17 +3480,17 @@ bool load_ship_file( char *shipfile )
 				ship->cockpit == ROOM_CORUSCANT_SHUTTLE   )
 		{}
 		else if ( ( pRoomIndex = get_room_index( ship->lastdoc ) ) != NULL
-				&& ship->class <= SHIP_CORVETTE )
+				&& (ship->class <= SHIP_CORVETTE || ship->shipstate == SHIP_DOCKED))
 		{
 			LINK( ship, pRoomIndex->first_ship, pRoomIndex->last_ship, next_in_room, prev_in_room );
 			ship->in_room = pRoomIndex;
 			ship->location = ship->lastdoc;
 		}
 
-
-		if ( ship->class >= SHIP_LFRIGATE || ship->type == MOB_SHIP )
+		if ( (ship->class >= SHIP_LFRIGATE && ship->shipstate != SHIP_DOCKED) || ship->type == MOB_SHIP )
 		{
 			ship_to_starsystem(ship, starsystem_from_name(ship->home) );
+			
 			if(ship->class >= SHIP_LFRIGATE)
 			{
 
@@ -3589,11 +3590,11 @@ bool load_ship_file( char *shipfile )
 			ship->hx = 1;
 			ship->hy = 1;
 			ship->hz = 1;
-			ship->shipstate = SHIP_READY;
 			ship->autopilot = TRUE;
 			ship->autorecharge = TRUE;
 			ship->shield = ship->maxshield;
-
+			ship->currspeed = ship->realspeed;
+			
 			if(ship->type == MOB_SHIP)
 			{
 				if(!str_cmp(ship->home, "Coruscant") || !str_cmp(ship->home, "coruscant"))
@@ -6880,7 +6881,7 @@ void launchship( SHIP_DATA *ship )
 	sprintf( buf, "%s lifts off into space.", ship->name );
 	echo_to_room( AT_YELLOW , get_room_index(ship->lastdoc) , buf );
 	ship->inship = NULL;
-
+	save_ship(ship);
 }
 
 int get_ship_count(int vnum)
@@ -7583,7 +7584,7 @@ void do_trajectory( CHAR_DATA *ch, char *argument )
 
 }
 
-
+// This was replaced with ordership
 void do_buyship(CHAR_DATA *ch, char *argument )
 {
 	long         price;

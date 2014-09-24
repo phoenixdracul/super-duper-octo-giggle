@@ -2424,7 +2424,7 @@ void do_shutdown( CHAR_DATA *ch, char *argument )
 		for ( vch = first_char; vch; vch = vch->next )
 			if ( !IS_NPC( vch ) )
 				save_char_obj( vch );
-
+				
 	if( compilelock )
 	{
 		set_char_color( AT_RED, ch );

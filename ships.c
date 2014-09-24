@@ -1198,6 +1198,7 @@ SHIP_DATA *make_prototype_ship(int ship_type,int vnum,CHAR_DATA *ch,char *ship_n
      */ 
     if(ch->in_room->area && ch->in_room->area->planet)
     {
+	// This was causing a bug - even capital ships should stay on the group until they're launched -- Boran
         if( ship_prototypes[ship_type].class >= SHIP_LFRIGATE &&  ch->in_room->area->planet->starsystem )
            ship->home = STRALLOC( ch->in_room->area->planet->starsystem->name );
         else
@@ -1286,6 +1287,7 @@ SHIP_DATA *make_prototype_ship(int ship_type,int vnum,CHAR_DATA *ch,char *ship_n
     }
     ship->tractorbeam = ship_prototypes[ship_type].tractor;
     ship->gravitywell = ship_prototypes[ship_type].gwell;
+    ship->grav = FALSE;
     ship->primaryType = ship_prototypes[ship_type].primaryType;
     ship->secondaryType = ship_prototypes[ship_type].secondaryType;
     ship->tertiaryType = ship_prototypes[ship_type].tertiaryType;
