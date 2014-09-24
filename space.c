@@ -17075,11 +17075,8 @@ bool check_grav_positions( SHIP_DATA * ship, bool Out )
     {
        for( well = ship->starsystem->first_ship; well; well = well->next_in_starsystem )
        {
-          distance = (well->gravitywell * 500 );
-           if( well->grav == TRUE &&
-              ( abs( ( int )well->vx ) - abs( ( int )ship->vx ) <= distance && abs( ( int )well->vx ) - abs( ( int )ship->vx ) >= (0-distance) )
-              && ( abs( ( int )well->vy ) - abs( ( int )ship->vy ) <= distance && abs( ( int )well->vy ) - abs( ( int )ship->vy ) >= (0-distance) )
-              && ( abs( ( int )well->vz ) - abs( ( int )ship->vz ) <= distance && abs( ( int )well->vz ) - abs( ( int )ship->vz ) >= (0-distance) ) )
+          distance = (well->gravitywell * 1000 );
+           if( well->grav == TRUE && sqrt( pow( abs(well->x - ship->vx ), 2 ) + pow( abs(well->y - ship->vy) , 2 ) + pow( abs( well->z - ship->vz ), 2 ) ) <= distance )
           {
              return FALSE;
           }
@@ -17157,9 +17154,9 @@ void do_engage_grav( CHAR_DATA *ch, char *argument)
           }
            if( nifty_is_name( arg, "off" ) )
           {
-             sprintf( buf, "&g[&GShip Computer&g]&R&W: %s: Gravity well offline.", ship->name );
+             sprintf( buf, "&g[&GShip Computer&g]&R&W: %w: Gravity well offline.", ship->name );
              echo_to_system( "plain", ship, buf, NULL );
-             echo_to_room( "plain", get_room_index( ship->pilotseat ),                           "&g[&GShip Computer&g]&R&W: %s: Gravity well offline." );
+             echo_to_room( "plain", get_room_index( ship->pilotseat ),                           "&g[&GShip Computer&g]&R&w: %s: Gravity well offline." );
              ship->grav = FALSE;
               return;
           }
