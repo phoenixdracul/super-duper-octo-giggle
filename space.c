@@ -17076,7 +17076,7 @@ bool check_grav_positions( SHIP_DATA * ship, bool Out )
        for( well = ship->starsystem->first_ship; well; well = well->next_in_starsystem )
        {
           distance = (well->gravitywell * 1000 );
-           if( well->grav == TRUE && sqrt( pow( abs(well->x - ship->vx ), 2 ) + pow( abs(well->y - ship->vy) , 2 ) + pow( abs( well->z - ship->vz ), 2 ) ) <= distance )
+           if( well->grav == TRUE && sqrt( pow( abs(well->vx - ship->vx ), 2 ) + pow( abs(well->vy - ship->vy) , 2 ) + pow( abs( well->vz - ship->vz ), 2 ) ) <= distance )
           {
              return FALSE;
           }
