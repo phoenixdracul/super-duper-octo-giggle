@@ -1077,12 +1077,12 @@ void update_space( )
 		}
 
 		/* following was originaly to fix ships that lost their pilot
-           in the middle of a manuever and are stuck in a busy state
+           in the middle of a maneuver and are stuck in a busy state
            but now used for timed manouevers such as turning */
 
 		if (ship->shipstate == SHIP_BUSY_3)
 		{
-			echo_to_room( AT_YELLOW, get_room_index(ship->pilotseat), "Manuever complete.");
+			echo_to_room( AT_YELLOW, get_room_index(ship->pilotseat), "Maneuver complete.");
 			ship->shipstate = SHIP_READY;
 		}
 		if (ship->shipstate == SHIP_BUSY_2)
@@ -4148,7 +4148,7 @@ void do_setship( CHAR_DATA *ch, char *argument )
 		send_to_char( "engineroom firstroom lastroom shipyard\n\r", ch );
 		send_to_char( "hangar1 hangar2 hangar3 hangar4\n\r", ch);
 		send_to_char( "hangar1space hangar2space hangar3space hangar4space\n\r", ch);
-		send_to_char( "manuever speed hyperspeed tractorbeam gwell window1-6\n\r", ch );
+		send_to_char( "maneuver speed hyperspeed tractorbeam gwell window1-6\n\r", ch );
 		send_to_char( "pcount primary scount secondary tcount tertiary missiles shield hull energy chaff\n\r", ch );
 		send_to_char( "comm sensor astroarray class torpedos bombs\n\r", ch );
 #ifdef USECARGO
@@ -4783,7 +4783,7 @@ void do_setship( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( !str_cmp( arg2, "manuever" ) )
+	if ( !str_cmp( arg2, "maneuver" ) )
 	{
 		ship->manuever = atoi(argument);
 		send_to_char( "Done.\n\r", ch );
@@ -5144,7 +5144,7 @@ void do_showship( CHAR_DATA *ch, char *argument )
 			ship->vx, ship->vy, ship->vz );
 	ch_printf( ch, "Current Heading: %.0f %.0f %.0f\n\r",
 			ship->hx, ship->hy, ship->hz );
-	ch_printf( ch, "Speed: %d/%d   Hyperspeed: %d\n\r  Manueverability: %d\n\r",
+	ch_printf( ch, "Speed: %d/%d   Hyperspeed: %d\n\r  Maneuverability: %d\n\r",
 			ship->currspeed, ship->realspeed, ship->hyperspeed , ship->manuever );
 	ch_printf( ch, "Flags: %s", flag_string(ship->flags, ship_flags));
 #ifdef USECARGO
@@ -7474,7 +7474,7 @@ void do_trajectory( CHAR_DATA *ch, char *argument )
 
 	if (ship->shipstate == SHIP_DISABLED)
 	{
-		send_to_char("&RThe ships drive is disabled. Unable to manuever.\n\r",ch);
+		send_to_char("&RThe ships drive is disabled. Unable to maneuver.\n\r",ch);
 		return;
 	}
 	if  ( ship->class == SHIP_SPACE_STATION )
@@ -8550,7 +8550,7 @@ void do_hyperspace(CHAR_DATA *ch, char *argument )
 	}
 	if (ship->shipstate == SHIP_DISABLED)
 	{
-		send_to_char("&RThe ships drive is disabled. Unable to manuever.\n\r",ch);
+		send_to_char("&RThe ships drive is disabled. Unable to maneuver.\n\r",ch);
 		return;
 	}
 	if (ship->shipstate == SHIP_DOCKED)
@@ -13485,7 +13485,7 @@ void do_recharge(CHAR_DATA *ch, char *argument )
 
 	if (ship->shipstate == SHIP_DISABLED)
 	{
-		send_to_char("&RThe ships drive is disabled. Unable to manuever.\n\r",ch);
+		send_to_char("&RThe ships drive is disabled. Unable to maneuver.\n\r",ch);
 		return;
 	}
 
@@ -16277,7 +16277,7 @@ void do_cut(CHAR_DATA *ch, char *argument )
 
 	if (ship->shipstate != SHIP_READY && ship->shipstate != SHIP_DISABLED)
 	{
-		send_to_char("Please wait until you have finished your current manuever.\n\r", ch);
+		send_to_char("Please wait until you have finished your current maneuver.\n\r", ch);
 		return;
 	}
 	switch( ch->substate )
