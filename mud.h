@@ -2494,10 +2494,10 @@ typedef enum
 typedef enum
 {
  PLR_IS_NPC, PLR_BOUGHT_PET, PLR_SHOVEDRAG, PLR_AUTOEXIT, PLR_AUTOLOOT, PLR_AUTOSAC,
- PLR_BLANK, PLR_OUTCAST, PLR_BRIEF, PLR_COMBINE, PLR_PROMPT, PLR_TELNET_GA, PLR_HOLYLIGHT, 
+ PLR_BLANK, PLR_OUTCAST, PLR_BRIEF, PLR_COMBINE, PLR_PROMPT, PLR_TELNET_GA, PLR_HOLYLIGHT,
  PLR_WIZINVIS, PLR_ROOMVNUM, PLR_SILENCE, PLR_NO_EMOTE, PLR_ATTACKER, PLR_NO_TELL, PLR_LOG,
  PLR_DENY, PLR_FREEZE, PLR_KILLER, PLR_WHOINVIS, PLR_LITTERBUG, PLR_ANSI, PLR_SOUND, PLR_NICE,
- PLR_FLEE, PLR_AUTOGOLD, PLR_SLOG, PLR_AFK                    
+ PLR_FLEE, PLR_AUTOGOLD, PLR_SLOG, PLR_AFK
 } player_flags;
 
 /* Bits for pc_data->flags. */
@@ -4812,8 +4812,9 @@ int	max_fight	args( ( CHAR_DATA *ch ) );
 void	violence_update	args( ( void ) );
 ch_ret	multi_hit	args( ( CHAR_DATA *ch, CHAR_DATA *victim, int dt ) );
 sh_int	ris_damage	args( ( CHAR_DATA *ch, sh_int dam, int ris ) );
-int	get_res		args( ( CHAR_DATA *ch, int dam, int r ) );
+int	get_res		args( ( CHAR_DATA *ch, int dam, OBJ_DATA * wield ) );
 float	calc_res	args( ( CHAR_DATA *ch, int r ) );
+float	calc_res_min	args( ( CHAR_DATA *ch, int r ) );
 ch_ret	damage		args( ( CHAR_DATA *ch, CHAR_DATA *victim, int dam,
 			    int dt ) );
 void	update_pos	args( ( CHAR_DATA *victim ) );

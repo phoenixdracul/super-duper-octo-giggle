@@ -929,7 +929,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 
 	if ( wield )
 	{
-		dam = get_res( victim, dam, wield->dam_type ); // New RIS method by Kasji!!!
+		dam = get_res( victim, dam, wield ); // New RIS method by Kasji!!!
 		dam = UMAX(1, dam);
 
 		if ( IS_SET( wield->extra_flags, ITEM_MAGIC ) )
@@ -945,7 +945,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	else
 	{
 		// Consider changing this for races that may have natural melee? -- Kasji
-		dam = get_res( victim, dam, RES_BLUNT );
+		dam = get_res( victim, dam, NULL );
 		dam = UMAX(1, dam);
 		dam = ris_damage( victim, dam, RIS_NONMAGIC );
 	}
@@ -1303,35 +1303,37 @@ sh_int ris_damage( CHAR_DATA *ch, sh_int dam, int ris )
 }
 
 // HA! You call that RIS, Thoric? I'll give you RIS! -- Kasji
-int get_res( CHAR_DATA * ch, int dam, int r)
+int get_res( CHAR_DATA * ch, int dam, OBJ_DATA * wield)
 {
-    int i;
-    float x, y;
-    OBJ_DATA * obj;
+    float min, max, actual, p = 1.0;
+    int i, j, r;
     AFFECT_DATA * af;
 
-    x = ch->base_res[r] / 100.0;
-    // Add resistance affects to armor and calculate resistance stacking here.
-    r += APPLY_RES_1;
-    for (obj = ch->first_carrying; obj; obj = obj->next_content)
+    if (wield != NULL)
+	r = wield->dam_type;
+    else
+	r = RES_BLUNT;
+
+    min = calc_res_min(ch, r);
+    max = calc_res(ch, r);
+
+    if (wield != NULL)
     {
-	if (obj->wear_loc != WEAR_NONE)
+	for (af = wield->first_affect; af; af = af->next)
 	{
-	    for (af = obj->first_affect; af; af = af->next)
+	    if (af->location == APPLY_ARMOR_PEN)
 	    {
-		if (af->location == r)
-		{
-		    x += (float)af->modifier;
-		    break;
-		}
+		p = 1.0 - ((float)af->modifier / 100.0);
 	    }
 	}
     }
 
-    y = x / (x + 100.0);
-    y = URANGE(0.0, y, 0.999);
 
-    i = dam * (1.0 - y);
+    j = number_range(0, 100);
+
+    actual = (min + (max * (float)j) / 100.0) * p;
+
+    i = dam * (1.0 - actual);
 
     return i;
 }
@@ -1363,7 +1365,40 @@ float calc_res( CHAR_DATA * ch, int r)
     y = x / (x + 100.0);
     y = URANGE(0.0, y, 0.999);
 
-    return y * 100.0;
+    return y;
+}
+
+float calc_res_min( CHAR_DATA * ch, int r)
+{
+    float x, y;
+    OBJ_DATA * obj;
+    AFFECT_DATA * af;
+    int q = 1000;
+
+    x = ch->base_res[r] / 100.0;
+    // Add resistance affects to armor and calculate resistance stacking here.
+    r += APPLY_RES_1;
+    for (obj = ch->first_carrying; obj; obj = obj->next_content)
+    {
+        if (obj->wear_loc != WEAR_NONE)
+        {
+            for (af = obj->first_affect; af; af = af->next)
+            {
+                if (af->location == r)
+                {
+		    if (obj->item_type == ITEM_ARMOR && obj->value[2] < q)
+			q = obj->value[2];
+                    x += (float)af->modifier;
+                    break;
+                }
+            }
+        }
+    }
+
+    y = x / (x + 100.0);
+    y = URANGE(0.0, y, 0.999);
+
+    return y * (float)q / 1000.0;
 }
 
 /*

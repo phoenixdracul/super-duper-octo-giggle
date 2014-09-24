@@ -40,6 +40,9 @@
 
 char * num_punct(int foo);
 
+char * min_max_gauge(float min, float max, int size);
+char * min_max_gauge_256(float min, float max, int size);
+
 /*
  *  Locals
  */
@@ -230,6 +233,23 @@ void do_score( CHAR_DATA *ch, char *argument )
 
 void do_armor(CHAR_DATA * ch, char * argument)
 {
+	float min = 0.0, max = 0.0;
+	int i;
+
+//			|----+----+----+----+----+----+----+----+----+----+|
+	send_to_char("&G.---------------------------------------------------------------------.\n\r", ch);
+
+	for (i = 0; i < RES_MAX; ++i)
+	{
+		min = calc_res_min(ch, i);
+		max = calc_res(ch, i);
+		if (IS_NPC(ch) || !IS_SET(ch->pcdata->flags, PCFLAG_256COL))
+			ch_printf(ch, "&G|&W%-18s&G|%s&G|\n\r", tiny_affect_loc_name(i + APPLY_RES_1), min_max_gauge(min, max, 50));
+		else
+			ch_printf(ch, "&G|&W%-18s&G|%s&G|\n\r", tiny_affect_loc_name(i + APPLY_RES_1), min_max_gauge_256(min, max, 50));
+	}
+
+	send_to_char("&G'---------------------------------------------------------------------'\n\r", ch);
 }
 
 /*

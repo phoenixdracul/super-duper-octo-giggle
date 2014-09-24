@@ -7247,6 +7247,7 @@ void ostat_plus( CHAR_DATA *ch, OBJ_DATA *obj)
 	case ITEM_ARMOR:
 		ch_printf( ch, "&GValue[&W0&G] Current AC: &W%d\n\r", obj->value[0]);
 		ch_printf( ch, "&GValue[&W1&G] Original AC: &W%d\n\r", obj->value[1]);
+		ch_printf( ch, "&GValue[&W2&G] Quality: &W%d\n\r", obj->value[2]);
 		if(obj->value[1] == 0)
 			dam = 10;
 		else

@@ -630,6 +630,8 @@ void affect_modify( CHAR_DATA *ch, AFFECT_DATA *paf, bool fAdd )
 		bug( "Affect_modify: unknown location %d.", paf->location );
 		return;
 
+	case APPLY_ARMOR_PEN:	break;
+
 	case APPLY_EXTRA_ATTACK:	ch->numattacks += mod;	break;
 
 	case APPLY_RES_1:
@@ -3175,6 +3177,8 @@ void fix_char( CHAR_DATA *ch )
 
 	ch->carry_weight	= 0;
 	ch->carry_number	= 0;
+
+//	ch->numattacks		= 0;
 
 	for ( aff = ch->first_affect; aff; aff = aff->next )
 		affect_modify( ch, aff, TRUE );
