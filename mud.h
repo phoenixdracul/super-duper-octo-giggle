@@ -2242,7 +2242,7 @@ typedef enum
   APPLY_RES_13,
 
   // Other new item bonuses
-  APPLY_EXTRA_ATTACK,
+  APPLY_EXTRA_ATTACK, APPLY_ARMOR_PEN,
 
   MAX_APPLY_TYPE
 } apply_types;
@@ -5182,7 +5182,7 @@ bool copyover_set;
 CHAR_DATA *copyover_ch;
 
 /* newscore.c */
-char *  get_race 	args( (CHAR_DATA *ch) );
+const char *  get_race 	args( (CHAR_DATA *ch) );
 
 #undef	SK
 #undef	CO

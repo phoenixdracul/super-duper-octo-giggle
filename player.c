@@ -108,10 +108,10 @@ char *drawalign(int align){
   else if (align <= -60 && align > -80) sprintf(buf, "&W[&C===&W|&C=========&W]");
   else if (align <= -80 && align > -100) sprintf(buf, "&W[&C==&W|&C==========&W]");
   else if (align <= -100) sprintf(buf, "&W[&W|&C============&W]");
-  
+
   return buf;
 }
-/* 
+/*
   New Score by Calo [Daniel Donaldson]
 */
 void do_score( CHAR_DATA *ch, char *argument )
@@ -182,7 +182,7 @@ void do_score( CHAR_DATA *ch, char *argument )
 
     }
   }
-  send_to_char("&r+==========================================================+&W\n\r", ch);      
+  send_to_char("&r+==========================================================+&W\n\r", ch);
   send_to_char("&r|  &W+&C = Primary Ability, &R&W-&C = Secondary Ability            &r  |\n\r", ch);
   send_to_char("&r+==========================================================+&W\n\r", ch);
   ch_printf(ch, "&R&r| &CCurrent Comm Frequency: &W%-9s     &CGood RP Points: &W%d  &r|&W\n\r", victim->comfreq, victim->rppoints ? victim->rppoints : 0 );
@@ -192,7 +192,7 @@ void do_score( CHAR_DATA *ch, char *argument )
   send_to_char("&r+==========================================================+&W\n\r", ch);
   send_to_char("&r|  &CFor more Information see lang, aff, group               &r|\n\r", ch);
   send_to_char("&r+==========================================================+&W\n\r", ch);
-  
+
   if(IS_IMMORTAL(ch))
   {
 	  ch_printf(ch, "&r| &CIMMORTAL DATA&z:&C  Wizinvis [&R%-1s&C]  Wizlevel (&W%-2d&C)%-14s&r|\n\r",
@@ -207,7 +207,7 @@ void do_score( CHAR_DATA *ch, char *argument )
 
           ch_printf(ch, "&r| &CMentor/Mentee:&C %-30s&r            |\n\r", ch->pcdata->mentor);
 
-          ch_printf(ch, "&r| &CVnum room # [ %d ]&r                                        |\n\r", victim->in_room->vnum);
+          ch_printf(ch, "&r| &CVnum room # [ %5d ]&r                                    |\n\r", victim->in_room->vnum);
 
 	  ch_printf(ch, "&r| &CBamfin&z:&C  %-48s&r|\n\r", (ch->pcdata->bamfin && ch->pcdata->bamfin[0] != '\0')
   		? ch->pcdata->bamfin : defaultBamfin);
@@ -227,6 +227,11 @@ void do_score( CHAR_DATA *ch, char *argument )
   }
 
 }
+
+void do_armor(CHAR_DATA * ch, char * argument)
+{
+}
+
 /*
  * New score command by Haus
  */
@@ -580,8 +585,7 @@ tiny_affect_loc_name(int location)
 	return "(? ? ?)";
 }
 
-char *
-get_race( CHAR_DATA *ch)
+const char * get_race( CHAR_DATA *ch)
 {
     if ( ch->race < MAX_NPC_RACE && ch->race >= 0)
 	return ( npc_race[ch->race] );

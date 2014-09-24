@@ -1378,8 +1378,8 @@ void load_mobiles( AREA_DATA *tarea, FILE *fp )
 			pMobIndex->susceptible	= x6;
 			pMobIndex->attacks		= x7;
 			pMobIndex->defenses		= x8;
-//			for (x1 = 0; x1 < RES_MAX; x1++) // note: just re-using x1, since it's done being used.
-//				pMobIndex->base_res[x1] = fread_float(fp);
+			for (x1 = 0; x1 < RES_MAX; x1++) // note: just re-using x1, since it's done being used.
+				pMobIndex->base_res[x1] = fread_float(fp);
 		}
 		else
 		{
@@ -1544,7 +1544,7 @@ void load_objects( AREA_DATA *tarea, FILE *fp )
 		pObjIndex->weight = UMAX( 1, pObjIndex->weight );
 		pObjIndex->cost			= fread_number( fp );
 		pObjIndex->rent		  	= fread_number( fp ); /* unused */
-//		pObjIndex->dam_type		= fread_number( fp );
+		pObjIndex->dam_type		= fread_number( fp );
 
 		for ( ; ; )
 		{
