@@ -97,6 +97,7 @@ struct ship_prototypes_struct
 	int         hangar1space;
 	int	    hangar2space;	// Added by Michael
 	int	    hangar3space;	// Added by Michael
+	int	    hangar4space;	// Added by Michael
     int		mods;
     //int         plasma;
 };
@@ -1317,6 +1318,7 @@ SHIP_DATA *make_prototype_ship(int ship_type,int vnum,CHAR_DATA *ch,char *ship_n
 	ship->hangar1space = ship_prototypes[ship_type].hangar1space;
 	ship->hangar2space = ship_prototypes[ship_type].hangar2space;
 	ship->hangar3space = ship_prototypes[ship_type].hangar3space;
+	ship->hangar4space = ship_prototypes[ship_type].hangar4space;
     ship->manuever = ship_prototypes[ship_type].manuever;
   //MARKER
         ship->shipyard = ch->in_room->vnum;
@@ -1597,6 +1599,7 @@ void save_prototype( int prototype )
 	fprintf( fpout, "Hanger1Space   %d\n",  ship_prototypes[prototype].hangar1space );
 	fprintf( fpout, "Hanger2Space   %d\n",  ship_prototypes[prototype].hangar2space );
 	fprintf( fpout, "Hanger3Space   %d\n",  ship_prototypes[prototype].hangar3space );
+	fprintf( fpout, "Hanger4Space   %d\n",  ship_prototypes[prototype].hangar4space );
     fprintf( fpout, "Maxbombs       %d\n",  ship_prototypes[prototype].maxbombs );
     fprintf( fpout, "Speed          %d\n",  ship_prototypes[prototype].speed );
     fprintf( fpout, "Hyperspeed     %d\n",  ship_prototypes[prototype].hyperspeed );
@@ -1700,6 +1703,7 @@ bool load_prototype_header(FILE *fp,int prototype)
 				KEY( "Hanger1Space",   ship_prototypes[prototype].hangar1space,     fread_number(fp));
 				KEY( "Hanger2Space",   ship_prototypes[prototype].hangar2space,     fread_number(fp));
 				KEY( "Hanger3Space",   ship_prototypes[prototype].hangar3space,     fread_number(fp));
+				KEY( "Hanger4Space",   ship_prototypes[prototype].hangar4space,     fread_number(fp));
                KEY( "Hull",           ship_prototypes[prototype].hull,             fread_number(fp));
                KEY( "Hyperspeed",     ship_prototypes[prototype].hyperspeed,       fread_number(fp));
 
@@ -2054,6 +2058,7 @@ void do_makeprototypeship(CHAR_DATA *ch, char *argument)
 	ship_prototypes[prototype].hangar1space = ship->hangar1space;
 	ship_prototypes[prototype].hangar2space = ship->hangar2space;
 	ship_prototypes[prototype].hangar3space = ship->hangar3space;
+	ship_prototypes[prototype].hangar4space = ship->hangar4space;
     ship_prototypes[prototype].maxbombs = ship->maxbombs;
     ship_prototypes[prototype].speed = ship->realspeed;
     ship_prototypes[prototype].hyperspeed = ship->hyperspeed;
