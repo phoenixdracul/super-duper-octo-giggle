@@ -137,6 +137,7 @@ void    echo_to_room_dnr args( ( int ecolor , ROOM_INDEX_DATA *room ,  char *arg
 ch_ret drive_ship( CHAR_DATA *ch, SHIP_DATA *ship, EXIT_DATA  *exit , int fall );
 bool    autofly(SHIP_DATA *ship);
 bool is_facing( SHIP_DATA *ship , SHIP_DATA *target );
+bool check_grav_positions( SHIP_DATA * ship, bool Out );
 void sound_to_ship( SHIP_DATA *ship , char *argument );
 int	get_shipflag(char *flag );
 
@@ -8559,6 +8560,12 @@ void do_hyperspace(CHAR_DATA *ch, char *argument )
 		send_to_char("&RYou need to calculate your jump first!\n\r",ch);
 		return;
 	}
+
+ 	if( check_grav_positions( ship, 1 ) == FALSE )
+ 	{
+        	send_to_char( "&OThere is a gravitational force preventing you from making the jump to lightspeed!\r\n", ch );
+         	return;
+   	}
 
 	if ( ship->energy < ((66*ship->hyperspeed)+((1+ship->hyperdistance)/6)) )
 	{

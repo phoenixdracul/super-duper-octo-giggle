@@ -1281,6 +1281,7 @@ SHIP_DATA *make_prototype_ship(int ship_type,int vnum,CHAR_DATA *ch,char *ship_n
         }
     }
     ship->tractorbeam = ship_prototypes[ship_type].tractor;
+    ship->gravitywell = ship_prototypes[ship_type].gwell;
     ship->primaryType = ship_prototypes[ship_type].primaryType;
     ship->secondaryType = ship_prototypes[ship_type].secondaryType;
     ship->tertiaryType = ship_prototypes[ship_type].tertiaryType;
@@ -1573,6 +1574,7 @@ void save_prototype( int prototype )
     fprintf( fpout, "Cost           %d\n",  ship_prototypes[prototype].cost );
     fprintf( fpout, "Class          %d\n",  ship_prototypes[prototype].class );
     fprintf( fpout, "Tractor        %d\n",  ship_prototypes[prototype].tractor );
+    fprintf( fpout, "Gwells         %d\n", ship_prototypes[prototype].gwell );
     fprintf( fpout, "primaryType         %d\n",  ship_prototypes[prototype].primaryType );
 	fprintf( fpout, "secondaryType		 %d\n",  ship_prototypes[prototype].secondaryType);
 	fprintf( fpout, "tertiaryType		 %d\n",  ship_prototypes[prototype].secondaryType);
@@ -1685,6 +1687,8 @@ bool load_prototype_header(FILE *fp,int prototype)
 	       	    fMatch = TRUE;
 	       	  break;
 	       }
+        	 case 'G':
+           	   KEY( "Gwell", ship_prototypes[prototype].gwell, fread_number( fp ) );
            case 'H':
 				KEY( "Hanger1Space",   ship_prototypes[prototype].hangar1space,     fread_number(fp));
                KEY( "Hull",           ship_prototypes[prototype].hull,             fread_number(fp));
@@ -2509,28 +2513,39 @@ void do_shipstat( CHAR_DATA *ch, char *argument )
   else sprintf(buf10, "&RNone.");
  if(ship_prototypes[shiptype].windows > 0) sprintf(buf9, "%d", ship_prototypes[shiptype].windows);
   else sprintf(buf11, "&RNone.");
+   if( ship_prototypes[shiptype].gwell > 0 )         sprintf( buf12, "%d", ship_prototypes[shiptype].gwell );
+    else
+       sprintf( buf12, "&RNone." );
   
- ch_printf(ch, "&R&z+&W---------------------------------------------------------------&z+\n\r");
- ch_printf(ch, "&W| Name: &w%-35.35s      &WCost: &w%8d &W|\r\n",
- 		ship_prototypes[shiptype].name, ship_prototypes[shiptype].cost);
- ch_printf(ch, "&z+&W---------------------------------------------------------------&z+\n\r\n\r");
-
- ch_printf(ch, "&W         Primary Weapon System:&w %-30.30s\n\r", primary_beam_name_proto(shiptype));
- ch_printf(ch, "&W                  Secondary:&w %-30.30s\n\r\n\r", secondary_beam_name_proto(shiptype));
- ch_printf(ch, "&W                  Tertiary:&w %-30.30s\n\r\n\r", tertiary_beam_name_proto(shiptype));
- ch_printf(ch, "&W          Missiles:&w %-5s&W   Torpedos:&w %-5s&W   Rockets:&w %-5s\n\r",
-	 buf3, buf5, buf7);
- ch_printf(ch, "&W   Planetary bombs:&w %-5s&W      Chaff:&w %-5s\n\r",
-	 buf8, buf10);
- ch_printf(ch, "\n\r&W   Hull:&w %-5d&W   Shields:&w %-5s&W   Speed:&w %-5d&W   Energy:&w %d\n\r",
-	ship_prototypes[shiptype].hull, buf4, 
-	ship_prototypes[shiptype].speed, ship_prototypes[shiptype].energy);
- ch_printf(ch, "&W           Maneuverability:&w %d   &WHyperdrive:&w %-5s\n\r", ship_prototypes[shiptype].manuever, buf6);
- ch_printf(ch, "&W                        Turrets:&w %-5s\n\r",buf9);
- ch_printf(ch, "&W                      MaxCargo %d\n\r", ship_prototypes[shiptype].maxcargo); 
- ch_printf(ch, "&W                    Hanger1Space: %d\n\r", ship_prototypes[shiptype].hangar1space);
- return;
-}
+   ch_printf( ch, "&R&z+&W---------------------------------------------------------------&z+\r\n" );
+   ch_printf( ch, "&z|&W  &cName&B: &w%-35.35s     &cCost&B: &w%8d &W|\r\n", ship_prototypes[shiptype].name,               ship_prototypes[shiptype].cost );
+    ch_printf( ch, "&z+&W---------------------------------------------------------------&z+\r\n" );
+    ch_printf( ch, "&z|&W  &cProfile&B:&W                                                     &z|\r\n" );
+    ch_printf( ch, "&z|&W    &gHull:&w %-5d&W   &gShields:&w %-5s         &gEnergy:&w %-6d        &z|\r\n", ship_prototypes[shiptype].hull, buf4, ship_prototypes[shiptype].energy );
+    ch_printf( ch, "&z|&W    &gSpeed:&w %-5d&W  &gManeuverability:&w %-5d &gHyperdrive:&w %-5s   &z|\r\n",  ship_prototypes[shiptype].speed, ship_prototypes[shiptype].manuever, buf6 );
+    ch_printf( ch, "&z+&W---------------------------------------------------------------&z+\r\n" );    ch_printf( ch, "&z|&W  &cArmaments&B:&W                                                   &z|\r\n" );
+    ch_printf( ch, "&z|&W    &gPrimary Weapon System:&w   %-30.30s    &z|\r\n", primary_beam_name_proto( shiptype ) );
+    ch_printf( ch, "&z|&W    &gSecondary Weapon System:&w %-30.30s    &z|\r\n", secondary_beam_name_proto( shiptype ) );
+    ch_printf( ch, "&z|&W    &gTertiary Weapon System:&w  %-30.30s    &z|\r\n", tertiary_beam_name_proto( shiptype ) );
+    ch_printf( ch, "&z+&W---------------------------------------------------------------&z+\r\n" );
+    ch_printf( ch, "&z|&W  &cOrdinance&B:&W                                                   &z|\r\n" );
+    ch_printf( ch, "&z|&W    &gMissiles:&w %-5s&W   &gTorpedos:&w %-5s&W   &gRockets:&w %-5s         &z|\r\n", buf3, buf5, buf7 );
+    ch_printf( ch, "&z|&W       &gPlanetary bombs:&w %-5s&W       &gChaff:&w %-5s               &z|\r\n", buf8, buf10 );
+    ch_printf( ch, "&z+&W---------------------------------------------------------------&z+\r\n" );
+    ch_printf( ch, "&z|&W  &cMisc&B:&W                                                        &z|\r\n" );
+    if( ship_prototypes[shiptype].turrets > 0 )    ch_printf( ch, "&z|&W    &gTurrets:&w %-5s                                             &z|\r\n", buf9  );
+    if( ship_prototypes[shiptype].windows > 0 )    ch_printf( ch, "&z|&W    &gWindows:&w %-5s                                             &z|\r\n", buf11 );
+    if( ship_prototypes[shiptype].hangar1space > 0 )    ch_printf( ch, "&z|&W    &gHangar 1 Capacity:&w %-5d  	                                &z|\n\r", ship_prototypes[shiptype].hangar1space);
+    if( ship_prototypes[shiptype].hangar2space > 0 )    ch_printf( ch, "&z|&W    &gHangar 2 Capacity:&w %-5d  	                                &z|\n\r", ship_prototypes[shiptype].hangar2space);
+    if( ship_prototypes[shiptype].hangar3space > 0 )    ch_printf( ch, "&z|&W    &gHangar 3 Capacity:&w %-5d  	                                &z|\n\r", ship_prototypes[shiptype].hangar3space);
+    if( ship_prototypes[shiptype].hangar4space > 0 )    ch_printf( ch, "&z|&W    &gHangar 4 Capacity:&w %-5d  	                                &z|\n\r", ship_prototypes[shiptype].hangar4space);
+    if( ship_prototypes[shiptype].gwell > 0 )    ch_printf( ch, "&z|&W    &gGravity Well Generators:&w %-5d                                 &z|\r\n", ship_prototypes[shiptype].gwell );
+ #ifdef USECARGO
+    if( ship_prototypes[shiptype].maxcargo > 0 )    ch_printf( ch, "&z|&W    &gMaxCargo:&w %-5d                                            &z|\n\r", ship_prototypes[shiptype].maxcargo );
+ #endif
+    ch_printf( ch, "&R&z+&W---------------------------------------------------------------&z+\r\n" );
+    return;
+ }
 
 void load_market_list()
 {
