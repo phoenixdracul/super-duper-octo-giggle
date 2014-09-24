@@ -3465,6 +3465,7 @@ bool load_ship_file( char *shipfile )
 			ship->autorecharge = FALSE;
 			ship->autotrack = FALSE;
 			ship->autospeed = FALSE;
+			ship->grav	= FALSE;	// Added by Michael
 
 
 		}
@@ -3962,6 +3963,7 @@ void resetship( SHIP_DATA *ship )
 	ship->autorecharge = FALSE;
 	ship->autotrack = FALSE;
 	ship->autospeed = FALSE;
+	ship->grav	= FALSE;
 
 	if ( IS_SET(ship->flags, XSHIP_ION_DRIVE) )
 	{
@@ -6247,6 +6249,7 @@ void destroy_ship( SHIP_DATA *ship , CHAR_DATA *ch, char *reason )
 			ship->autotrack = FALSE;
 			ship->autospeed = FALSE;
 			ship->autopilot = TRUE;
+			ship->grav	= FALSE;
 			ship->vx = number_range(-2000, 2000);
 			ship->vy = number_range(-2000, 2000);
 			ship->vz = number_range(-2000, 2000);
@@ -6728,6 +6731,7 @@ void do_launch( CHAR_DATA *ch, char *argument )
 		ship->autorecharge = FALSE;
 		ship->autotrack = FALSE;
 		ship->autospeed = FALSE;
+		ship->grav	= FALSE;
 		ship->hull = ship->maxhull;
 
 		ship->missilestate = MISSILE_READY;
