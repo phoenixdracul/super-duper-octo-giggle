@@ -17135,7 +17135,7 @@ void do_engage_grav( CHAR_DATA *ch, char *argument)
              send_to_char( "&RYou must be in the cockpit, turret or engineroom of a ship to do that!\r\n", ch );
              return;
           }
-           if( NULLSTR( arg ) )
+           if( arg[0] == '\0'  )
           {
              send_to_char( "Syntax: gravity <on/off>\r\n", ch );
              return;
@@ -17170,7 +17170,7 @@ void do_engage_grav( CHAR_DATA *ch, char *argument)
           echo_to_ship( "plain", ship, "&OThe lights dim momentarily, and you hear a faint humming sound." );
   
           add_timer( ch, TIMER_DO_FUN, 5, do_engage_grav, 1 );
-          ch->dest_buf = STRDUP( ship->name );
+          ch->dest_buf = str_dup( ship->name );
           return;
 
         case 1:
