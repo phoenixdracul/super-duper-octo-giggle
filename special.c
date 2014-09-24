@@ -1028,8 +1028,8 @@ bool spec_stormtrooper( CHAR_DATA *ch )
 	   continue;
         if ( get_timer(victim, TIMER_RECENTFIGHT) > 0 )
 	   continue;
-				if(!IS_NPC(victim) && IS_SET(victim->pcdata->act2, ACT_BOUND))
-			continue;
+	if(!IS_NPC(victim) && IS_SET(victim->pcdata->act2, ACT_BOUND))
+		continue;
         if ( ( IS_NPC( victim ) && nifty_is_name( "republic" , victim->name )
                && victim->fighting && who_fighting( victim ) != ch ) ||
              ( !IS_NPC( victim ) && victim->pcdata && victim->pcdata->clan && IS_AWAKE(victim)
@@ -1061,8 +1061,8 @@ bool spec_new_republic_trooper( CHAR_DATA *ch )
 	   continue;
         if ( get_timer(victim, TIMER_RECENTFIGHT) > 0 )
 	   continue;
-				if(!IS_NPC(victim) && IS_SET(victim->pcdata->act2, ACT_BOUND))
-			continue;
+	if(!IS_NPC(victim) && IS_SET(victim->pcdata->act2, ACT_BOUND))
+		continue;
         if ( ( IS_NPC( victim ) && nifty_is_name( "imperial" , victim->name )
                && victim->fighting && who_fighting( victim ) != ch ) ||
              ( !IS_NPC( victim ) && victim->pcdata && victim->pcdata->clan && IS_AWAKE(victim) 

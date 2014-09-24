@@ -1371,17 +1371,17 @@ void do_north( CHAR_DATA *ch, char *argument )
 			do_build_walk( ch, "north" );
 			return;
 		}
-
-		if ( !IS_SET( ch->pcdata->flags, PCFLAG_BUILDWALK ) )
-		{
-			move_char( ch, get_exit( ch->in_room, DIR_NORTH ), 0 );
-			return;
-		}
-		else if (!IS_NPC(ch) && IS_SET(ch->pcdata->act2, ACT_BOUND))
+		else if (IS_SET(ch->pcdata->act2, ACT_BOUND))
 		{
 			send_to_char("You struggle in your bindings, but to no avail.\n\r", ch);
 			return;
 		}
+		else
+		{
+			move_char( ch, get_exit( ch->in_room, DIR_NORTH ), 0 );
+			return;
+		}
+		
 	}
 	if ( IS_NPC( ch ) )
 	{
@@ -1401,17 +1401,17 @@ void do_east( CHAR_DATA *ch, char *argument )
 			do_build_walk( ch, "east" );
 			return;
 		}
-
-		if ( !IS_SET( ch->pcdata->flags, PCFLAG_BUILDWALK ) )
-		{
-			move_char( ch, get_exit( ch->in_room, DIR_EAST ), 0 );
-			return;
-		}
-		else if (!IS_NPC(ch) && IS_SET(ch->pcdata->act2, ACT_BOUND))
+		if (IS_SET(ch->pcdata->act2, ACT_BOUND))
 		{
 			send_to_char("You struggle in your bindings, but to no avail.\n\r", ch);
 			return;
 		}
+		else
+		{
+			move_char( ch, get_exit( ch->in_room, DIR_EAST ), 0 );
+			return;
+		}
+		
 	}
 	if ( IS_NPC( ch ) )
 	{
@@ -1431,15 +1431,14 @@ void do_south( CHAR_DATA *ch, char *argument )
 			do_build_walk( ch, "south" );
 			return;
 		}
-
-		if ( !IS_SET( ch->pcdata->flags, PCFLAG_BUILDWALK ) )
-		{
-			move_char( ch, get_exit( ch->in_room, DIR_SOUTH ), 0 );
-			return;
-		}
-		else if (!IS_NPC(ch) && IS_SET(ch->pcdata->act2, ACT_BOUND))
+		if (IS_SET(ch->pcdata->act2, ACT_BOUND))
 		{
 			send_to_char("You struggle in your bindings, but to no avail.\n\r", ch);
+			return;
+		}
+		else
+		{
+			move_char( ch, get_exit( ch->in_room, DIR_SOUTH ), 0 );
 			return;
 		}
 	}
@@ -1461,17 +1460,17 @@ void do_west( CHAR_DATA *ch, char *argument )
 			do_build_walk( ch, "west" );
 			return;
 		}
-
-		if ( !IS_SET( ch->pcdata->flags, PCFLAG_BUILDWALK ) )
-		{
-			move_char( ch, get_exit( ch->in_room, DIR_WEST ), 0 );
-			return;
-		}
-		else if (!IS_NPC(ch) && IS_SET(ch->pcdata->act2, ACT_BOUND))
+		if (IS_SET(ch->pcdata->act2, ACT_BOUND))
 		{
 			send_to_char("You struggle in your bindings, but to no avail.\n\r", ch);
 			return;
 		}
+		else
+		{
+			move_char( ch, get_exit( ch->in_room, DIR_WEST ), 0 );
+			return;
+		}
+		
 	}
 	if ( IS_NPC( ch ) )
 	{
@@ -1491,17 +1490,17 @@ void do_up( CHAR_DATA *ch, char *argument )
 			do_build_walk( ch, "up" );
 			return;
 		}
-
-		if ( !IS_SET( ch->pcdata->flags, PCFLAG_BUILDWALK ) )
-		{
-			move_char( ch, get_exit( ch->in_room, DIR_UP ), 0 );
-			return;
-		}
-		else if (!IS_NPC(ch) && IS_SET(ch->pcdata->act2, ACT_BOUND))
+		if (IS_SET(ch->pcdata->act2, ACT_BOUND))
 		{
 			send_to_char("You struggle in your bindings, but to no avail.\n\r", ch);
 			return;
 		}
+		else
+		{
+			move_char( ch, get_exit( ch->in_room, DIR_UP ), 0 );
+			return;
+		}
+		
 	}
 	if ( IS_NPC( ch ) )
 	{
@@ -1521,17 +1520,17 @@ void do_down( CHAR_DATA *ch, char *argument )
 			do_build_walk( ch, "down" );
 			return;
 		}
-
-		if ( !IS_SET( ch->pcdata->flags, PCFLAG_BUILDWALK ) )
-		{
-			move_char( ch, get_exit( ch->in_room, DIR_DOWN ), 0 );
-			return;
-		}
-		else if (!IS_NPC(ch) && IS_SET(ch->pcdata->act2, ACT_BOUND))
+		if (IS_SET(ch->pcdata->act2, ACT_BOUND))
 		{
 			send_to_char("You struggle in your bindings, but to no avail.\n\r", ch);
 			return;
 		}
+		else
+		{
+			move_char( ch, get_exit( ch->in_room, DIR_DOWN ), 0 );
+			return;
+		}
+		
 	}
 	if ( IS_NPC( ch ) )
 	{
@@ -1550,15 +1549,14 @@ void do_northeast( CHAR_DATA *ch, char *argument )
 			do_build_walk( ch, "northeast" );
 			return;
 		}
-
-		if ( !IS_SET( ch->pcdata->flags, PCFLAG_BUILDWALK ) )
-		{
-			move_char( ch, get_exit( ch->in_room, DIR_NORTHEAST ), 0 );
-			return;
-		}
-		else if (!IS_NPC(ch) && IS_SET(ch->pcdata->act2, ACT_BOUND))
+		if (IS_SET(ch->pcdata->act2, ACT_BOUND))
 		{
 			send_to_char("You struggle in your bindings, but to no avail.\n\r", ch);
+			return;
+		}
+		else
+		{
+			move_char( ch, get_exit( ch->in_room, DIR_NORTHEAST ), 0 );
 			return;
 		}
 	}
@@ -1579,15 +1577,14 @@ void do_northwest( CHAR_DATA *ch, char *argument )
 			do_build_walk( ch, "northwest" );
 			return;
 		}
-
-		if ( !IS_SET( ch->pcdata->flags, PCFLAG_BUILDWALK ) )
-		{
-			move_char( ch, get_exit( ch->in_room, DIR_NORTHWEST ), 0 );
-			return;
-		}
-		else if (!IS_NPC(ch) && IS_SET(ch->pcdata->act2, ACT_BOUND))
+		if (IS_SET(ch->pcdata->act2, ACT_BOUND))
 		{
 			send_to_char("You struggle in your bindings, but to no avail.\n\r", ch);
+			return;
+		}
+		else
+		{
+			move_char( ch, get_exit( ch->in_room, DIR_NORTHWEST ), 0 );
 			return;
 		}
 	}
@@ -1608,17 +1605,17 @@ void do_southeast( CHAR_DATA *ch, char *argument )
 			do_build_walk( ch, "southeast" );
 			return;
 		}
-
-		if ( !IS_SET( ch->pcdata->flags, PCFLAG_BUILDWALK ) )
-		{
-			move_char( ch, get_exit( ch->in_room, DIR_SOUTHEAST ), 0 );
-			return;
-		}
-		else if (!IS_NPC(ch) && IS_SET(ch->pcdata->act2, ACT_BOUND))
+		if (IS_SET(ch->pcdata->act2, ACT_BOUND))
 		{
 			send_to_char("You struggle in your bindings, but to no avail.\n\r", ch);
 			return;
 		}
+		else
+		{
+			move_char( ch, get_exit( ch->in_room, DIR_SOUTHEAST ), 0 );
+			return;
+		}
+		
 	}
 	if ( IS_NPC( ch ) )
 	{
@@ -1637,15 +1634,14 @@ void do_southwest( CHAR_DATA *ch, char *argument )
 			do_build_walk( ch, "southwest" );
 			return;
 		}
-
-		if ( !IS_SET( ch->pcdata->flags, PCFLAG_BUILDWALK ) )
-		{
-			move_char( ch, get_exit( ch->in_room, DIR_SOUTHWEST ), 0 );
-			return;
-		}
-		else if (!IS_NPC(ch) && IS_SET(ch->pcdata->act2, ACT_BOUND))
+		if (IS_SET(ch->pcdata->act2, ACT_BOUND))
 		{
 			send_to_char("You struggle in your bindings, but to no avail.\n\r", ch);
+			return;
+		}
+		else
+		{
+			move_char( ch, get_exit( ch->in_room, DIR_SOUTHWEST ), 0 );
 			return;
 		}
 	}

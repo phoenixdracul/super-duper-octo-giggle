@@ -1535,7 +1535,7 @@ void do_shove( CHAR_DATA *ch, char *argument )
 	{
 		if (!IS_SET(victim->pcdata->act2, ACT_BOUND))
 		{
-			send_to_char("They must be restrained in order to properly shove them into a ship.\n\r", ch);
+			send_to_char("They must be restrained in order to shove them into a ship.\n\r", ch);
 			return;
 		}
 
