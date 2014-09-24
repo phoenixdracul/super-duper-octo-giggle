@@ -1085,7 +1085,10 @@ int colorcode( const char *col, char *code, CHAR_DATA *ch )
 		ansi = TRUE;
 	else
 		ansi = ( ((!IS_NPC(ch)) || ch->desc) && xIS_SET( ch->act, PLR_ANSI ) );
-
+	
+	// Switched chars don't see color
+	if(IS_NPC(ch))
+		return 0;
 	col++;
 
 	if( !*col )
@@ -1124,7 +1127,7 @@ int colorcode( const char *col, char *code, CHAR_DATA *ch )
 		if( *ctype == '^' )
 		{
 			ln++;
-			if (IS_SET(ch->pcdata->flags, PCFLAG_NOIR))
+			if (IS_NPC(ch) || IS_SET(ch->pcdata->flags, PCFLAG_NOIR))
 				strncpy( code, BACK_BLACK, 20 );
 			else
 			switch( *col )
@@ -1228,7 +1231,7 @@ int colorcode( const char *col, char *code, CHAR_DATA *ch )
                                 i = atoi(tmp);
 				if ( IS_AFFECTED( ch, AFF_INFRARED) )
 					strncpy( code, ANSI_RED, 20 );
-				else if (IS_SET(ch->pcdata->flags, PCFLAG_256COL) && !IS_SET(ch->pcdata->flags, PCFLAG_NOIR))
+				else if (!IS_NPC(ch) && IS_SET(ch->pcdata->flags, PCFLAG_256COL) && !IS_SET(ch->pcdata->flags, PCFLAG_NOIR))
 				{
 					char * buf = COLOR256F(i);
 	                                strncpy( code, buf, 20 );
@@ -1467,7 +1470,7 @@ void set_char_color( sh_int AType, CHAR_DATA *ch )
 	if ( !ch || !ch->desc )
 		return;
 
-	if (IS_SET(ch->pcdata->flags, PCFLAG_NOIR))
+	if (IS_NPC(ch) || IS_SET(ch->pcdata->flags, PCFLAG_NOIR))
 		AType = AT_GREY;
 
 	write_to_buffer( ch->desc, color_str( AType, ch ), 0 );
@@ -1486,7 +1489,7 @@ void set_pager_color( sh_int AType, CHAR_DATA *ch )
 	if ( !ch || !ch->desc )
 		return;
 
-	if (IS_SET(ch->pcdata->flags, PCFLAG_NOIR))
+	if (IS_NPC(ch) || IS_SET(ch->pcdata->flags, PCFLAG_NOIR))
 		AType = AT_GREY;
 
 	if ( IS_AFFECTED( ch, AFF_INFRARED) )
