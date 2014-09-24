@@ -218,7 +218,7 @@ DECLARE_DO_FUN( do_emote	);
 DECLARE_DO_FUN( do_empower );
 DECLARE_DO_FUN( do_empty	);
 DECLARE_DO_FUN( do_endsimulator	);
-CMDF( do_engage_grav 		);
+DECLARE_DO_FUN( do_engage_grav 	);
 DECLARE_DO_FUN( do_enlist );
 DECLARE_DO_FUN( do_enter	);
 DECLARE_DO_FUN( do_equipment	);
