@@ -1439,6 +1439,7 @@ struct ship_data
     int		hangar2;
     int		hangar3;
     int		hangar4;
+	int 		gravitywell;	// Added by Michael
     int		hangar1space; // space capacity by Kasji
     int		hangar2space;
     int		hangar3space;
@@ -1774,23 +1775,6 @@ typedef enum
 #define RIS_MAGIC		  BV20
 #define RIS_PARALYSIS		  BV21
 /* 21 RIS's*/
-
-// We can leave the above implemented for now, but I'm going to implement
-// a much more sophisticated system now just for Star Wars. -- Kasji
-#define RES_PLASMA		 0
-#define RES_ION			 1
-#define RES_LIGHTSABER		 2
-#define RES_FIRE		 3
-#define RES_COLD		 4
-#define RES_BLUNT		 5
-#define RES_PIERCE		 6
-#define RES_SLASH		 7
-#define RES_EXPLOSIVE		 8
-#define RES_ACID		 9
-#define RES_POISON		10
-#define RES_FORCE		11
-#define RES_DISRUPTOR		12
-#define RES_MAX			13	// Adjust as needed to keep -- Kasji
 
 /*
  * Attack types
@@ -2234,17 +2218,7 @@ typedef enum
   APPLY_KICK, APPLY_PARRY, APPLY_BASH, APPLY_STUN, APPLY_PUNCH, APPLY_CLIMB,
   APPLY_GRIP, APPLY_SCRIBE, APPLY_COVER_TRAIL, APPLY_WEARSPELL, APPLY_REMOVESPELL,
   APPLY_EMOTION, APPLY_MENTALSTATE, APPLY_STRIPSN, APPLY_REMOVE, APPLY_DIG,
-  APPLY_FULL, APPLY_THIRST, APPLY_DRUNK, APPLY_BLOOD,
-
-  // Let items apply to the new damage RIS! -- Kasji
-  APPLY_RES_1, APPLY_RES_2, APPLY_RES_3, APPLY_RES_4, APPLY_RES_5, APPLY_RES_6,
-  APPLY_RES_7, APPLY_RES_8, APPLY_RES_9, APPLY_RES_10, APPLY_RES_11, APPLY_RES_12,
-  APPLY_RES_13,
-
-  // Other new item bonuses
-  APPLY_EXTRA_ATTACK,
-
-  MAX_APPLY_TYPE
+  APPLY_FULL, APPLY_THIRST, APPLY_DRUNK, APPLY_BLOOD, MAX_APPLY_TYPE
 } apply_types;
 
 #define REVERSE_APPLY		   1000
@@ -2655,7 +2629,6 @@ struct	mob_index_data
     sh_int		saving_breath;
     sh_int		saving_spell_staff;
     int                 vip_flags;
-    float		base_res[RES_MAX]; // New RIS by Kasji
 };
 
 
@@ -2865,7 +2838,6 @@ struct char_data
     char *		textcolor;
     char *		emotecolor;
     char *		afk_msg;		/* Afk message string - Added by Boran */
-    float		base_res[RES_MAX];	// New damage resistances -- Kasji
 };
 
 
@@ -2925,19 +2897,19 @@ struct	pc_data
 {
     CLAN_DATA *		clan;
     AREA_DATA *		area;
-    GLOBAL_BOARD_DATA * board; 	            	/* The current board */
-    time_t	        last_note[MAX_BOARD];	/* last note for the boards */
-    NOTE_DATA *	        in_progress;        	/* In progress of using notes */
+    GLOBAL_BOARD_DATA * board; 	            /* The current board */
+	time_t	        last_note[MAX_BOARD]; 	/* last note for the boards */
+	NOTE_DATA *	        in_progress;        /* In progress of using notes */
     ROOM_INDEX_DATA *   roomarena;
 
-    time_t		last_changes;		/* Stores the last time the player checked the changes */
+    time_t			last_changes;			/* Stores the last time the player checked the changes */
 
     ROOM_INDEX_DATA *   blueprint_room;		/* Added by Boran TODO   						 */
-						/* Used if the char substate is SUB_BLUEPRINTING */
+											/* Used if the char substate is SUB_BLUEPRINTING */
 
-    ACCOUNT_DATA *	account;		/* May seem redundant...but it's necessary.	*/
-						/* Used for loading and saving of link-dead chars */
-
+    ACCOUNT_DATA	*	account;			/* May seem redundant...but it's necessary.	*/
+											/* Used for loading and saving of link-dead chars */
+	
     char *		homepage;
     char *		screenname;
     char *		image;
@@ -3068,7 +3040,6 @@ struct	obj_index_data
     int			serial;
     sh_int		layers;
     int			rent;			/* Unused */
-    short		dam_type;
 };
 
 
@@ -3115,7 +3086,6 @@ struct	obj_data
     int			serial;		/* serial number	       */
     int			room_vnum;
     int			damplus;
-    short		dam_type;
 };
 
 
@@ -4089,7 +4059,7 @@ struct specfun_list
  * Global constants.
  */
 extern  time_t last_restore_all_time;
-extern	const char * const furniture_flags[]; 
+extern char *const furniture_flags[]; 
 extern  time_t boot_time;  /* this should be moved down */
 extern  HOUR_MIN_SEC * set_boot_time; 
 extern  struct  tm *new_boot_time;
@@ -4109,11 +4079,11 @@ extern  const	struct	lck_app_type	lck_app		[26];
 extern  const	struct	frc_app_type	frc_app		[26];
 extern	const	struct	race_type	race_table	[MAX_RACE];
 extern	const	struct	liq_type	liq_table	[LIQ_MAX];
-extern	const	char *	const			attack_table	[MAX_ATTACKS];
-extern	const	char *  const	        	ability_name	[MAX_ABILITY];
-extern  const	char *  const			height_name[4];
-extern  const	char *  const			build_name[6];
-extern  const	char *  const			droid_name[8];
+extern	char *	const			attack_table	[MAX_ATTACKS];
+extern	char *  const	        	ability_name	[MAX_ABILITY];
+extern  char *  const			height_name[4];
+extern  char *  const			build_name[6];
+extern  char *  const			droid_name[8];
 
 extern	char *	const	skill_tname	[];
 extern	sh_int	const	movement_loss	[SECT_MAX];
@@ -4122,31 +4092,31 @@ extern	char *	const	ship_dir_name	[];
 extern	char *	const	where_name	[];
 extern	const	sh_int	rev_dir		[];
 extern	const	int	trap_door	[];
-extern  const char *	const   ex_flags        [];
-extern	const char *	const	r_flags		[];
-extern  const char *	const   r_flags2	[];
-extern	const char *	const	w_flags		[];
-extern	const char *	const	o_flags		[];
-extern	const char *	const	a_flags		[];
-extern	const char *	const	o_types		[];
-extern	const char *	const	a_types		[];
+extern  char *  const   ex_flags        [];
+extern	char *	const	r_flags		[];
+extern  char *  const   r_flags2	[];
+extern	char *	const	w_flags		[];
+extern	char *	const	o_flags		[];
+extern	char *	const	a_flags		[];
+extern	char *	const	o_types		[];
+extern	char *	const	a_types		[];
 extern  const char *    const   npc_position    [];
 extern	const char *	const	act_flags	[];
-extern  const char *	const	sector_name     [SECT_MAX];
-extern  const char *	const   planet_flags    [];
-extern  const char *	const   mprog_flags    [];
-extern  const char *	const   weapon_table    [13];
-extern  const char *	const   spice_table     [];
-extern	const char *	const	plr_flags	[];
-extern	const char *	const	pc_flags	[];
-extern	const char *	const	trap_flags	[];
-extern	const char *	const	ris_flags	[];
-extern	const char *	const	trig_flags	[];
-extern	const char *	const	part_flags	[];
-extern	const char *	const	npc_race	[];
-extern	const char *	const	defense_flags	[];
-extern	const char *	const	attack_flags	[];
-extern	const char *	const	area_flags	[];
+extern  const   char *  sector_name     [SECT_MAX];
+extern  char *  const   planet_flags    [];
+extern  char *  const   mprog_flags    [];
+extern  char *  const   weapon_table    [13];
+extern  char *  const   spice_table     [];
+extern	char *	const	plr_flags	[];
+extern	char *	const	pc_flags	[];
+extern	char *	const	trap_flags	[];
+extern	char *	const	ris_flags	[];
+extern	char *	const	trig_flags	[];
+extern	char *	const	part_flags	[];
+extern	char *	const	npc_race	[];
+extern	char *	const	defense_flags	[];
+extern	char *	const	attack_flags	[];
+extern	char *	const	area_flags	[];
 
 extern	int	const	lang_array      [];
 extern	char *	const	lang_names      [];
@@ -4549,7 +4519,7 @@ void    free_global_note args( (NOTE_DATA *note) );
 NOTE_DATA *note_free;
 
 /* build.c */
-char *	flag_string	args( ( int bitvector, const char * const flagarray[] ) );
+char *	flag_string	args( ( int bitvector, char * const flagarray[] ) );
 
 int	get_mpflag	args( ( char *flag ) );
 int	get_dir		args( ( char *txt  ) );
@@ -4810,8 +4780,6 @@ int	max_fight	args( ( CHAR_DATA *ch ) );
 void	violence_update	args( ( void ) );
 ch_ret	multi_hit	args( ( CHAR_DATA *ch, CHAR_DATA *victim, int dt ) );
 sh_int	ris_damage	args( ( CHAR_DATA *ch, sh_int dam, int ris ) );
-int	get_res		args( ( CHAR_DATA *ch, int dam, int r ) );
-float	calc_res	args( ( CHAR_DATA *ch, int r ) );
 ch_ret	damage		args( ( CHAR_DATA *ch, CHAR_DATA *victim, int dam,
 			    int dt ) );
 void	update_pos	args( ( CHAR_DATA *victim ) );
@@ -4976,7 +4944,7 @@ bool	room_is_private	args( ( CHAR_DATA *ch, ROOM_INDEX_DATA *pRoomIndex ) );
 bool	can_see		args( ( CHAR_DATA *ch, CHAR_DATA *victim ) );
 bool	can_see_obj	args( ( CHAR_DATA *ch, OBJ_DATA *obj ) );
 bool	can_drop_obj	args( ( CHAR_DATA *ch, OBJ_DATA *obj ) );
-const char *	item_type_name	args( ( OBJ_DATA *obj ) );
+char *	item_type_name	args( ( OBJ_DATA *obj ) );
 char *	affect_loc_name	args( ( int location ) );
 char *	affect_bit_name	args( ( int vector ) );
 char *	extra_bit_name	args( ( int extra_flags ) );
