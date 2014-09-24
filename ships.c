@@ -1700,6 +1700,11 @@ bool load_prototype_header(FILE *fp,int prototype)
         	 case 'G':
            	   KEY( "Gwell", ship_prototypes[prototype].gwell, fread_number( fp ) );
            case 'H':
+				KEY( "Hangar1Space",   ship_prototypes[prototype].hangar1space,     fread_number(fp));
+				KEY( "Hangar2Space",   ship_prototypes[prototype].hangar2space,     fread_number(fp));
+				KEY( "Hangar3Space",   ship_prototypes[prototype].hangar3space,     fread_number(fp));
+				KEY( "Hangar4Space",   ship_prototypes[prototype].hangar4space,     fread_number(fp));
+				// Included for legacy compatibility
 				KEY( "Hanger1Space",   ship_prototypes[prototype].hangar1space,     fread_number(fp));
 				KEY( "Hanger2Space",   ship_prototypes[prototype].hangar2space,     fread_number(fp));
 				KEY( "Hanger3Space",   ship_prototypes[prototype].hangar3space,     fread_number(fp));
