@@ -100,7 +100,7 @@ char *  const   bus_stop [MAX_BUS_STOP+1] =
 		"Bakura", "Coruscant"  /* last should always be same as first */
 };
 
-char *  const   ship_flags [] =
+const char *  const   ship_flags [] =
 {
 		"nohijack", "shield_boost", "torp_boost", "chaff_boost", "hull_boost",
 		"laser_boost", "missile_boost", "rocket_boost", "simulator", "nodestroy", "noslicer", "ion_lasers",
@@ -8565,10 +8565,14 @@ void do_hyperspace(CHAR_DATA *ch, char *argument )
 		return;
 	}
 
- 	if( check_grav_positions( ship, 1 ) == FALSE )
- 	{
-        	send_to_char( "&OThere is a gravitational force preventing you from making the jump to lightspeed!\r\n", ch );
-         	return;
+ 	if( check_grav_positions( ship, 1 ) == FALSE )
+
+ 	{
+
+        	send_to_char( "&OThere is a gravitational force preventing you from making the jump to lightspeed!\r\n", ch );
+
+         	return;
+
    	}
 
 	if ( ship->energy < ((66*ship->hyperspeed)+((1+ship->hyperdistance)/6)) )
@@ -17154,18 +17158,18 @@ void do_engage_grav( CHAR_DATA *ch, char *argument)
           }
            if( nifty_is_name( arg, "off" ) )
           {
-             sprintf( buf, "&g[&GShip Computer&g]&R&W: %w: Gravity well offline.", ship->name );
-             echo_to_system( "plain", ship, buf, NULL );
-             echo_to_room( "plain", get_room_index( ship->pilotseat ),                           "&g[&GShip Computer&g]&R&w: %s: Gravity well offline." );
+             sprintf( buf, "&g[&GShip Computer&g]&R&W: %s: Gravity well offline.", ship->name );
+             echo_to_system( AT_PLAIN, ship, buf, NULL );
+             echo_to_room( AT_PLAIN, get_room_index( ship->pilotseat ),                           "&g[&GShip Computer&g]&R&w: %s: Gravity well offline." );
              ship->grav = FALSE;
               return;
           }
            sprintf( buf, "&g[&GShip Computer&g]&R&W: Energy charge detected from %s.", ship->name );
-          echo_to_system( "plain", ship, buf, NULL );
+          echo_to_system( AT_PLAIN, ship, buf, NULL );
           sprintf( buf, "&g[&GShip Computer&g]&R&W: Gravity well charging..." );
-          echo_to_room( "plain", get_room_index( ship->pilotseat ), buf );
-          echo_to_ship( "plain", ship, "&OThe lights dim momentarily, and you hear a faint humming sound." );
-  
+          echo_to_room( AT_PLAIN, get_room_index( ship->pilotseat ), buf );
+          echo_to_ship( AT_PLAIN, ship, "&OThe lights dim momentarily, and you hear a faint humming sound." );
+
           add_timer( ch, TIMER_DO_FUN, 5, do_engage_grav, 1 );
           ch->dest_buf = str_dup( ship->name );
           return;
@@ -17183,9 +17187,9 @@ void do_engage_grav( CHAR_DATA *ch, char *argument)
        if( !str_cmp( sname, ship->name ) )
           break;
      sprintf( buf, "&g[&GShip Computer&g]&R&W: %s: gravity well engaged.", ship->name );
-    echo_to_system( "plain", ship, buf, NULL );
+    echo_to_system( AT_PLAIN, ship, buf, NULL );
     sprintf( buf, "&g[&GShip Computer&g]&R&W: Gravity well online." );
-    echo_to_room( "plain", get_room_index( ship->pilotseat ), buf );
+    echo_to_room( AT_PLAIN, get_room_index( ship->pilotseat ), buf );
     ship->grav = TRUE;
      return;
  }

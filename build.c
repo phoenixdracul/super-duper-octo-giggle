@@ -179,11 +179,11 @@ const char *	const	a_types	[] =
 		"grip", "scribe", "cover_trail", "wearspell", "removespell", "mentalstate", "emotion",
 		"stripsn", "remove", "dig", "full", "thirst", "drunk", "blood",
 
-		"res_plasma", "res_ionic", "res_lightsaber", "res_fire", "res_cold", "res_blunt",
+		"res_plasma", "res_electric", "res_lightsaber", "res_fire", "res_cold", "res_blunt",
 		"res_pierce", "res_slash", "res_explosive", "res_acid", "res_poison", "res_force",
 		"res_disruptor",
 
-		"extra_attack"
+		"extra_attack", "armor_pen"
 };
 
 const char *const npc_position[POS_MAX] = {

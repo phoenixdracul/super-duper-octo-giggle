@@ -1780,7 +1780,7 @@ typedef enum
 // We can leave the above implemented for now, but I'm going to implement
 // a much more sophisticated system now just for Star Wars. -- Kasji
 #define RES_PLASMA		 0
-#define RES_ION			 1
+#define RES_ELECTRIC		 1
 #define RES_LIGHTSABER		 2
 #define RES_FIRE		 3
 #define RES_COLD		 4

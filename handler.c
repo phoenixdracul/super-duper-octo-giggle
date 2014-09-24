@@ -2637,7 +2637,7 @@ char *affect_loc_name( int location )
 	case APPLY_DRUNK:		return "drunk";
 	case APPLY_BLOOD:		return "blood";
 	case APPLY_RES_1:		return "Resist: Plasma";
-	case APPLY_RES_2:		return "Resist: Ionic";
+	case APPLY_RES_2:		return "Resist: Electric";
 	case APPLY_RES_3:		return "Resist: Lightsaber";
 	case APPLY_RES_4:		return "Resist: Fire";
 	case APPLY_RES_5:		return "Resist: Cold";
