@@ -1439,6 +1439,7 @@ struct ship_data
     int		hangar2;
     int		hangar3;
     int		hangar4;
+	int 		gravitywell;
     int		hangar1space; // space capacity by Kasji
     int		hangar2space;
     int		hangar3space;

@@ -2488,7 +2488,7 @@ void do_shipstat( CHAR_DATA *ch, char *argument )
  char buf9[MAX_STRING_LENGTH];
  char buf10[MAX_STRING_LENGTH];
  char buf11[MAX_STRING_LENGTH];
- 
+ char buf12[MAX_STRING_LENGTH];
  if ( IS_NPC( ch ) )
  {
   send_to_char( "Huh?\n\r", ch );
