@@ -1014,7 +1014,7 @@ void do_makemedpac( CHAR_DATA *ch, char *argument )
 
 	level = IS_NPC(ch) ? ch->skill_level[COMBAT_ABILITY]
 	                                     : (int) (ch->pcdata->learned[gsn_makemedpac]);
-	vnum = 4922;
+	vnum = 34;
 
 	if ( ( pObjIndex = get_obj_index( vnum ) ) == NULL )
 	{
