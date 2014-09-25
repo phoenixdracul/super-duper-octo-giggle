@@ -710,7 +710,7 @@ void do_makemissile(CHAR_DATA *ch, char *argument)
 
 		if ( chemNum < 3 )
 		{
-			send_to_char( "&RYou'll need two chemicals for the explosive, and one for propulsion.\n\r", ch);
+			send_to_char( "&RYou'll need two chemicals for the explosive, plus another one for propulsion.\n\r", ch);
 			return;
 		}
 
@@ -758,7 +758,8 @@ void do_makemissile(CHAR_DATA *ch, char *argument)
 	checkdura = FALSE;
 	checkbatt = FALSE;
 	checkcirc = FALSE;
-
+	chemNum = 3;
+	
 	for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 	{
 		if (obj->item_type == ITEM_TOOLKIT)
@@ -770,33 +771,33 @@ void do_makemissile(CHAR_DATA *ch, char *argument)
 			extract_obj( obj );
 			checkbatt = TRUE;
 		}
-       if (obj->item_type == ITEM_CHEMICAL && chemNum > 0)
-       {
-	  if(obj->count > 3)
-	  {
-	    obj->count -= 3;
-	    chemNum -= 3;
-	  }	
-	  else if(obj->count == 1)
-	  {
-            separate_obj( obj );
-            obj_from_char( obj );
-            extract_obj( obj );
-	    chemNum -= 1;
-	  }
-	  else if(obj->count == 3)
-	  {
-            obj_from_char( obj );
-            extract_obj( obj );
-	    chemNum -= 3;
-	  }
-	  else
-	  {
-            obj_from_char( obj );
-            extract_obj( obj );
-	    chemNum -= 2;
-	  }
-       }
+	       if (obj->item_type == ITEM_CHEMICAL && chemNum > 0)
+	       {
+		  if(obj->count > chemNum)
+		  {
+		    obj->count -= chemNum;
+		    chemNum = 0;
+		  }	
+		  else if(obj->count == 1)
+		  {
+		    separate_obj( obj );
+		    obj_from_char( obj );
+		    extract_obj( obj );
+		    chemNum -= 1;
+		  }
+		  else if(obj->count == 3)
+		  {
+		    obj_from_char( obj );
+		    extract_obj( obj );
+		    chemNum -= 3;
+		  }
+		  else
+		  {
+		    obj_from_char( obj );
+		    extract_obj( obj );
+		    chemNum -= 2;
+		  }
+	       }
 
 		if (obj->item_type == ITEM_CIRCUIT && checkcirc == FALSE)
 		{

@@ -3378,10 +3378,10 @@ void do_keypad( CHAR_DATA *ch, char *argument )
 		if (IS_SET(pexit->exit_info, EX_LOCKED)   )
 		{
 			if ( pexit->keypad == 0 )
-			{ send_to_char( "You can't do that.\n\r",      ch ); return; }
+			{ send_to_char( "There is no keypad there.\n\r",      ch ); return; }
 
 			if ( !IS_SET(pexit->exit_info, EX_ISDOOR) )
-			{ send_to_char( "You can't do that.\n\r",      ch ); return; }
+			{ send_to_char( "There is no door there.\n\r",      ch ); return; }
 
 			if ( !IS_SET(pexit->exit_info, EX_CLOSED) )
 			{ send_to_char( "It's not closed.\n\r",        ch ); return; }
@@ -3406,10 +3406,10 @@ void do_keypad( CHAR_DATA *ch, char *argument )
 		{
 			/*lock door*/
 			if ( pexit->keypad == 0 )
-			{ send_to_char( "You can't do that.\n\r",      ch ); return; }
+			{ send_to_char( "There is no keypad there.\n\r",      ch ); return; }
 
 			if ( !IS_SET(pexit->exit_info, EX_ISDOOR) )
-			{ send_to_char( "You can't do that.\n\r",      ch ); return; }
+			{ send_to_char( "There is no door there.\n\r",      ch ); return; }
 
 			if ( !IS_SET(pexit->exit_info, EX_CLOSED) )
 			{ send_to_char( "It's not closed.\n\r",        ch ); return; }
