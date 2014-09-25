@@ -72,6 +72,8 @@ ACCOUNT_DATA *account_fread( char *name );
 void separate_obj(OBJ_DATA *obj);
 char *ext_flag_string( EXT_BV * bitvector, const char *const flagarray[] );
 bool ext_is_empty( EXT_BV * bits );
+int get_plrflag( char *flag );
+ACCOUNT_CHARACTER_DATA *account_get_character( ACCOUNT_DATA *account, char *name );
 /*
  * Array of containers read for proper re-nesting of objects.
  */

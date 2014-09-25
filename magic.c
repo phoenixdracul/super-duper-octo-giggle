@@ -59,13 +59,13 @@ bool is_immune( CHAR_DATA *ch, short damtype )
 {
    switch( damtype )
    {
-      case SD_FIRE:           return( IS_SET( ch->immune, RIS_FIRE ) );
-      case SD_COLD:           return( IS_SET( ch->immune, RIS_COLD ) );
-      case SD_ELECTRICITY:    return( IS_SET( ch->immune, RIS_ELECTRICITY ) );
-      case SD_ENERGY:         return( IS_SET( ch->immune, RIS_ENERGY ) );
-      case SD_ACID:           return( IS_SET( ch->immune, RIS_ACID ) );
-      case SD_POISON:         return( IS_SET( ch->immune, RIS_POISON ) );
-      case SD_DRAIN:          return( IS_SET( ch->immune, RIS_DRAIN ) );
+      case SD_FIRE:           return((bool) IS_SET( ch->immune, RIS_FIRE ) );
+      case SD_COLD:           return((bool) IS_SET( ch->immune, RIS_COLD ) );
+      case SD_ELECTRICITY:    return((bool) IS_SET( ch->immune, RIS_ELECTRICITY ) );
+      case SD_ENERGY:         return((bool) IS_SET( ch->immune, RIS_ENERGY ) );
+      case SD_ACID:           return((bool) IS_SET( ch->immune, RIS_ACID ) );
+      case SD_POISON:         return((bool) IS_SET( ch->immune, RIS_POISON ) );
+      case SD_DRAIN:          return((bool) IS_SET( ch->immune, RIS_DRAIN ) );
    }
    return FALSE;
 }

@@ -39,6 +39,7 @@
 #include <time.h>
 #include "mud.h"
 
+void save_vendor(ROOM_INDEX_DATA *room);
 
 /*
  * Local functions
@@ -148,7 +149,7 @@ CHAR_DATA *find_fixer( CHAR_DATA *ch )
 int get_cost( CHAR_DATA *ch, CHAR_DATA *keeper, OBJ_DATA *obj, bool fBuy )
 {
 	SHOP_DATA *pShop;
-	int cost;
+	int cost = 0;
 	bool richcustomer;
 	int profitmod;
 
@@ -166,7 +167,7 @@ int get_cost( CHAR_DATA *ch, CHAR_DATA *keeper, OBJ_DATA *obj, bool fBuy )
 
 	if ( fBuy )
 	{
-		cost = (int) (cost * (80 + UMIN(ch->top_level, LEVEL_AVATAR))) / 100;
+		cost = (int) (obj->cost * (80 + UMIN(ch->top_level, LEVEL_AVATAR))) / 100;
 
 		profitmod = 13 - get_curr_cha(ch) + (richcustomer ? 15 : 0)
 				  + ((URANGE(5,ch->top_level,LEVEL_AVATAR)-20)/2);

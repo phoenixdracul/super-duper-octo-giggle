@@ -3003,7 +3003,7 @@ void do_makeholster( CHAR_DATA *ch, char *argument )
 	OBJ_DATA *obj;
 	OBJ_DATA *material;
 	OBJ_DATA *duraplast;
-	int value;
+//	int value;
 
 	strcpy(arg, argument);
 

@@ -2652,6 +2652,7 @@ char *affect_loc_name( int location )
 	case APPLY_RES_12:		return "Resist: Force";
 	case APPLY_RES_13:		return "Resist: Disruptor";
 	case APPLY_EXTRA_ATTACK:	return "Extra Attacks";
+	case APPLY_ARMOR_PEN:		return "Armor Penetration";
 	}
 
 	bug( "Affect_location_name: unknown location %d.", location );

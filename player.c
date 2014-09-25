@@ -236,8 +236,10 @@ void do_armor(CHAR_DATA * ch, char * argument)
 	float min = 0.0, max = 0.0;
 	int i;
 
-//			|----+----+----+----+----+----+----+----+----+----+|
+//					   |----+----+----+----+----+----+----+----+----+----+|
 	send_to_char("&G.------------------.--------------------------------------------------.\n\r", ch);
+	send_to_char("&G|Resistance        |&R0%                     &Y50%                    &G100%|\n\r", ch);
+	send_to_char("&G|------------------+--------------------------------------------------|\n\r", ch);
 
 	for (i = 0; i < RES_MAX; ++i)
 	{
@@ -585,20 +587,21 @@ tiny_affect_loc_name(int location)
 	case APPLY_THIRST:		return " THIRST";
 	case APPLY_DRUNK:		return " DRUNK ";
 	case APPLY_BLOOD:		return " BLOOD ";
-	case APPLY_RES_1:           	return "Resist: Plasma";
-	case APPLY_RES_2:           	return "Resist: Electric";
-	case APPLY_RES_3:           	return "Resist: Lightsaber";
-	case APPLY_RES_4:           	return "Resist: Fire";
-	case APPLY_RES_5:           	return "Resist: Cold";
-	case APPLY_RES_6:           	return "Resist: Blunt";
-	case APPLY_RES_7:           	return "Resist: Piercing";
-	case APPLY_RES_8:           	return "Resist: Slashing";
-	case APPLY_RES_9:           	return "Resist: Explosive";
-	case APPLY_RES_10:          	return "Resist: Acid";
-	case APPLY_RES_11:          	return "Resist: Poison";
-	case APPLY_RES_12:          	return "Resist: Force";
-	case APPLY_RES_13:          	return "Resist: Disruptor";
+	case APPLY_RES_1:           	return "Plasma";
+	case APPLY_RES_2:           	return "Electric";
+	case APPLY_RES_3:           	return "Lightsaber";
+	case APPLY_RES_4:           	return "Fire";
+	case APPLY_RES_5:           	return "Cold";
+	case APPLY_RES_6:           	return "Blunt";
+	case APPLY_RES_7:           	return "Piercing";
+	case APPLY_RES_8:           	return "Slashing";
+	case APPLY_RES_9:           	return "Explosive";
+	case APPLY_RES_10:          	return "Acid";
+	case APPLY_RES_11:          	return "Poison";
+	case APPLY_RES_12:          	return "Force";
+	case APPLY_RES_13:          	return "Disruptor";
 	case APPLY_EXTRA_ATTACK:	return "Extra Attacks";
+	case APPLY_ARMOR_PEN:		return "Armor Pen";
 	}
 
 	bug("Affect_location_name: unknown location %d.", location);
