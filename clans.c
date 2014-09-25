@@ -2934,7 +2934,7 @@ void do_clanstat( CHAR_DATA *ch, char *argument)
 	if( support >= 0 )
 		ch_printf(ch, "&C|&z   &BPop Support&W: %-3.3d                  &BRevenue&W: %-9.9d            &C|\n\r&z", support, revenue);
 	else
-		ch_printf(ch, "&C|&z   &BPop Support&W: %-3.3d                  &BRevenue&W: %-9.9d            &C|\n\r&z", support, revenue);
+		ch_printf(ch, "&C|&z   &BPop Support&W: %-3.3d                 &BRevenue&W: %-9.9d            &C|\n\r&z", support, revenue);
 	ch_printf(ch, "&C+===================================================================+\n\r&z");
 	ch_printf(ch, "&C|&z        &BLeader&W: %-12.12s           &BFirst&W: %-12.12s         &C|\n\r&z", clan->leader ? clan->leader : "none",   clan->number1 ? clan->number1 : "none" );
 	ch_printf(ch, "&C|&z        &BSecond&W: %-12.12s           &BThird&W: %-12.12s         &C|\n\r&z", clan->number2 ? clan->number2 : "none", clan->number3 ? clan->number3 : "none" );

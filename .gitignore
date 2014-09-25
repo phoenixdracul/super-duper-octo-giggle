@@ -3,7 +3,7 @@ hooks/
 o/
 objects/
 refs/
-sync.bat
+nightmare_sync.bat
 DEADJOE
 nohup.out
 startup
