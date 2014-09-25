@@ -209,7 +209,7 @@ const char *	const	a_flags [] =
 		"scrying", "fireshield", "shockshield", "fastheal", "iceshield", "possess",
 		"berserk", "aqua_breath",
 
-		"res_plasma", "res_ionic", "res_lightsaber", "res_fire", "res_cold", "res_blunt",
+		"res_plasma", "res_electric", "res_lightsaber", "res_fire", "res_cold", "res_blunt",
 		"res_pierce", "res_slash", "res_explosive", "res_acid", "res_poison", "res_force",
 		"res_disruptor",
 

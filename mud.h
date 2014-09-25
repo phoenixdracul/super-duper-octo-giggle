@@ -4813,6 +4813,7 @@ void	violence_update	args( ( void ) );
 ch_ret	multi_hit	args( ( CHAR_DATA *ch, CHAR_DATA *victim, int dt ) );
 sh_int	ris_damage	args( ( CHAR_DATA *ch, sh_int dam, int ris ) );
 int	get_res		args( ( CHAR_DATA *ch, int dam, OBJ_DATA * wield ) );
+int	get_armor_penalty	args( ( CHAR_DATA * ch ) );
 float	calc_res	args( ( CHAR_DATA *ch, int r ) );
 float	calc_res_min	args( ( CHAR_DATA *ch, int r ) );
 ch_ret	damage		args( ( CHAR_DATA *ch, CHAR_DATA *victim, int dam,

@@ -702,10 +702,8 @@ sh_int off_shld_lvl( CHAR_DATA *ch, CHAR_DATA *victim )
 ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 {
 	OBJ_DATA *wield;
-	int victim_ac;
-	int thac0;
-	int thac0_00;
-	int thac0_32;
+	int ch_roll;
+	int vict_def;
 	int plusris;
 	int dam, x;
 	int diceroll;
@@ -836,41 +834,28 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 			dt = (TYPE_HIT + WEAPON_LIGHTSABER);
 	}
 
-	/*
-	 * Calculate to-hit-armor-class-0 versus armor.
-	 */
-	thac0_00 = 20;
-	thac0_32 = 10;
-	thac0     = interpolate( ch->skill_level[COMBAT_ABILITY] , thac0_00, thac0_32 ) - GET_HITROLL(ch);
-	victim_ac = (int) (GET_AC(victim) / 10);
+	// New hit/miss -- Kasji
+	diceroll = number_range(1, 20);
+	ch_roll  = diceroll + (prof_bonus / 10);
+	vict_def = get_curr_dex(victim) - get_armor_penalty(victim);
 
 	/* if you can't see what's coming... */
 	if ( wield && !can_see_obj( victim, wield) )
-		victim_ac += 1;
+		vict_def -= 1;
 	if ( !can_see( ch, victim ) )
-		victim_ac -= 4;
+		vict_def += 4;
 
 	if ( ch->race == RACE_DEFEL )
-		victim_ac += 2;
+		vict_def -= 2;
 
 	if ( !IS_AWAKE ( victim ) )
-		victim_ac += 5;
-
-	/* Weapon proficiency bonus */
-	victim_ac += prof_bonus/20;
-
+		vict_def -= 5;
 
 	/* No more beating up stunned players */
 	if ( IS_AFFECTED( victim, AFF_PARALYSIS ) )
 		affect_strip( ch, gsn_stun );
 
-	/*
-	 * The moment of excitement!
-	 */
-	diceroll = number_range( 1,20 );
-
-	if ( diceroll == 1
-			|| ( diceroll < 20 && diceroll < thac0 - victim_ac ) )
+	if (diceroll == 1 || (vict_def > ch_roll && diceroll != 20))
 	{
 		/* Miss. */
 		if ( prof_gsn != -1 )
@@ -1300,6 +1285,22 @@ sh_int ris_damage( CHAR_DATA *ch, sh_int dam, int ris )
 	if ( modifier == 10 )
 		return dam;
 	return (dam * modifier) / 10;
+}
+
+int get_armor_penalty(CHAR_DATA * ch)
+{
+    int i = 0;
+    OBJ_DATA * obj;
+
+    for (obj = ch->first_carrying; obj; obj = obj->next_content)
+    {
+	if (obj->wear_loc != WEAR_NONE && obj->item_type == ITEM_ARMOR)
+	{
+	    i += obj->weight;
+	}
+    }
+
+    return i / 50;
 }
 
 // HA! You call that RIS, Thoric? I'll give you RIS! -- Kasji
