@@ -137,7 +137,12 @@ void do_copyover (CHAR_DATA *ch, char * argument)
 		account_save( account );
 
 	/* do_asave (NULL, ""); - autosave changed areas */
-
+	
+	// Save ships  -- Added by Boran
+	SHIP_DATA *ship;
+	for( ship = first_ship; ship; ship = ship->next )
+		save_ship(ship);
+		
 	snprintf(buf, MSL, "\n\r%s[%sCopyover%s] %sby %s%s%s - %sPlease remain seated!%s\n\r",
 			ANSI_DGREY, ANSI_RED, ANSI_DGREY, ANSI_RED, ANSI_GREY, ch->name, ANSI_DGREY, ANSI_RED, ANSI_GREY);
 	copyover_set = FALSE;	// Disable the copyover timer.

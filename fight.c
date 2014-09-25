@@ -3052,7 +3052,7 @@ void do_murder( CHAR_DATA *ch, char *argument )
 
 	if (!IS_NPC(ch) && IS_SET(ch->pcdata->act2, ACT_BOUND))
 	{
-		send_to_char("Thats a bit hard to do right now...\n\r", ch);
+		send_to_char("Thats a bit hard to do with your bindings...\n\r", ch);
 		return;
 	}
 
@@ -3117,7 +3117,7 @@ void do_flee( CHAR_DATA *ch, char *argument )
 
 	if (!IS_NPC(ch) && IS_SET(ch->pcdata->act2, ACT_BOUND))
 	{
-		send_to_char("Thats a bit hard to do right now...\n\r", ch);
+		send_to_char("Thats a bit hard to do with your bindings...\n\r", ch);
 		return;
 	}
 
@@ -3264,7 +3264,7 @@ void do_retreat( CHAR_DATA *ch, char *argument )
 
 	if (!IS_NPC(ch) && IS_SET(ch->pcdata->act2, ACT_BOUND))
 	{
-		send_to_char("Thats a bit hard to do right now...\n\r", ch);
+		send_to_char("Thats a bit hard to do with your bindings...\n\r", ch);
 		return;
 	}
 

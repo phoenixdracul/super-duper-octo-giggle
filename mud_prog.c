@@ -177,8 +177,6 @@ bool CheckQuestComplete(char *quest, CHAR_DATA *player);
 /*
 	MarkQuestComplete
 	Appends the line passed to it to the player's quest file.
-	Note that it could duplicate quests if marked more than once,
-	so use if questcomplete before calling this.
 */
 void MarkQuestComplete(char *quest, CHAR_DATA *player)
 {
@@ -189,12 +187,14 @@ void MarkQuestComplete(char *quest, CHAR_DATA *player)
 	strcat(quest_file, player->name);
 	strcat(quest_file, ".qdt");
 
-	fw = NULL;
-	fw = fopen(quest_file,"a");
+	if(!CheckQuestComplete(quest, player))
+	{
+		fw = NULL;
+		fw = fopen(quest_file,"a");
 
-	fprintf(fw, "%s\n",quest);
-	printf("stuck %s in %s - correct?\n",quest,quest_file);
-	fclose(fw);
+		fprintf(fw, "%s\n",quest);
+		fclose(fw);
+	}
 }
 
 /*

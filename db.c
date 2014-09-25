@@ -7049,7 +7049,10 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 		 all = TRUE;
 	 else
 	 {
-		 send_to_char("Please specify room, mob, or object as your first argument.\n\r", ch);
+		 // Changed by Boran - Just run 'checkvnums all'
+		 char newargs[MAX_STRING_LENGTH];
+		 sprintf(newargs, "all %s %s", arg1, arg2);
+		 do_check_vnums(ch, newargs);
 		 return;
 	 }
 

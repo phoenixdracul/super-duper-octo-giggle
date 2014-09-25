@@ -2564,10 +2564,7 @@ void do_wear( CHAR_DATA *ch, char *argument )
 		{
 			obj_next = obj->next_content;
 			if ( obj->item_type == ITEM_BINDERS)
-			{
-				send_to_char( "You're into that S&&M stuff, eh?\n\r", ch);
-				return;
-			}
+				continue;
 			if ( obj->wear_loc == WEAR_NONE && can_see_obj( ch, obj ) )
 				wear_obj( ch, obj, FALSE, -1 );
 		}
@@ -2582,7 +2579,7 @@ void do_wear( CHAR_DATA *ch, char *argument )
 		}
 		if ( obj->item_type == ITEM_BINDERS)
 		{
-			send_to_char( "You're into that S&&M stuff, eh?\n\r", ch);
+			send_to_char( "You're into that S&M stuff, eh?\n\r", ch);
 			return;
 		}
 		if ( arg2[0] != '\0' )

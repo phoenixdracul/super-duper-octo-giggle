@@ -63,8 +63,8 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
     { 
     	default:
     	        
-     		if(str_cmp(arg, "hull") && str_cmp( arg, "slave") && str_cmp( arg, "tractor") && str_cmp(arg, "torpedo") && str_cmp(arg, "rocket") && str_cmp(arg, "missile") && str_cmp(arg, "primary") && str_cmp(arg, "secondary") && str_cmp(arg, "tertiary") && str_cmp(arg, "shield") && str_cmp(arg, "speed") && str_cmp(arg, "hyperspeed") && str_cmp(arg, "energy") && str_cmp(arg, "manuever") && str_cmp(arg, "chaff") && str_cmp(arg, "bomb") && str_cmp(arg, "cargo") && str_cmp(arg, "alarm")){
-    		  send_to_char("Modules may affect the following aspects of the ship:\n\rPrimary, Secondary, Tertiary, Missile, Rocket, Torpedo, Hull, Shield, Speed, Hyperspeed, Energy, Manuever, Slave, Tractor, Chaff, Bomb, Cargo, and Alarm.\n\r", ch);
+     		if(str_cmp(arg, "hull") && str_cmp( arg, "slave") && str_cmp( arg, "tractor") && str_cmp(arg, "torpedo") && str_cmp(arg, "rocket") && str_cmp(arg, "missile") && str_cmp(arg, "primary") && str_cmp(arg, "secondary") && str_cmp(arg, "tertiary") && str_cmp(arg, "shield") && str_cmp(arg, "speed") && str_cmp(arg, "hyperspeed") && str_cmp(arg, "energy") && str_cmp(arg, "maneuver") && str_cmp(arg, "chaff") && str_cmp(arg, "bomb") && str_cmp(arg, "cargo") && str_cmp(arg, "alarm")){
+    		  send_to_char("Modules may affect the following aspects of the ship:\n\rPrimary, Secondary, Tertiary, Missile, Rocket, Torpedo, Hull, Shield, Speed, Hyperspeed, Energy, Maneuver, Slave, Tractor, Chaff, Bomb, Cargo, and Alarm.\n\r", ch);
     		  return;
     		}
                 checklens = FALSE;
@@ -286,10 +286,10 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
       affectammount = (level * 5);
       strcpy(name, "An Energy Module");
     }
-    if(!str_cmp(arg, "manuever")){
+    if(!str_cmp(arg, "maneuver")){
       affecttype = AFFECT_MANUEVER;
       affectammount = (level / 10);
-      strcpy(name, "A Manuever Module");
+      strcpy(name, "A Maneuver Module");
     }
     if(!str_cmp(arg, "alarm"))
     {
@@ -409,7 +409,7 @@ void do_showmodules( CHAR_DATA *ch, char *argument ){
       if(mod->affect == AFFECT_ENERGY)
         strcpy(str, "Energy");
       if(mod->affect == AFFECT_MANUEVER)
-        strcpy(str, "Manuever");
+        strcpy(str, "Maneuver");
       if(mod->affect == AFFECT_ALARM)
         strcpy(str, "Alarm");
       if(mod->affect == AFFECT_CHAFF)

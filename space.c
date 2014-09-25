@@ -1077,12 +1077,12 @@ void update_space( )
 		}
 
 		/* following was originaly to fix ships that lost their pilot
-           in the middle of a manuever and are stuck in a busy state
+           in the middle of a maneuver and are stuck in a busy state
            but now used for timed manouevers such as turning */
 
 		if (ship->shipstate == SHIP_BUSY_3)
 		{
-			echo_to_room( AT_YELLOW, get_room_index(ship->pilotseat), "Manuever complete.");
+			echo_to_room( AT_YELLOW, get_room_index(ship->pilotseat), "Maneuver complete.");
 			ship->shipstate = SHIP_READY;
 		}
 		if (ship->shipstate == SHIP_BUSY_2)
@@ -2873,6 +2873,7 @@ void save_ship( SHIP_DATA *ship )
 		fprintf( fp, "Maxmod       %d\n",	ship->maxmod		);
 		fprintf( fp, "Tractorbeam  %d\n",	ship->tractorbeam	);
       	fprintf( fp, "Gwell        %d\n", ship->gravitywell );
+	fprintf( fp, "Grav         %d\n", ship->grav );
 		fprintf( fp, "Shipyard     %d\n",	ship->shipyard		);
 		fprintf( fp, "Turret1      %d\n",	ship->turret1		);
 		fprintf( fp, "Turret2      %d\n",	ship->turret2		);
@@ -3061,9 +3062,11 @@ void fread_ship( SHIP_DATA *ship, FILE *fp )
 					ship->cargotype = CARGO_NONE;
 #endif
 
-				if (ship->shipstate != SHIP_DISABLED)
+				// Only capital ships and space stations can stay in space during copyovers
+				// TODO: Change this
+				if (ship->shipstate != SHIP_DISABLED && ship->class <= SHIP_CORVETTE)
 					ship->shipstate = SHIP_DOCKED;
-
+				
 				ship->primaryState = LASER_READY;
 				ship->secondaryState = LASER_READY;
 				ship->tertiaryState = LASER_READY;
@@ -3116,6 +3119,7 @@ void fread_ship( SHIP_DATA *ship, FILE *fp )
 		case 'G':
 			KEY( "Gunseat",     ship->gunseat,          fread_number( fp ) );
             	KEY( "Gwell", ship->gravitywell, fread_number( fp ) );
+		KEY( "Grav", ship->grav, fread_number( fp ) );
 			break;
 
 		case 'H':
@@ -3273,8 +3277,7 @@ bool load_ship_file( char *shipfile )
 	bool found;
 	ROOM_INDEX_DATA *pRoomIndex;
 	CLAN_DATA *clan;
-
-
+	
 	CREATE( ship, SHIP_DATA, 1 );
 
 	found = FALSE;
@@ -3325,7 +3328,7 @@ bool load_ship_file( char *shipfile )
 	if ( !(found) )
 		DISPOSE( ship );
 	else
-	{
+	{		
 		LINK( ship, first_ship, last_ship, next, prev );
 		if ( !str_cmp("Public",ship->owner) || ship->type == MOB_SHIP )
 		{
@@ -3349,7 +3352,7 @@ bool load_ship_file( char *shipfile )
 			if ( IS_SET(ship->flags, XSHIP_ION_HYPER) )
 			{
 				REMOVE_BIT(ship->flags, XSHIP_ION_HYPER);
-				ship->shipstate = LASER_READY;
+				ship->shipstate = SHIP_READY;
 
 			}
 
@@ -3477,17 +3480,17 @@ bool load_ship_file( char *shipfile )
 				ship->cockpit == ROOM_CORUSCANT_SHUTTLE   )
 		{}
 		else if ( ( pRoomIndex = get_room_index( ship->lastdoc ) ) != NULL
-				&& ship->class <= SHIP_CORVETTE )
+				&& (ship->class <= SHIP_CORVETTE || ship->shipstate == SHIP_DOCKED))
 		{
 			LINK( ship, pRoomIndex->first_ship, pRoomIndex->last_ship, next_in_room, prev_in_room );
 			ship->in_room = pRoomIndex;
 			ship->location = ship->lastdoc;
 		}
 
-
-		if ( ship->class >= SHIP_LFRIGATE || ship->type == MOB_SHIP )
+		if ( (ship->class >= SHIP_LFRIGATE && ship->shipstate != SHIP_DOCKED) || ship->type == MOB_SHIP )
 		{
 			ship_to_starsystem(ship, starsystem_from_name(ship->home) );
+			
 			if(ship->class >= SHIP_LFRIGATE)
 			{
 
@@ -3587,11 +3590,11 @@ bool load_ship_file( char *shipfile )
 			ship->hx = 1;
 			ship->hy = 1;
 			ship->hz = 1;
-			ship->shipstate = SHIP_READY;
 			ship->autopilot = TRUE;
 			ship->autorecharge = TRUE;
 			ship->shield = ship->maxshield;
-
+			ship->currspeed = ship->realspeed;
+			
 			if(ship->type == MOB_SHIP)
 			{
 				if(!str_cmp(ship->home, "Coruscant") || !str_cmp(ship->home, "coruscant"))
@@ -4109,6 +4112,7 @@ void do_resetship( CHAR_DATA *ch, char *argument )
 		ship->shipstate = SHIP_READY;
 		ship->autopilot = TRUE;
 		ship->autorecharge = TRUE;
+		ship->grav = FALSE;
 		ship->shield = ship->maxshield;
 
 		//		sprintf(buf, "%s enters the starsystem at %.0f %.0f %.0f", ship->name, ship->vx, ship->vy, ship->vz);
@@ -4144,7 +4148,7 @@ void do_setship( CHAR_DATA *ch, char *argument )
 		send_to_char( "engineroom firstroom lastroom shipyard\n\r", ch );
 		send_to_char( "hangar1 hangar2 hangar3 hangar4\n\r", ch);
 		send_to_char( "hangar1space hangar2space hangar3space hangar4space\n\r", ch);
-		send_to_char( "manuever speed hyperspeed tractorbeam gwell window1-6\n\r", ch );
+		send_to_char( "maneuver speed hyperspeed tractorbeam gwell window1-6\n\r", ch );
 		send_to_char( "pcount primary scount secondary tcount tertiary missiles shield hull energy chaff\n\r", ch );
 		send_to_char( "comm sensor astroarray class torpedos bombs\n\r", ch );
 #ifdef USECARGO
@@ -4779,7 +4783,7 @@ void do_setship( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( !str_cmp( arg2, "manuever" ) )
+	if ( !str_cmp( arg2, "maneuver" ) )
 	{
 		ship->manuever = atoi(argument);
 		send_to_char( "Done.\n\r", ch );
@@ -5140,7 +5144,7 @@ void do_showship( CHAR_DATA *ch, char *argument )
 			ship->vx, ship->vy, ship->vz );
 	ch_printf( ch, "Current Heading: %.0f %.0f %.0f\n\r",
 			ship->hx, ship->hy, ship->hz );
-	ch_printf( ch, "Speed: %d/%d   Hyperspeed: %d\n\r  Manueverability: %d\n\r",
+	ch_printf( ch, "Speed: %d/%d   Hyperspeed: %d\n\r  Maneuverability: %d\n\r",
 			ship->currspeed, ship->realspeed, ship->hyperspeed , ship->manuever );
 	ch_printf( ch, "Flags: %s", flag_string(ship->flags, ship_flags));
 #ifdef USECARGO
@@ -6877,7 +6881,7 @@ void launchship( SHIP_DATA *ship )
 	sprintf( buf, "%s lifts off into space.", ship->name );
 	echo_to_room( AT_YELLOW , get_room_index(ship->lastdoc) , buf );
 	ship->inship = NULL;
-
+	save_ship(ship);
 }
 
 int get_ship_count(int vnum)
@@ -7470,7 +7474,7 @@ void do_trajectory( CHAR_DATA *ch, char *argument )
 
 	if (ship->shipstate == SHIP_DISABLED)
 	{
-		send_to_char("&RThe ships drive is disabled. Unable to manuever.\n\r",ch);
+		send_to_char("&RThe ships drive is disabled. Unable to maneuver.\n\r",ch);
 		return;
 	}
 	if  ( ship->class == SHIP_SPACE_STATION )
@@ -7580,7 +7584,7 @@ void do_trajectory( CHAR_DATA *ch, char *argument )
 
 }
 
-
+// This was replaced with ordership
 void do_buyship(CHAR_DATA *ch, char *argument )
 {
 	long         price;
@@ -7992,7 +7996,7 @@ void do_autopilot(CHAR_DATA *ch, char *argument )
 
 	if (  (ship = ship_from_pilotseat(ch->in_room->vnum))  == NULL )
 	{
-		send_to_char("&RYou must be in the pilots seat!\n\r",ch);
+		send_to_char("&RYou must be in the pilot's seat!\n\r",ch);
 		return;
 	}
 
@@ -8009,7 +8013,7 @@ void do_autopilot(CHAR_DATA *ch, char *argument )
 	}
 
 
-	act( AT_PLAIN, "$n flips a switch on the control panell.", ch,
+	act( AT_PLAIN, "$n flips a switch on the control panel.", ch,
 			NULL, argument , TO_ROOM );
 
 	if (ship->autopilot == TRUE)
@@ -8519,7 +8523,7 @@ void do_hyperspace(CHAR_DATA *ch, char *argument )
 
 	if ( autofly(ship)  )
 	{
-		send_to_char("&RYou'll have to turn off the ships autopilot first.\n\r",ch);
+		send_to_char("&RYou'll have to turn off the ship's autopilot first.\n\r",ch);
 		return;
 	}
 
@@ -8546,7 +8550,7 @@ void do_hyperspace(CHAR_DATA *ch, char *argument )
 	}
 	if (ship->shipstate == SHIP_DISABLED)
 	{
-		send_to_char("&RThe ships drive is disabled. Unable to manuever.\n\r",ch);
+		send_to_char("&RThe ships drive is disabled. Unable to maneuver.\n\r",ch);
 		return;
 	}
 	if (ship->shipstate == SHIP_DOCKED)
@@ -8688,7 +8692,7 @@ void do_target(CHAR_DATA *ch, char *argument )
 
 		if ( autofly(ship) )
 		{
-			send_to_char("&RYou'll have to turn off the ships autopilot first....\n\r",ch);
+			send_to_char("&RYou'll have to turn off the ship's autopilot first....\n\r",ch);
 			return;
 		}
 
@@ -8900,7 +8904,7 @@ void do_fire(CHAR_DATA *ch, char *argument )
 
 	if ( autofly(ship) )
 	{
-		send_to_char("&RYou'll have to turn off the ships autopilot first.\n\r",ch);
+		send_to_char("&RYou'll have to turn off the ship's autopilot first.\n\r",ch);
 		return;
 	}
 
@@ -13292,7 +13296,7 @@ void do_calculate(CHAR_DATA *ch, char *argument )
 
 	if ( autofly(ship)  )
 	{
-		send_to_char("&RYou'll have to turn off the ships autopilot first....\n\r",ch);
+		send_to_char("&RYou'll have to turn off the ship's autopilot first....\n\r",ch);
 		return;
 	}
 
@@ -13481,7 +13485,7 @@ void do_recharge(CHAR_DATA *ch, char *argument )
 
 	if (ship->shipstate == SHIP_DISABLED)
 	{
-		send_to_char("&RThe ships drive is disabled. Unable to manuever.\n\r",ch);
+		send_to_char("&RThe ships drive is disabled. Unable to maneuver.\n\r",ch);
 		return;
 	}
 
@@ -13816,7 +13820,7 @@ void do_autotrack( CHAR_DATA *ch, char *argument )
 	}
 	if ( autofly(ship)  )
 	{
-		send_to_char("&RYou'll have to turn off the ships autopilot first....\n\r",ch);
+		send_to_char("&RYou'll have to turn off the ship's autopilot first....\n\r",ch);
 		return;
 	}
 
@@ -16273,7 +16277,7 @@ void do_cut(CHAR_DATA *ch, char *argument )
 
 	if (ship->shipstate != SHIP_READY && ship->shipstate != SHIP_DISABLED)
 	{
-		send_to_char("Please wait until you have finished your current manuever.\n\r", ch);
+		send_to_char("Please wait until you have finished your current maneuver.\n\r", ch);
 		return;
 	}
 	switch( ch->substate )
@@ -17113,85 +17117,87 @@ bool check_grav_positions( SHIP_DATA * ship, bool Out )
  }
 
 void do_engage_grav( CHAR_DATA *ch, char *argument)
- {
-    SHIP_DATA *ship;
-    char arg[MAX_INPUT_LENGTH];
-    char buf[MAX_STRING_LENGTH];
-    char sname[MAX_STRING_LENGTH];
+{
+	SHIP_DATA *ship;
+	char arg[MAX_INPUT_LENGTH];
+	char buf[MAX_STRING_LENGTH];
+	char sname[MAX_STRING_LENGTH];
  
-    argument = one_argument( argument, arg );
+	argument = one_argument( argument, arg );
  
-    switch ( ch->substate )
-    {
-       case SUB_TIMER_DO_ABORT:   
-       DISPOSE( ch->dest_buf );  
-       ch->substate = SUB_NONE; 
-       send_to_char( "&RYou did not complete the process.\r\n", ch );
-       return;
+	switch ( ch->substate )
+	{
+		case SUB_TIMER_DO_ABORT:   
+			DISPOSE( ch->dest_buf );  
+			ch->substate = SUB_NONE; 
+			send_to_char( "&RYou did not complete the process.\r\n", ch );
+			return;
 
-       default:
+		default:
 
-          if( ( ship = ship_from_cockpit( ch->in_room->vnum ) ) == NULL )
-          {
-             send_to_char( "&RYou must be in the cockpit, turret or engineroom of a ship to do that!\r\n", ch );
-             return;
-          }
-           if( arg[0] == '\0'  )
-          {
-             send_to_char( "Syntax: gravity <on/off>\r\n", ch );
-             return;
-          }
-           if( ship->gravitywell == 0 )
-          {
-             send_to_char( "This ship doesnt have a gravity well generator!\r\n", ch );
-             return;
-          }
-           if( ship->grav == TRUE && nifty_is_name( arg, "on" ) )
-          {
-             send_to_char( "The gravity well is already activated.\r\n", ch );
-             return;
-          }
-           if( ship->grav == FALSE && nifty_is_name( arg, "off" ) )
-          {
-             send_to_char( "The gravity well is already offline.\r\n", ch );
-             return;
-          }
-           if( nifty_is_name( arg, "off" ) )
-          {
-             sprintf( buf, "&g[&GShip Computer&g]&R&W: %s: Gravity well offline.", ship->name );
-             echo_to_system( AT_PLAIN, ship, buf, NULL );
-             echo_to_room( AT_PLAIN, get_room_index( ship->pilotseat ),                           "&g[&GShip Computer&g]&R&w: %s: Gravity well offline." );
-             ship->grav = FALSE;
-              return;
-          }
-           sprintf( buf, "&g[&GShip Computer&g]&R&W: Energy charge detected from %s.", ship->name );
-          echo_to_system( AT_PLAIN, ship, buf, NULL );
-          sprintf( buf, "&g[&GShip Computer&g]&R&W: Gravity well charging..." );
-          echo_to_room( AT_PLAIN, get_room_index( ship->pilotseat ), buf );
-          echo_to_ship( AT_PLAIN, ship, "&OThe lights dim momentarily, and you hear a faint humming sound." );
+			if( ( ship = ship_from_cockpit( ch->in_room->vnum ) ) == NULL )
+			{
+				send_to_char( "&RYou must be in the cockpit, turret or engineroom of a ship to do that!\r\n", ch );
+				return;
+			}
+			if( arg[0] == '\0'  )
+			{
+				send_to_char( "Syntax: gravity <on/off>\r\n", ch );
+				return;
+			}
+			if( ship->gravitywell == 0 )
+			{
+				send_to_char( "This ship doesnt have a gravity well generator!\r\n", ch );
+				return;
+			}
+			if( ship->grav == TRUE && nifty_is_name( arg, "on" ) )
+			{
+				send_to_char( "The gravity well is already activated.\r\n", ch );
+				return;
+			}
+			if( ship->grav == FALSE && nifty_is_name( arg, "off" ) )
+			{
+				send_to_char( "The gravity well is already offline.\r\n", ch );
+				return;
+			}
+			if( nifty_is_name( arg, "off" ) )
+			{
+				sprintf( buf, "&g[&GShip Computer&g]&R&W: %s: Gravity well offline.", ship->name );
+				echo_to_system( AT_PLAIN, ship, buf, NULL );
+				echo_to_room( AT_PLAIN, get_room_index( ship->pilotseat ),                           "&g[&GShip Computer&g]&R&w: Gravity well offline." );
+				ship->grav = FALSE;
+				save_ship(ship);
+				return;
+			}
+			sprintf( buf, "&g[&GShip Computer&g]&R&W: Energy charge detected from %s.", ship->name );
+			echo_to_system( AT_PLAIN, ship, buf, NULL );
+			sprintf( buf, "&g[&GShip Computer&g]&R&W: Gravity well charging..." );
+			echo_to_room( AT_PLAIN, get_room_index( ship->pilotseat ), buf );
+			echo_to_ship( AT_PLAIN, ship, "&OThe lights dim momentarily, and you hear a faint humming sound." );
 
-          add_timer( ch, TIMER_DO_FUN, 5, do_engage_grav, 1 );
-          ch->dest_buf = str_dup( ship->name );
-          return;
+			add_timer( ch, TIMER_DO_FUN, 5, do_engage_grav, 1 );
+			ch->dest_buf = str_dup( ship->name );
+			return;
 
-        case 1:
+		case 1:
 
-           if( !ch->dest_buf )
-             return;
-           strcpy( sname, ( const char * )ch->dest_buf );
-          DISPOSE( ch->dest_buf );
-          break;
-    }
+			if( !ch->dest_buf )
+				return;
+			strcpy( sname, ( const char * )ch->dest_buf );
+			DISPOSE( ch->dest_buf );
+		break;
+	}
 
-     for( ship = first_ship; ship; ship = ship->next )
-       if( !str_cmp( sname, ship->name ) )
-          break;
-     sprintf( buf, "&g[&GShip Computer&g]&R&W: %s: gravity well engaged.", ship->name );
-    echo_to_system( AT_PLAIN, ship, buf, NULL );
-    sprintf( buf, "&g[&GShip Computer&g]&R&W: Gravity well online." );
-    echo_to_room( AT_PLAIN, get_room_index( ship->pilotseat ), buf );
-    ship->grav = TRUE;
-     return;
+	for( ship = first_ship; ship; ship = ship->next )
+		if( !str_cmp( sname, ship->name ) )
+			break;
+	sprintf( buf, "&g[&GShip Computer&g]&R&W: %s: gravity well engaged.", ship->name );
+	echo_to_system( AT_PLAIN, ship, buf, NULL );
+	sprintf( buf, "&g[&GShip Computer&g]&R&W: Gravity well online." );
+	echo_to_room( AT_PLAIN, get_room_index( ship->pilotseat ), buf );
+	ship->grav = TRUE;
+	save_ship(ship);
+	return;
  }
 
 #ifdef USECARGO
