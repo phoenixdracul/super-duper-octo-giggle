@@ -2679,7 +2679,9 @@ void do_hail( CHAR_DATA *ch , char *argument )
 		room = get_room_index ( vnum );
 
 		if ( room != NULL ){
-			if ( IS_SET(room->room_flags , ROOM_HOTEL ) )
+			if ( IS_SET(room->room_flags , ROOM_HOTEL ) 
+				&& (!IS_SET(room->room_flags, ROOM_PLR_HOME)/* || (ch->plr_home && ch->plr_home->vnum == room->vnum)*/)
+				&& !IS_SET(room->room_flags, ROOM_EMPTY_HOME))
 				break;
 			else
 				room = NULL;
