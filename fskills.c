@@ -683,6 +683,7 @@ void fskill_identify(CHAR_DATA *ch, char *argument)
 			victim->force_alter = number_range(10, 25) + number_range(20, 50) + number_range(10, 25);
 			victim->force_identified = 1;
 			x= victim->force_control + victim->force_alter + victim->force_sense;
+			victim->skill_level[FORCE_ABILITY] = 1;
 			if(x < 150)
 				send_to_char(force_parse_string(ch,victim,"The force is with this one.\r\n"),ch);
 			else if(x >= 150 && x < 200)

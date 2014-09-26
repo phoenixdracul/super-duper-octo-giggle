@@ -50,7 +50,7 @@ EXT_BV fread_bitvector( FILE * fp );
 /*
  * Here are the extended bitvector macros:
  */
-#define xIS_SET(var, bit)           (((var).bits[(bit) >> RSV] & 1 << ((bit) & XBM)) != FALSE)
+#define xIS_SET(var, bit)           ((var).bits[(bit) >> RSV] & 1 << ((bit) & XBM))
 #define xSET_BIT(var, bit)          ((var).bits[(bit) >> RSV] |= 1 << ((bit) & XBM))
 #define xSET_BITS(var, bit)         (ext_set_bits(&(var), &(bit)))
 #define xREMOVE_BIT(var, bit)       ((var).bits[(bit) >> RSV] &= ~(1 << ((bit) & XBM)))

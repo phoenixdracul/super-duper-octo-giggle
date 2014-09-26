@@ -752,7 +752,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 		wield = get_eq_char( ch, WEAR_WIELD );
 
 	prof_bonus = weapon_prof_bonus_check( ch, wield, &prof_gsn );
-
+bug("prof_bonus: %d", prof_bonus);
 	if ( ch->fighting		/* make sure fight is already started */
 			&&   dt == TYPE_UNDEFINED
 			&&   IS_NPC(ch)
@@ -1148,9 +1148,11 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	{
 		if ( dam > 0 )
 			learn_from_success( ch, prof_gsn );
-		else	;
+		else
 			learn_from_failure( ch, prof_gsn );
 	}
+	else
+		bug("prof_gsn == -1");
 
 	/* Don't allow people to attack vendors */
 	if((victim && victim->pIndexData && victim->pIndexData->pShop &&
