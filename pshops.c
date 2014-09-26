@@ -269,7 +269,7 @@ void do_pricevendor(CHAR_DATA *ch, char *argument)
 
 	obj  = get_obj_carry( keeper, arg1 );
 
-	if ( !obj && arg1[0] == '#' )
+	if ( !obj || arg1[0] == '#' )
 	{
 		int onum, oref;
 		bool ofound = FALSE;
@@ -308,12 +308,16 @@ void do_pricevendor(CHAR_DATA *ch, char *argument)
 	int price;
 	price = atoi(arg2);
 
-	if(price <= 0 || price > 5000000)
+	if(price <= 0)
 	{
 		send_to_char("&RInvalid price.\n\r", ch);
 		return;
 	}
-
+	if(price > 5000000)
+	{
+		send_to_char("&RYou can't price items that high.\n\r", ch);
+		return;
+	}
 	send_to_char("&GPrice set.\n\r", ch);
 	obj->cost = price;
 	save_vendor(keeper->in_room);

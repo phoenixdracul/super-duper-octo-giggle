@@ -1014,7 +1014,7 @@ void do_makemedpac( CHAR_DATA *ch, char *argument )
 
 	level = IS_NPC(ch) ? ch->skill_level[COMBAT_ABILITY]
 	                                     : (int) (ch->pcdata->learned[gsn_makemedpac]);
-	vnum = 4922;
+	vnum = 34;
 
 	if ( ( pObjIndex = get_obj_index( vnum ) ) == NULL )
 	{
@@ -1903,15 +1903,16 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
 	strcpy ( arg2, argument);
 
 	if ( !str_cmp( arg, "body" )
-			|| !str_cmp( arg, "head" )
-			|| !str_cmp( arg, "legs" )
-			|| !str_cmp( arg, "arms" )
+			|| !str_cmp( arg, "head"  )
+			|| !str_cmp( arg, "legs"  )
+			|| !str_cmp( arg, "arms"  )
 			|| !str_cmp( arg, "about" )
-			|| !str_cmp( arg, "eyes" )
+			|| !str_cmp( arg, "eyes"  )
 			|| !str_cmp( arg, "waist" )
-			|| !str_cmp( arg, "hold" )
-			|| !str_cmp( arg, "feet" )
-			|| !str_cmp( arg, "hands" ))
+			|| !str_cmp( arg, "hold"  )
+			|| !str_cmp( arg, "feet"  )
+			|| !str_cmp( arg, "hands" )
+			|| !str_cmp( arg, "back"  ))
 	{
 		send_to_char( "&RYou cannot make jewelry for that body part.\n\r&w", ch);
 		send_to_char( "&RTry MAKEARMOR.\n\r&w", ch);
@@ -1930,10 +1931,11 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
 		return;
 	}
 	if ( !str_cmp( arg, "holster1")
-			|| !str_cmp( arg, "holster2") )
+			|| !str_cmp( arg, "holster2") 
+			|| !str_cmp( arg, "holster"))
 	{
 		send_to_char( "&RYou can't use jewelry there.&w\n\r", ch);
-		send_to_char( "&RTry MAKECONTAINER...\n\r&w", ch);
+		send_to_char( "&RTry MAKEHOLSTER...\n\r&w", ch);
 		return;
 	}
 
@@ -2835,6 +2837,14 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 	{
 		send_to_char( "&RAre you going to fight with a container?\n\r&w", ch);
 		send_to_char( "&RTry MAKEBLADE...\n\r&w", ch);
+		return;
+	}
+	if ( !str_cmp( arg, "holster1" )
+			|| !str_cmp(arg, "holster2")
+			|| !str_cmp(arg, "holster"))
+	{
+		send_to_char( "&RYou cannot make a container for your hip.\n\r&w", ch);
+		send_to_char( "&RTry MAKEHOLSTER...\n\r&w", ch);
 		return;
 	}
 

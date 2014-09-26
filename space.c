@@ -7414,13 +7414,16 @@ void do_accelerate( CHAR_DATA *ch, char *argument )
 		sprintf( buf, "%s begins to speed up." , ship->name );
 		echo_to_system( AT_ORANGE , ship , buf , NULL );
 	}
-
-	if ( change < ship->currspeed )
+	else if ( change < ship->currspeed )
 	{
 		send_to_char( "&GDecelerating.\n\r", ch);
 		echo_to_cockpit( AT_YELLOW , ship , "The ship begins to slow down.");
 		sprintf( buf, "%s begins to slow down." , ship->name );
 		echo_to_system( AT_ORANGE , ship , buf , NULL );
+	}
+	else
+	{
+		send_to_char( "&YMaintaining current speed.\n\r", ch);
 	}
 
 	ship->energy -= abs((change-abs(ship->currspeed))/10);

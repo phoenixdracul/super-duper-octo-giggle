@@ -2280,9 +2280,9 @@ void do_tell( CHAR_DATA *ch, char *argument )
 				ch->name,  color_str(AT_TELL, victim),argument);
 
 	if(IS_IMMORTAL(ch) || IS_IMMORTAL(victim))
-		ch_printf(ch, "&W&b-&B=&R[&CSent Message to: &W%s&R]&B=&b-&w: %s%s\n\r", victim->name, color_str(AT_TELL, ch),argument);
+		ch_printf(ch, "&W&b-&B=&R[&CSent Message to: &W%s&R]&B=&b-&z: %s%s\n\r", victim->name, color_str(AT_TELL, ch),argument);
 	else
-		ch_printf(ch, "&W&b-&B=&R[&CSent Message to: &W%s&R]&B=^b-&w: %s%s\n\r", arg, color_str(AT_TELL, ch), argument);
+		ch_printf(ch, "&W&b-&B=&R[&CSent Message to: &W%s&R]&B=^b-&z: %s%s\n\r", arg, color_str(AT_TELL, ch), argument);
 
 	position		= victim->position;
 	victim->position	= POS_STANDING;
@@ -2580,7 +2580,7 @@ void do_reply( CHAR_DATA *ch, char *argument )
 				IS_IMMORTAL(ch) ? ch->name :
 	IS_IMMORTAL(victim) ? ch->name : ch->comfreq, argument);
 
-	ch_printf(ch, "&W&b-&B=&R[&CSent Message to: &W%s&R]&B=&b-&w: %s\n\r",
+	ch_printf(ch, "&W&b-&B=&R[&CSent Message to: &W%s&R]&B=&b-&z: %s\n\r",
 			IS_IMMORTAL(ch) ? victim->name :
 	IS_IMMORTAL(victim) ? victim->name : victim->comfreq, argument);
 

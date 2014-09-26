@@ -885,7 +885,7 @@ void do_sell( CHAR_DATA *ch, char *argument )
 		return;
 
 	if( keeper->pIndexData && keeper->pIndexData->pShop && keeper->pIndexData->pShop->playershop && keeper->pIndexData->pShop->owner
-		&& (!keeper->pIndexData->pShop->owner || str_cmp(keeper->pIndexData->pShop->owner, ch->name )) )
+		&& str_cmp(keeper->pIndexData->pShop->owner, ch->name ) )
 	{
 		act( AT_TELL, "$n glances at the item, 'Nah.'", keeper, NULL, ch, TO_VICT );
 		return;
@@ -916,7 +916,7 @@ void do_sell( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( ( cost = get_cost( ch, keeper, obj, FALSE ) ) <= 0 )
+	if ( ( cost = get_cost( ch, keeper, obj, FALSE )) <= 0 )
 	{
 		act( AT_ACTION, "$n looks uninterested in $p.", keeper, obj, ch, TO_VICT );
 		return;

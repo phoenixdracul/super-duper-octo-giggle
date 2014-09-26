@@ -2698,6 +2698,11 @@ void trip( CHAR_DATA *ch, CHAR_DATA *victim )
     if ( IS_AFFECTED( victim, AFF_FLYING )
     ||   IS_AFFECTED( victim, AFF_FLOATING ) )
       return;
+    // You have to be in the same room to trip someone...
+    if (!ch->in_room || !victim->in_room)
+	return;
+    if (ch->in_room != victim->in_room)
+	return;
     if ( victim->mount )
     {
 	if ( IS_AFFECTED( victim->mount, AFF_FLYING )

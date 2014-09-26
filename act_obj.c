@@ -1027,6 +1027,8 @@ void do_put( CHAR_DATA *ch, char *argument )
 					&&   obj->wear_loc == WEAR_NONE
 					&&   obj != container
 					&&   can_drop_obj( ch, obj )
+					&&   !IS_SET(obj->extra_flags, ITEM_UNIQUE)
+					&&   !(obj->item_type == ITEM_GRENADE && obj->timer > 0)
 			&&   get_obj_weight( obj ) + get_obj_weight( container )
 			<= container->value[0] )
 			{
@@ -2197,7 +2199,7 @@ void wear_obj( CHAR_DATA *ch, OBJ_DATA *obj, bool fReplace, sh_int wear_bit )
 				 if ( !obj->action_desc || obj->action_desc[0]=='\0' )
 				 {
 					 act( AT_ACTION, "$n straps $p on $s right hip.",   ch, obj, NULL, TO_ROOM );
-					 act( AT_ACTION, "You wear $p on right hip.", ch, obj, NULL, TO_CHAR );
+					 act( AT_ACTION, "You wear $p on your right hip.", ch, obj, NULL, TO_CHAR );
 				 }
 				 else actiondesc( ch, obj, NULL );
 			 }
@@ -2210,7 +2212,7 @@ void wear_obj( CHAR_DATA *ch, OBJ_DATA *obj, bool fReplace, sh_int wear_bit )
 			 if ( !obj->action_desc || obj->action_desc[0]=='\0' )
 			 {
 				 act( AT_ACTION, "$n straps $p on $s left hip.",   ch, obj, NULL, TO_ROOM );
-				 act( AT_ACTION, "You wear $p on left hip.", ch, obj, NULL, TO_CHAR );
+				 act( AT_ACTION, "You wear $p on your left hip.", ch, obj, NULL, TO_CHAR );
 			 }
 			 else	actiondesc( ch, obj, NULL );
 		 }

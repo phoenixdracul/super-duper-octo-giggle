@@ -60,10 +60,10 @@ void do_gold(CHAR_DATA * ch, char *argument)
 char *drawlife(int min, int max){
    static char buf[MAX_STRING_LENGTH];
    int per;
-   per = ((min * 100) / max);
+   per = max > 0 ? ((min * 100) / max) : 100;
    if (per < 0) per = 0;
    if (per > 100) per = 100;
-                   if (per == 100)  sprintf(buf, "&G&W[&R|||||&Y||||&G||||&W]");
+                   if (per >= 100)  sprintf(buf, "&G&W[&R|||||&Y||||&G||||&W]");
    else if (per >= 90 && per < 100) sprintf(buf, "&G&W[&R|||||&Y||||&G|||&G-&W]");
    else if (per >= 80 && per < 90)  sprintf(buf, "&G&W[&R|||||&Y||||&G||&G--&W]");
    else if (per >= 70 && per < 80)  sprintf(buf, "&G&W[&R|||||&Y||||&G|&G---&W]");
@@ -75,15 +75,14 @@ char *drawlife(int min, int max){
    else if (per >= 20 && per < 40)  sprintf(buf, "&G&W[&R|||&Y&G&G----------&W]");
    else if (per >= 10 && per < 40)  sprintf(buf, "&G&W[&R||&Y&G&G-----------&W]");
    else if (per >= 0 &&  per < 10)  sprintf(buf, "&G&W[&R&Y&G&G-------------&W]");
-   //else sprintf(buf, "&G&W[&R&W]");
    return buf;
 }
 
 char *drawmove(int min, int max){
    static char buf[MAX_STRING_LENGTH];
    int per;
-   per = ((min * 100) / max);
-                   if (per == 100)  sprintf(buf, "&G&W[&R|||&Y||&G||&W]");
+   per = max > 0 ? ((min * 100) / max) : 100;
+                   if (per >= 100)  sprintf(buf, "&G&W[&R|||&Y||&G||&W]");
    else if (per >= 90 && per < 100) sprintf(buf, "&G&W[&R|||&Y||&G|&G-&W]");
    else if (per >= 80 && per < 90)  sprintf(buf, "&G&W[&R|||&Y||&G&G--&W]");
    else if (per >= 70 && per < 80)  sprintf(buf, "&G&W[&R|||&Y|&G&G---&W]");
