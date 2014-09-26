@@ -3374,7 +3374,7 @@ void stop_follower( CHAR_DATA *ch )
 void die_follower( CHAR_DATA *ch )
 {
 	CHAR_DATA *fch;
-
+bug("die_follow: %s", ch->name);
 	if ( ch->master )
 		stop_follower( ch );
 
