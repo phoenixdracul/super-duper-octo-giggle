@@ -1580,6 +1580,7 @@ void extract_char( CHAR_DATA *ch, bool fPull )
 	{
 		ch->desc->character = NULL;
 		close_socket(ch->desc, FALSE);
+		ch->desc = NULL;
 	}
 	/* --------------------------------------------------------------- */
 
