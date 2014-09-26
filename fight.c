@@ -836,7 +836,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 
 	// New hit/miss -- Kasji
 	diceroll = number_range(1, 20);
-	ch_roll  = diceroll + (prof_bonus / 10);
+	ch_roll  = diceroll + (prof_bonus / 10) + (get_curr_lck(ch) / 6);
 	vict_def = get_curr_dex(victim) - get_armor_penalty(victim);
 
 	/* if you can't see what's coming... */

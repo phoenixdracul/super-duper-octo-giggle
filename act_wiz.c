@@ -5879,6 +5879,12 @@ void do_cset( CHAR_DATA *ch, char *argument )
 		send_to_char("Ok.\n\r", ch);
 		return;
 	}
+	if (!str_cmp(arg, "forceroll"))
+	{
+		sysdata.forceroll = level;
+		send_to_char("Ok.\n\r", ch);
+		return;
+	}
 
 	if (level < 0 || level > MAX_LEVEL)
 	{
@@ -5950,12 +5956,6 @@ void do_cset( CHAR_DATA *ch, char *argument )
 	if (!str_cmp(arg, "woverride_private"))
 	{
 		sysdata.privwoverride = level;
-		send_to_char("Ok.\n\r", ch);
-		return;
-	}
-	if (!str_cmp(arg, "forceroll"))
-	{
-		sysdata.forceroll = level;
 		send_to_char("Ok.\n\r", ch);
 		return;
 	}
