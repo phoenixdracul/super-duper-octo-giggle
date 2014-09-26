@@ -1711,7 +1711,7 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 			dam = ( dam * dampmod ) / 100;
 	}
 
-	dam_message( ch, victim, dam, dt );
+//	dam_message( ch, victim, dam, dt );
 
 
 	/*
