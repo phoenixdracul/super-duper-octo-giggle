@@ -1577,7 +1577,10 @@ void extract_char( CHAR_DATA *ch, bool fPull )
 
 	/* Added by Boran. Fixes a crash introduced by the Accounts System */
 	if(ch->desc)
+	{
+		ch->desc->character = NULL;
 		close_socket(ch->desc, FALSE);
+	}
 	/* --------------------------------------------------------------- */
 
 	if ( char_died(ch) )
