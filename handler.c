@@ -1599,8 +1599,10 @@ void extract_char( CHAR_DATA *ch, bool fPull )
 	if ( gch_prev == ch )
 		gch_prev = ch->prev;
 
-	if ( fPull && !xIS_SET(ch->act, ACT_POLYMORPHED))
+	if ( fPull /*&& !xIS_SET(ch->act, ACT_POLYMORPHED)*/ )
 		die_follower( ch );
+	// With the new ext_bv system, polymorph is getting
+	// confused somehow with the killer flag. -- Kasji
 
 	stop_fighting( ch, TRUE );
 
