@@ -1826,7 +1826,6 @@ void do_osay(CHAR_DATA *ch, char *argument)
 	char *arg;
 	char buf[MAX_INPUT_LENGTH];
 	CHAR_DATA *vch;
-	EXT_BV actflags;
 
 	if ( argument[0] == '\0' )
 	{
@@ -1840,7 +1839,6 @@ void do_osay(CHAR_DATA *ch, char *argument)
 		return;
 	}
 
-	actflags = ch->act;
 	if ( IS_NPC( ch ) )
 		xREMOVE_BIT( ch->act, ACT_SECRETIVE );
 
@@ -3076,61 +3074,45 @@ void do_quit( CHAR_DATA *ch, char *argument )
 
 void send_rip_screen( CHAR_DATA *ch )
 {
-	FILE *rpfile;
-	int num=0;
-	char BUFF[MAX_STRING_LENGTH*2];
-
-	if ((rpfile = fopen(RIPSCREEN_FILE,"r")) !=NULL) {
-		while ((BUFF[num]=fgetc(rpfile)) != EOF)
-			num++;
-		fclose(rpfile);
-		BUFF[num] = 0;
-		write_to_buffer(ch->desc,BUFF,num);
-	}
+	send_rip_title(ch);
 }
 
 void send_rip_title( CHAR_DATA *ch )
 {
 	FILE *rpfile;
-	int num=0;
-	char BUFF[MAX_STRING_LENGTH*2];
-
+	char BUFF[MAX_STRING_LENGTH];
+	strcpy(BUFF, "");
 	if ((rpfile = fopen(RIPTITLE_FILE,"r")) !=NULL) {
-		while ((BUFF[num]=fgetc(rpfile)) != EOF)
-			num++;
+		while( !feof(rpfile))
+			strcat(BUFF, fread_line(rpfile));
 		fclose(rpfile);
-		BUFF[num] = 0;
-		write_to_buffer(ch->desc,BUFF,num);
+		write_to_buffer(ch->desc,BUFF,strlen(BUFF) - 1);
 	}
 }
 
 void send_ansi_title( CHAR_DATA *ch )
 {
 	FILE *rpfile;
-	int num=0;
-	char BUFF[MAX_STRING_LENGTH*2];
-
+	char BUFF[MAX_STRING_LENGTH];
+	strcpy(BUFF, "");
 	if ((rpfile = fopen(ANSITITLE_FILE,"r")) !=NULL) {
-		while ((BUFF[num]=fgetc(rpfile)) != EOF)
-			num++;
+		while( !feof(rpfile))
+			strcat(BUFF, fread_line(rpfile));
 		fclose(rpfile);
-		BUFF[num] = 0;
-		write_to_buffer(ch->desc,BUFF,num);
+		write_to_buffer(ch->desc,BUFF,strlen(BUFF) - 1);
 	}
 }
 
 void send_ascii_title( CHAR_DATA *ch )
 {
 	FILE *rpfile;
-	int num=0;
 	char BUFF[MAX_STRING_LENGTH];
-
+	strcpy(BUFF, "");
 	if ((rpfile = fopen(ASCTITLE_FILE,"r")) !=NULL) {
-		while ((BUFF[num]=fgetc(rpfile)) != EOF)
-			num++;
+		while( !feof(rpfile))
+			strcat(BUFF, fread_line(rpfile));
 		fclose(rpfile);
-		BUFF[num] = 0;
-		write_to_buffer(ch->desc,BUFF,num);
+		write_to_buffer(ch->desc,BUFF,strlen(BUFF) - 1);
 	}
 }
 

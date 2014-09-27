@@ -3364,14 +3364,14 @@ char *fread_flagstring( FILE * fp )
             plast++;
             ln++;
             break;
-
+		/* 	// EOF is less than the minimum value of the type
          case EOF:
             bug( "%s", "Fread_string: EOF" );
             if( fBootDb )
                exit( 1 );
             *plast = '\0';
             return ( buf );
-
+		*/
          case '\n':
             ++plast;
             ++ln;
@@ -3489,7 +3489,7 @@ char *fread_string( FILE *fp )
 		default:
 			plast++; ln++;
 			break;
-
+		/*	// EOF is less than the minimum value of the type
 		case EOF:
 			//bug( "Fread_string: EOF" );
 			if ( fBootDb )
@@ -3497,7 +3497,7 @@ char *fread_string( FILE *fp )
 			*plast = '\0';
 			return STRALLOC(buf);
 			break;
-
+		*/
 		case '\n':
 			plast++;  ln++;
 			*plast++ = '\r';  ln++;
@@ -3560,7 +3560,7 @@ char *fread_string_nohash( FILE *fp )
 		default:
 			plast++; ln++;
 			break;
-
+		/*	// EOF is less than the minimum value of the type
 		case EOF:
 			bug( "Fread_string_no_hash: EOF" );
 			if ( fBootDb )
@@ -3568,7 +3568,7 @@ char *fread_string_nohash( FILE *fp )
 			*plast = '\0';
 			return str_dup(buf);
 			break;
-
+		*/
 		case '\n':
 			plast++;  ln++;
 			*plast++ = '\r';  ln++;
@@ -3653,7 +3653,7 @@ char *fread_line( FILE *fp )
 	{
 		if ( feof(fp) )
 		{
-			bug("fread_line: EOF encountered on read.\n\r");
+			//bug("fread_line: EOF encountered on read.\n\r");
 			if ( fBootDb )
 				exit(1);
 			*pline = '\0';
