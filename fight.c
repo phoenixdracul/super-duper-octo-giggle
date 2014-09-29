@@ -644,12 +644,12 @@ int weapon_prof_bonus_check( CHAR_DATA *ch, OBJ_DATA *wield, int *gsn_ptr )
 		case 11:	*gsn_ptr = gsn_force_pikes;	break;
 
 		}
-		if ( *gsn_ptr != -1 )
+		if ( *gsn_ptr != -1 ) // To do: Add melee combat skills -- Kasji
 			bonus = (int) ( ch->pcdata->learned[*gsn_ptr] );
 
 	}
-	if ( IS_NPC(ch) && wield )
-		bonus = get_trust(ch);
+	if ( IS_NPC(ch) )
+		bonus = get_trust(ch) * 100 / 80;
 	return bonus;
 }
 
@@ -752,7 +752,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 		wield = get_eq_char( ch, WEAR_WIELD );
 
 	prof_bonus = weapon_prof_bonus_check( ch, wield, &prof_gsn );
-bug("prof_bonus: %d", prof_bonus);
+//bug("prof_bonus: %d", prof_bonus);
 	if ( ch->fighting		/* make sure fight is already started */
 			&&   dt == TYPE_UNDEFINED
 			&&   IS_NPC(ch)

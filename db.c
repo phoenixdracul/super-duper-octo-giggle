@@ -2924,12 +2924,12 @@ void clear_char( CHAR_DATA *ch )
 	ch->logon			= current_time;
 	ch->armor			= 100;
 	ch->position		= POS_STANDING;
-	ch->hit			= 500;
-	ch->max_hit			= 500;
+	ch->hit			= 100;
+	ch->max_hit			= 100;
 	ch->mana			= 1000;
 	ch->max_mana		= 0;
-	ch->move			= 1000;
-	ch->max_move		= 1000;
+	ch->move			= 100;
+	ch->max_move		= 100;
 	ch->height			= 72;
 	ch->weight			= 180;
 	ch->xflags			= 0;

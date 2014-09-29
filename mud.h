@@ -258,7 +258,7 @@ typedef ch_ret	SPELL_FUN	args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
 #define MAX_NPC_RACE		   91
 #define MAX_ATMO		    8
 #define MAX_VNUMS		500000
-#define MAX_LEVEL		   36
+#define MAX_LEVEL		   86
 #define MAX_CLAN		   50
 #define MAX_PLANET		  100
 #define MAX_SHIP                 1000
