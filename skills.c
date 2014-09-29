@@ -1846,6 +1846,7 @@ void do_search( CHAR_DATA *ch, char *argument )
 
     separate_obj(obj);
     REMOVE_BIT( obj->extra_flags, ITEM_HIDDEN );
+    REMOVE_BIT( obj->extra_flags, ITEM_BURRIED );
     act( AT_SKILL, "Your search reveals $p!", ch, obj, NULL, TO_CHAR );
     act( AT_SKILL, "$n finds $p!", ch, obj, NULL, TO_ROOM );
     learn_from_success( ch, gsn_search );

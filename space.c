@@ -8264,117 +8264,118 @@ void do_status(CHAR_DATA *ch, char *argument )
 			target->hx, target->hy, target->hz );
 	ch_printf( ch, "&zSpeed:&w %d&W/%d   &zHyperdrive: &wClass %d   %s %s\n\r",
 			target->currspeed , target->realspeed, target->hyperspeed,
-			ship->class >= SHIP_LFRIGATE ? "&zBay doors:" : "",
-					(ship->class >= SHIP_LFRIGATE && ship->bayopen == TRUE) ? "&wOpen" :
-							(ship->class>= SHIP_LFRIGATE && ship->bayopen == FALSE) ? "&wClosed" : "" );
+			target->class >= SHIP_LFRIGATE ? "&zBay doors:" : "",
+					(target->class >= SHIP_LFRIGATE && target->bayopen == TRUE) ? "&wOpen" :
+							(target->class>= SHIP_LFRIGATE && target->bayopen == FALSE) ? "&wClosed" : "" );
 
-	ch_printf( ch, "&zHull:&w %d&W/%d   &zShields:&w %d&W/%d   &zFuel:&w %d&W/%d\n\r\n\r",
+	ch_printf( ch, "&zHull:&w %d&W/%d   &zShields:&w %d&W/%d   &zFuel:&w %d&W/%d\n\r",
 			target->hull, target->maxhull, target->shield, target->maxshield,
 			target->energy, target->maxenergy);
+	ch_printf( ch, "&zAutopilot: %s\n\r\n\r", target->autopilot ? "&GON" : "&ROFF");
 
 	ch_printf( ch, "&zPrimary Weapon System:   &w%-7s&W::  &w%s\n\r",
 			target->primaryState == LASER_DAMAGED ? "&ROffline" : "&GOnline", primary_beam_name(target));
 
-	switch(ship->primaryType)
+	switch(target->primaryType)
 	{
 	case 0: x = 0; break;
-	case 1: x = ship->primaryCount; break;
-	case 2: x = ship->primaryCount; break;
-	case 3: x = 2*ship->primaryCount; break;
-	case 4: x = 3*ship->primaryCount; break;
-	case 5: x = 4*ship->primaryCount; break;
-	case 6: x = 3*ship->primaryCount; break;
-	case 7: x = ship->primaryCount; break;
-	case 8: x = ship->primaryCount; break;
-	case 9: x = ship->primaryCount; break;
-	case 10: x = ship->primaryCount; break;
-	case 11: x = 2*ship->primaryCount; break;
-	case 12: x = 3*ship->primaryCount; break;
-	case 13: x = 4*ship->primaryCount; break;
-	case 14: x = 3*ship->primaryCount; break;
-	case 15: x = ship->primaryCount; break;
-	case 16: x = ship->primaryCount; break;
-	case 17: x = ship->primaryCount; break;
-	case 18: x = ship->primaryCount; break;
-	case 19: x = 2*ship->primaryCount; break;
-	case 20: x = 3*ship->primaryCount; break;
-	case 21: x = 4*ship->primaryCount; break;
-	case 22: x = 3*ship->primaryCount; break;
-	case 23: x = ship->primaryCount; break;
-	case 24: x = ship->primaryCount; break;
-	case 25: x = ship->primaryCount; break;
-	case 26: x = ship->primaryCount; break;
-	case 27: x = 2*ship->primaryCount; break;
-	case 28: x = 3*ship->primaryCount; break;
-	case 29: x = 4*ship->primaryCount; break;
-	case 30: x = 3*ship->primaryCount; break;
-	case 31: x = ship->primaryCount; break;
-	case 32: x = ship->primaryCount; break;
-	case 33: x = ship->primaryCount; break;
-	case 34: x = 3*ship->primaryCount; break;
-	case 35: x = ship->primaryCount; break;
-	case 36: x = ship->primaryCount; break;
-	case 37: x = ship->primaryCount; break;
-	case 38: x = ship->primaryCount; break;
-	case 39: x = ship->primaryCount; break;
-	case 40: x = ship->primaryCount; break;
-	case 41: x = ship->primaryCount; break;
-        case 42: x = ship->primaryCount; break;
-        case 43: x = ship->primaryCount; break;
-        case 44: x = ship->primaryCount; break;
+	case 1: x = target->primaryCount; break;
+	case 2: x = target->primaryCount; break;
+	case 3: x = 2*target->primaryCount; break;
+	case 4: x = 3*target->primaryCount; break;
+	case 5: x = 4*target->primaryCount; break;
+	case 6: x = 3*target->primaryCount; break;
+	case 7: x = target->primaryCount; break;
+	case 8: x = target->primaryCount; break;
+	case 9: x = target->primaryCount; break;
+	case 10: x = target->primaryCount; break;
+	case 11: x = 2*target->primaryCount; break;
+	case 12: x = 3*target->primaryCount; break;
+	case 13: x = 4*target->primaryCount; break;
+	case 14: x = 3*target->primaryCount; break;
+	case 15: x = target->primaryCount; break;
+	case 16: x = target->primaryCount; break;
+	case 17: x = target->primaryCount; break;
+	case 18: x = target->primaryCount; break;
+	case 19: x = 2*target->primaryCount; break;
+	case 20: x = 3*target->primaryCount; break;
+	case 21: x = 4*target->primaryCount; break;
+	case 22: x = 3*target->primaryCount; break;
+	case 23: x = target->primaryCount; break;
+	case 24: x = target->primaryCount; break;
+	case 25: x = target->primaryCount; break;
+	case 26: x = target->primaryCount; break;
+	case 27: x = 2*target->primaryCount; break;
+	case 28: x = 3*target->primaryCount; break;
+	case 29: x = 4*target->primaryCount; break;
+	case 30: x = 3*target->primaryCount; break;
+	case 31: x = target->primaryCount; break;
+	case 32: x = target->primaryCount; break;
+	case 33: x = target->primaryCount; break;
+	case 34: x = 3*target->primaryCount; break;
+	case 35: x = target->primaryCount; break;
+	case 36: x = target->primaryCount; break;
+	case 37: x = target->primaryCount; break;
+	case 38: x = target->primaryCount; break;
+	case 39: x = target->primaryCount; break;
+	case 40: x = target->primaryCount; break;
+	case 41: x = target->primaryCount; break;
+        case 42: x = target->primaryCount; break;
+        case 43: x = target->primaryCount; break;
+        case 44: x = target->primaryCount; break;
 	default: x = 1; break;
 	}
 
 	ch_printf(ch, "&z   Linked fire: &w%s\n\r",
-			(x <= 1) ? "Unavailable" : ship->primaryLinked == TRUE ? "&GON" : "&ROFF");
+			(x <= 1) ? "Unavailable" : target->primaryLinked == TRUE ? "&GON" : "&ROFF");
 
-	switch(ship->secondaryType)
+	switch(target->secondaryType)
 	{
 	case 0: x = 0; break;
-	case 1: x = ship->secondaryCount; break;
-	case 2: x = ship->secondaryCount; break;
-	case 3: x = 2*ship->secondaryCount; break;
-	case 4: x = 3*ship->secondaryCount; break;
-	case 5: x = 4*ship->secondaryCount; break;
-	case 6: x = 3*ship->secondaryCount; break;
-	case 7: x = ship->secondaryCount; break;
-	case 8: x = ship->secondaryCount; break;
-	case 9: x = ship->secondaryCount; break;
-	case 10: x = ship->secondaryCount; break;
-	case 11: x = 2*ship->secondaryCount; break;
-	case 12: x = 3*ship->secondaryCount; break;
-	case 13: x = 4*ship->secondaryCount; break;
-	case 14: x = 3*ship->secondaryCount; break;
-	case 15: x = ship->secondaryCount; break;
-	case 16: x = ship->secondaryCount; break;
-	case 17: x = ship->secondaryCount; break;
-	case 18: x = ship->secondaryCount; break;
-	case 19: x = 2*ship->secondaryCount; break;
-	case 20: x = 3*ship->secondaryCount; break;
-	case 21: x = 4*ship->secondaryCount; break;
-	case 22: x = 3*ship->secondaryCount; break;
-	case 23: x = ship->secondaryCount; break;
-	case 24: x = ship->secondaryCount; break;
-	case 25: x = ship->secondaryCount; break;
-	case 26: x = ship->secondaryCount; break;
-	case 27: x = 2*ship->secondaryCount; break;
-	case 28: x = 3*ship->secondaryCount; break;
-	case 29: x = 4*ship->secondaryCount; break;
-	case 30: x = 3*ship->secondaryCount; break;
-	case 31: x = ship->secondaryCount; break;
-	case 32: x = ship->secondaryCount; break;
-	case 33: x = ship->secondaryCount; break;
-	case 34: x = 3*ship->secondaryCount; break;
-	case 35: x = ship->secondaryCount; break;
-	case 36: x = ship->secondaryCount; break;
-	case 37: x = ship->secondaryCount; break;
-	case 38: x = ship->secondaryCount; break;
-	case 39: x = ship->secondaryCount; break;
-	case 40: x = ship->secondaryCount; break;
-	case 41: x = ship->secondaryCount; break;
-        case 42: x = ship->secondaryCount; break;
-        case 43: x = ship->secondaryCount; break;
-        case 44: x = ship->secondaryCount; break;
+	case 1: x = target->secondaryCount; break;
+	case 2: x = target->secondaryCount; break;
+	case 3: x = 2*target->secondaryCount; break;
+	case 4: x = 3*target->secondaryCount; break;
+	case 5: x = 4*target->secondaryCount; break;
+	case 6: x = 3*target->secondaryCount; break;
+	case 7: x = target->secondaryCount; break;
+	case 8: x = target->secondaryCount; break;
+	case 9: x = target->secondaryCount; break;
+	case 10: x = target->secondaryCount; break;
+	case 11: x = 2*target->secondaryCount; break;
+	case 12: x = 3*target->secondaryCount; break;
+	case 13: x = 4*target->secondaryCount; break;
+	case 14: x = 3*target->secondaryCount; break;
+	case 15: x = target->secondaryCount; break;
+	case 16: x = target->secondaryCount; break;
+	case 17: x = target->secondaryCount; break;
+	case 18: x = target->secondaryCount; break;
+	case 19: x = 2*target->secondaryCount; break;
+	case 20: x = 3*target->secondaryCount; break;
+	case 21: x = 4*target->secondaryCount; break;
+	case 22: x = 3*target->secondaryCount; break;
+	case 23: x = target->secondaryCount; break;
+	case 24: x = target->secondaryCount; break;
+	case 25: x = target->secondaryCount; break;
+	case 26: x = target->secondaryCount; break;
+	case 27: x = 2*target->secondaryCount; break;
+	case 28: x = 3*target->secondaryCount; break;
+	case 29: x = 4*target->secondaryCount; break;
+	case 30: x = 3*target->secondaryCount; break;
+	case 31: x = target->secondaryCount; break;
+	case 32: x = target->secondaryCount; break;
+	case 33: x = target->secondaryCount; break;
+	case 34: x = 3*target->secondaryCount; break;
+	case 35: x = target->secondaryCount; break;
+	case 36: x = target->secondaryCount; break;
+	case 37: x = target->secondaryCount; break;
+	case 38: x = target->secondaryCount; break;
+	case 39: x = target->secondaryCount; break;
+	case 40: x = target->secondaryCount; break;
+	case 41: x = target->secondaryCount; break;
+        case 42: x = target->secondaryCount; break;
+        case 43: x = target->secondaryCount; break;
+        case 44: x = target->secondaryCount; break;
 	default: x = 1; break;
 	}
 	if(target->secondaryCount != 0)
@@ -8383,55 +8384,55 @@ void do_status(CHAR_DATA *ch, char *argument )
 				target->secondaryState == LASER_DAMAGED ? "&ROffline" : "&GOnline",
 						secondary_beam_name(target));
 		ch_printf(ch, "&z   Linked fire: &w%s\n\r",
-				(x <= 1) ? "Unavailable" : ship->secondaryLinked == TRUE ? "&GON" : "&ROFF");
+				(x <= 1) ? "Unavailable" : target->secondaryLinked == TRUE ? "&GON" : "&ROFF");
 	}
-	switch(ship->tertiaryType)
+	switch(target->tertiaryType)
 	{
 	case 0: x = 0; break;
-	case 1: x = ship->tertiaryCount; break;
-	case 2: x = ship->tertiaryCount; break;
-	case 3: x = 2*ship->tertiaryCount; break;
-	case 4: x = 3*ship->tertiaryCount; break;
-	case 5: x = 4*ship->tertiaryCount; break;
-	case 6: x = 3*ship->tertiaryCount; break;
-	case 7: x = ship->tertiaryCount; break;
-	case 8: x = ship->tertiaryCount; break;
-	case 9: x = ship->tertiaryCount; break;
-	case 10: x = ship->tertiaryCount; break;
-	case 11: x = 2*ship->tertiaryCount; break;
-	case 12: x = 3*ship->tertiaryCount; break;
-	case 13: x = 4*ship->tertiaryCount; break;
-	case 14: x = 3*ship->tertiaryCount; break;
-	case 15: x = ship->tertiaryCount; break;
-	case 16: x = ship->tertiaryCount; break;
-	case 17: x = ship->tertiaryCount; break;
-	case 18: x = ship->tertiaryCount; break;
-	case 19: x = 2*ship->tertiaryCount; break;
-	case 20: x = 3*ship->tertiaryCount; break;
-	case 21: x = 4*ship->tertiaryCount; break;
-	case 22: x = 3*ship->tertiaryCount; break;
-	case 23: x = ship->tertiaryCount; break;
-	case 24: x = ship->tertiaryCount; break;
-	case 25: x = ship->tertiaryCount; break;
-	case 26: x = ship->tertiaryCount; break;
-	case 27: x = 2*ship->tertiaryCount; break;
-	case 28: x = 3*ship->tertiaryCount; break;
-	case 29: x = 4*ship->tertiaryCount; break;
-	case 30: x = 3*ship->tertiaryCount; break;
-	case 31: x = ship->tertiaryCount; break;
-	case 32: x = ship->tertiaryCount; break;
-	case 33: x = ship->tertiaryCount; break;
-	case 34: x = 3*ship->tertiaryCount; break;
-	case 35: x = ship->tertiaryCount; break;
-	case 36: x = ship->tertiaryCount; break;
-	case 37: x = ship->tertiaryCount; break;
-	case 38: x = ship->tertiaryCount; break;
-	case 39: x = ship->tertiaryCount; break;
-	case 40: x = ship->tertiaryCount; break;
-	case 41: x = ship->tertiaryCount; break;
-        case 42: x = ship->tertiaryCount; break;
-        case 43: x = ship->tertiaryCount; break;
-        case 44: x = ship->tertiaryCount; break;
+	case 1: x = target->tertiaryCount; break;
+	case 2: x = target->tertiaryCount; break;
+	case 3: x = 2*target->tertiaryCount; break;
+	case 4: x = 3*target->tertiaryCount; break;
+	case 5: x = 4*target->tertiaryCount; break;
+	case 6: x = 3*target->tertiaryCount; break;
+	case 7: x = target->tertiaryCount; break;
+	case 8: x = target->tertiaryCount; break;
+	case 9: x = target->tertiaryCount; break;
+	case 10: x = target->tertiaryCount; break;
+	case 11: x = 2*target->tertiaryCount; break;
+	case 12: x = 3*target->tertiaryCount; break;
+	case 13: x = 4*target->tertiaryCount; break;
+	case 14: x = 3*target->tertiaryCount; break;
+	case 15: x = target->tertiaryCount; break;
+	case 16: x = target->tertiaryCount; break;
+	case 17: x = target->tertiaryCount; break;
+	case 18: x = target->tertiaryCount; break;
+	case 19: x = 2*target->tertiaryCount; break;
+	case 20: x = 3*target->tertiaryCount; break;
+	case 21: x = 4*target->tertiaryCount; break;
+	case 22: x = 3*target->tertiaryCount; break;
+	case 23: x = target->tertiaryCount; break;
+	case 24: x = target->tertiaryCount; break;
+	case 25: x = target->tertiaryCount; break;
+	case 26: x = target->tertiaryCount; break;
+	case 27: x = 2*target->tertiaryCount; break;
+	case 28: x = 3*target->tertiaryCount; break;
+	case 29: x = 4*target->tertiaryCount; break;
+	case 30: x = 3*target->tertiaryCount; break;
+	case 31: x = target->tertiaryCount; break;
+	case 32: x = target->tertiaryCount; break;
+	case 33: x = target->tertiaryCount; break;
+	case 34: x = 3*target->tertiaryCount; break;
+	case 35: x = target->tertiaryCount; break;
+	case 36: x = target->tertiaryCount; break;
+	case 37: x = target->tertiaryCount; break;
+	case 38: x = target->tertiaryCount; break;
+	case 39: x = target->tertiaryCount; break;
+	case 40: x = target->tertiaryCount; break;
+	case 41: x = target->tertiaryCount; break;
+        case 42: x = target->tertiaryCount; break;
+        case 43: x = target->tertiaryCount; break;
+        case 44: x = target->tertiaryCount; break;
 	default: x = 1; break;
 	}
 	if(target->tertiaryCount != 0)
@@ -8440,7 +8441,7 @@ void do_status(CHAR_DATA *ch, char *argument )
 				target->tertiaryState == LASER_DAMAGED ? "&ROffline" : "&GOnline",
 						tertiary_beam_name(target));
 		ch_printf(ch, "&z   Linked fire: &w%s\n\r",
-				(x <= 1) ? "Unavailable" : ship->tertiaryLinked == TRUE ? "&GON" : "&ROFF");
+				(x <= 1) ? "Unavailable" : target->tertiaryLinked == TRUE ? "&GON" : "&ROFF");
 	}
 	if (target->turret1)
 		ch_printf( ch, "\n\r&zTurret One:  &w %s  &zCurrent Target:&w %s\n\r",
@@ -8475,24 +8476,27 @@ void do_status(CHAR_DATA *ch, char *argument )
 
 
 	ch_printf(ch, "\n\r&w          | &zMissile launcher:&w %-15s   &zPayload: &w%d&W/%d\n\r",
-			!ship->maxmissiles ? "&RNot installed" :
-					ship->missilestate == LASER_DAMAGED ? "&ROffline" : "&GOnline",
-							ship->missiles, ship->maxmissiles);
+			!target->maxmissiles ? "&RNot installed" :
+					target->missilestate == LASER_DAMAGED ? "&ROffline" : "&GOnline",
+							target->missiles, target->maxmissiles);
 	ch_printf(ch, " %-10s&w | &zTorpedo launcher:&w %-15s   &zPayload: &w%d&W/%d\n\r",
-			ship->warheadLinked == TRUE ? "&GLinked" : "&RUnlinked",
-					!ship->maxtorpedos ? "&RNot installed" :
-							ship->torpedostate == LASER_DAMAGED ? "&ROffline" : "&GOnline",
-									ship->torpedos, ship->maxtorpedos);
+			target->warheadLinked == TRUE ? "&GLinked" : "&RUnlinked",
+					!target->maxtorpedos ? "&RNot installed" :
+							target->torpedostate == LASER_DAMAGED ? "&ROffline" : "&GOnline",
+									target->torpedos, target->maxtorpedos);
 	ch_printf(ch, "          &w| &zRocket launcher: &w %-15s   &zPayload: &w%d&W/%d\n\r",
-			!ship->maxrockets ? "&RNot installed" :
-					ship->rocketstate == LASER_DAMAGED ? "&ROffline" : "&GOnline",
-							ship->rockets, ship->maxrockets);
-	if(ship->maxbombs > 0) ch_printf(ch, "&zBomb Payload: &w%d&W/%d\n\r", ship->bombs, ship->maxbombs);
+			!target->maxrockets ? "&RNot installed" :
+					target->rocketstate == LASER_DAMAGED ? "&ROffline" : "&GOnline",
+							target->rockets, target->maxrockets);
+	if(target->maxbombs > 0) 
+		ch_printf(ch, "&zBomb Payload: &w%d&W/%d\n\r", target->bombs, target->maxbombs);
+	if (target->gravitywell > 0) 
+		ch_printf(ch, "&zGravity Wells: &w%d   &zGravity Status: %s\n\r", target->gravitywell, target->grav ? "&GON" : "&ROFF");
 #ifdef USECARGO
 	ch_printf( ch, "&OCargo: &Y%d/&O%d   Cargo Type: &Y%s&w\n\r",
-			ship->cargo,
-			ship->maxcargo,
-			cargo_names[ship->cargotype]);
+			target->cargo,
+			target->maxcargo,
+			cargo_names[target->cargotype]);
 #endif
 
 	learn_from_success( ch, gsn_shipsystems );

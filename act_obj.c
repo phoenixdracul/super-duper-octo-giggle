@@ -182,6 +182,7 @@ void get_obj( CHAR_DATA *ch, OBJ_DATA *obj, OBJ_DATA *container )
 	else
 	{
 		obj = obj_to_char( obj, ch );
+		REMOVE_BIT( obj->extra_flags, ITEM_BURRIED);
 	}
 
 	if ( char_died(ch) || obj_extracted(obj) )

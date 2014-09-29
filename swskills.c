@@ -3201,7 +3201,6 @@ void do_gemcutting( CHAR_DATA *ch, char *argument )
 	int level, schance;
 	bool checktool, checkore;
 	OBJ_DATA *obj, *ore;
-
 	strcpy( arg, argument );
 
 	switch ( ch->substate )
@@ -3286,7 +3285,8 @@ void do_gemcutting( CHAR_DATA *ch, char *argument )
 	checkore = FALSE;
 
 	ore = NULL;
-
+	int value = 0;
+	int vnum = 0;
 	for( obj = ch->last_carrying; obj; obj = obj->prev_content )
 	{
 		if( obj->item_type == ITEM_TOOLKIT )
@@ -3295,6 +3295,11 @@ void do_gemcutting( CHAR_DATA *ch, char *argument )
 		{
 			ore = obj;
 			checkore = TRUE;
+			value = obj->cost == 0 ? 10 : obj->cost;
+			vnum = obj->pIndexData->vnum;
+			separate_obj( obj );
+			obj_from_char( obj );
+			extract_obj( obj );
 		}
 	}
 
@@ -3307,24 +3312,27 @@ void do_gemcutting( CHAR_DATA *ch, char *argument )
 		learn_from_failure( ch, gsn_gemcutting );
 		return;
 	}
+	obj = create_object( get_obj_index(vnum), ch->top_level );
+	
+	obj->item_type = ITEM_CRYSTAL;
+	SET_BIT( obj->wear_flags, ITEM_HOLD );
+	SET_BIT( obj->wear_flags, ITEM_TAKE );
+	obj->weight = URANGE( 1, obj->weight - 1, 6 );
 
-	ore->item_type = ITEM_CRYSTAL;
-	ore->weight = URANGE( 1, ore->weight - 1, 6 );
-
-	STRFREE( ore->name );
+	STRFREE( obj->name );
 	strcpy( buf, arg );
 	strcat( buf, " crystal gem" );
-	ore->name = STRALLOC( remand( buf ) );
+	obj->name = STRALLOC( remand( buf ) );
 	strcpy( buf, arg );
 
-	STRFREE( ore->short_descr );
-	ore->short_descr = STRALLOC( buf );
-	STRFREE( ore->description );
+	STRFREE( obj->short_descr );
+	obj->short_descr = STRALLOC( buf );
+	STRFREE( obj->description );
 	strcat( buf, " was left here." );
-	ore->description = STRALLOC( buf );
-	ore->cost = URANGE( 25, ore->cost * 2, 5000 );
+	obj->description = STRALLOC( buf );
+	obj->cost = URANGE( 25, value * 2, 5000 );
 
-	ore = obj_to_char( ore, ch );
+	obj = obj_to_char( obj, ch );
 
 	send_to_char( "&GYou finish your work and hold up your newly cut gem.&w\n\r", ch );
 	act( AT_PLAIN, "$n finishes cutting a gem.", ch, NULL, argument, TO_ROOM );
@@ -3333,7 +3341,7 @@ void do_gemcutting( CHAR_DATA *ch, char *argument )
 		long xpgain;
 
 		xpgain =
-				UMIN( ore->cost * 200,
+				UMIN( obj->cost * 200,
 						( exp_level( ch->skill_level[ENGINEERING_ABILITY] + 1 ) -
 								exp_level( ch->skill_level[ENGINEERING_ABILITY] ) ) ) / 2;
 		gain_exp( ch, xpgain, ENGINEERING_ABILITY );

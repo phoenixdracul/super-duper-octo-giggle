@@ -2166,7 +2166,18 @@ void do_help( CHAR_DATA *ch, char *argument )
 	{
 		//send_to_pager( pHelp->keyword, ch );
 		//send_to_pager( "\n\r", ch );
-		sprintf(buf, "&B=-=-=-=-=-=-=-=-=-=-=-=&W[ &R%s &W]&B-=-=-=-=-=-=-=-=-=-=-=&W\n\r", pHelp->keyword);
+		const int LINE_WIDTH = 77;
+		int keywordsLen = strlen(pHelp->keyword);
+		int i = 0;
+		sprintf(buf, "&B");
+		for (i = 0; i < (LINE_WIDTH - 4 - keywordsLen)/2; ++i)
+			strcat(buf, i%2 == 0 ? "=" : "-");
+		strcat(buf, "&W[ &R");
+		strcat(buf, pHelp->keyword);
+		strcat(buf, " &W]&B");
+		for (i = 0; i < (LINE_WIDTH - 4 - keywordsLen)/2; ++i)
+			strcat(buf, i%2 == 0 ? "-" : "=");
+		strcat(buf, "&W\n\r");
 		send_to_pager( buf, ch );
 	}
 

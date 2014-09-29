@@ -514,6 +514,8 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
 	char buf[MAX_STRING_LENGTH];
 	char buf2[MAX_STRING_LENGTH];
 	char garb[MAX_STRING_LENGTH];
+	char histbuf[MAX_STRING_LENGTH];
+	
 	DESCRIPTOR_DATA *d;
 
 	SHIP_DATA *ship = ship_from_cockpit( ch->in_room->vnum);
@@ -668,14 +670,22 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
 		if (ch->top_level < LEVEL_IMMORTAL)
 		{
 			if(ch->pcdata && ch->pcdata->account && ch->pcdata->account->chatname)
+			{
 				ch_printf(ch, "&z[&cOOC&z] &G&W@%s%s: %s\n\r", color_str(AT_OOC,ch),ch->pcdata->account->name, argument);
+				sprintf( histbuf, "&z[&cOOC&z] &G&W@%s%s: %s",  color_str(AT_OOC,ch), ch->pcdata->account->name, argument);
+			}
 			else
+			{
 				ch_printf(ch,"&z[&cOOC&z] &w%s%s&z:&w %s\n\r", color_str(AT_OOC,ch),ch->name, argument);
+				sprintf( histbuf, "&z[&cOOC&z] &w%s%s&z:&w %s",  color_str(AT_OOC,ch), ch->name, argument);
+			}
 		}
 		else
 		{
 			ch_printf(ch,"&z[&cIMM&z][&cOOC&z] &w%s%s&z:&w %s\n\r", color_str(AT_OOC, ch), xIS_SET(ch->act, PLR_WIZINVIS) ? "Immortal" : ch->name,  argument);
+			sprintf( histbuf, "&z[&cIMM&z][&cOOC&z] &w%s%s&z:&w %s",  color_str(AT_OOC,ch), xIS_SET(ch->act, PLR_WIZINVIS) ? "Immortal" : ch->name, argument);
 		}
+		ooc_history_add(str_dup(histbuf));
 		position        = ch->position;
 		ch->position    = POS_STANDING;
 		ch->position    = position;
@@ -719,9 +729,6 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
 				argument, verb );
 		append_to_file( LOG_FILE, buf2 );
 	}
-
-	/* Added by Boran for ooc_history */
-	int d_count = 0;
 
 	for ( d = first_descriptor; d; d = d->next )
 	{
@@ -792,32 +799,15 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
 				break;
 
 			case CHANNEL_OOC:
-				{
-				char histbuf[MAX_STRING_LENGTH];	// I know, it's messy -_-
 				if (ch->top_level < LEVEL_IMMORTAL)
 				{
 					if(ch->pcdata && ch->pcdata->account && ch->pcdata->account->chatname)
-					{
 						sprintf( buf, "&r-&R=&C[&WOOC&z]&R=&r- &G&W@%s%s: $t",  color_str(AT_OOC,vch), ch->pcdata->account->name);
-						sprintf( histbuf, "&r-&R=&C[&WOOC&z]&R=&r- &G&W@%s%s: %s",  color_str(AT_OOC,vch), ch->pcdata->account->name, argument);
-					}
 					else
-					{
 						sprintf( buf, "&z[&cOOC&z] &w%s%s&z:&w $t",  color_str(AT_OOC,vch), ch->name);
-						sprintf( histbuf, "&z[&WOOC&z] &W%s%s&z:&w %s",  color_str(AT_OOC,vch), ch->name, argument);
-					}
 				}
 				else
-				{
 					sprintf( buf, "&z[&cIMM&z][&cOOC&z] &G&W%s%s&z:&w $t", color_str(AT_OOC,vch), xIS_SET(ch->act, PLR_WIZINVIS) ? "Immortal" : ch->name );
-					sprintf( histbuf, "&z[&cIMM&z][&cOOC&z] &G&W%s%s&z:&w %s", color_str(AT_OOC,vch), xIS_SET(ch->act, PLR_WIZINVIS) ? "Immortal" : ch->name, argument );
-				}
-				if(d_count == 0) // Only update history for the first descriptor.
-				{
-					ooc_history_add(str_dup(histbuf));
-					d_count += 1;
-				}
-				}
 				break;
 
 			case CHANNEL_WARTALK:
@@ -1015,8 +1005,6 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
 			vch->position	= position;
 		}
 	}
-
-	return;
 }
 
 void do_retune(CHAR_DATA *ch, char *argument)
@@ -1216,31 +1204,30 @@ void do_gocial (CHAR_DATA * ch, char *command, char *argument)
 		
 		if (ch->top_level < LEVEL_IMMORTAL)
 		{
+			sprintf (buf, "&z[&cOOC&z]&w %s", social->char_no_arg);
+			act (AT_SOCIAL, buf, ch, NULL, victim, TO_CHAR);
 			if(ch->pcdata && ch->pcdata->account && ch->pcdata->account->chatname)
 				sprintf (buf, "&z[&cOOC&z] &w@%s", ch->pcdata->account->name);
 			else
 				sprintf (buf, "&z[&cOOC&z]&w %s", social->others_no_arg);
 			act (AT_SOCIAL, buf, ch, NULL, victim, TO_MUD);
-			sprintf (buf, "&z[&cOOC&z]&w %s", social->char_no_arg);
-			act (AT_SOCIAL, buf, ch, NULL, victim, TO_CHAR);
 		}
 		else
 		{
-			sprintf (buf, "&z[&cIMM&z][&cOOC&z]&w %s", social->others_no_arg);
-			act (AT_SOCIAL, buf, ch, NULL, victim, TO_MUD);
 			sprintf (buf, "&z[&cIMM&z][&cOOC&z]&w %s", social->char_no_arg);
 			act (AT_SOCIAL, buf, ch, NULL, victim, TO_CHAR);
+			sprintf (buf, "&z[&cIMM&z][&cOOC&z]&w %s", social->others_no_arg);
+			act (AT_SOCIAL, buf, ch, NULL, victim, TO_MUD);
 		}
-		return;
 	}
 
-	if ((victim = get_char_world (ch, arg)) == NULL)
+	else if ((victim = get_char_world (ch, arg)) == NULL)
 	{
 		send_to_char ("You really shouldn't talk about people who aren't logged in.\n\r", ch);
 		return;
 	}
 
-	if (victim == ch)
+	else if (victim == ch)
 	{
 		if (social->others_auto == NULL)
 		{
@@ -1249,22 +1236,21 @@ void do_gocial (CHAR_DATA * ch, char *command, char *argument)
 		}
 		if (ch->top_level < LEVEL_IMMORTAL)
 		{
+			sprintf (buf, "&r-&R=&C[&WOOC&z]&R=&r-&W %s", social->char_auto);
+			act (AT_SOCIAL, buf, ch, NULL, victim, TO_CHAR);
 			if(ch->pcdata && ch->pcdata->account && ch->pcdata->account->chatname)
 				sprintf (buf, "&r-&R=&C[&WOOC&z]&R=&r-&W@%s", ch->pcdata->account->name);
 			else
 				sprintf (buf, "&z[&cOOC&z]&w %s", social->others_auto);
 			act (AT_SOCIAL, buf, ch, NULL, victim, TO_MUD);
-			sprintf (buf, "&r-&R=&C[&WOOC&z]&R=&r-&W %s", social->char_auto);
-			act (AT_SOCIAL, buf, ch, NULL, victim, TO_CHAR);
 		}
 		else
 		{
-			sprintf (buf, "&z[&cIMM&z][&cOOC&z]&w %s", social->others_auto);
-			act (AT_SOCIAL, buf, ch, NULL, victim, TO_MUD);
 			sprintf (buf, "&z[&cIMM&z][&cOOC&z]&w %s", social->char_auto);
 			act (AT_SOCIAL, buf, ch, NULL, victim, TO_CHAR);
+			sprintf (buf, "&z[&cIMM&z][&cOOC&z]&w %s", social->others_auto);
+			act (AT_SOCIAL, buf, ch, NULL, victim, TO_MUD);
 		}
-		return;
 	}
 	else
 	{
@@ -1278,27 +1264,30 @@ void do_gocial (CHAR_DATA * ch, char *command, char *argument)
 			if(ch->pcdata && ch->pcdata->account && ch->pcdata->account->chatname)
 				sprintf (buf, "&r-&R=&C[&WOOC&z]&R=&r-&W@%s", ch->pcdata->account->name);
 			else
-				sprintf (buf, "&z[&cOOC&z]&w %s", social->others_found);
-			act (AT_SOCIAL, buf, ch, NULL, victim, TO_MUD);
-			if(ch->pcdata && ch->pcdata->account && ch->pcdata->account->chatname)
-				sprintf (buf, "&r-&R=&C[&WOOC&z]&R=&r-&W@%s", ch->pcdata->account->name);
-			else
 				sprintf (buf, "&z[&cOOC&z]&w %s", social->vict_found);
 			act (AT_SOCIAL, buf, ch, NULL, victim, TO_VICT);
 			sprintf (buf, "&z[&cOOC&z]&w %s", social->char_found);
 			act (AT_SOCIAL, buf, ch, NULL, victim, TO_CHAR);
+			if(ch->pcdata && ch->pcdata->account && ch->pcdata->account->chatname)
+				sprintf (buf, "&r-&R=&C[&WOOC&z]&R=&r-&W@%s", ch->pcdata->account->name);
+			else
+				sprintf (buf, "&z[&cOOC&z]&w %s", social->others_found);
+			act (AT_SOCIAL, buf, ch, NULL, victim, TO_MUD);
 		}
 		else
 		{
-			sprintf (buf, "&z[&cIMM&z][&cOOC&z]&w %s", social->others_auto);
-			act (AT_SOCIAL, buf, ch, NULL, victim, TO_MUD);
 			sprintf (buf, "&z[&cIMM&z][&cOOC&z]&w %s", social->char_found);
 			act (AT_SOCIAL, buf, ch, NULL, victim, TO_CHAR);
 			sprintf (buf, "&z[&cIMM&z][&cOOC&z]&w %s", social->vict_found);
 			act (AT_SOCIAL, buf, ch, NULL, victim, TO_VICT);
+			sprintf (buf, "&z[&cIMM&z][&cOOC&z]&w %s", social->others_auto);
+			act (AT_SOCIAL, buf, ch, NULL, victim, TO_MUD);
 		}
-		return;
 	}
+	strcat(buf, " (");
+	strcat(buf, ch->name);
+	strcat(buf, ")");
+	ooc_history_add(str_dup(buf));
 }
 
 
@@ -1658,7 +1647,7 @@ void do_say_to_char( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH], last_char;
 	char buf[MAX_STRING_LENGTH];
-	char *sbuf;
+	//char *sbuf;
 	CHAR_DATA *victim;
 	EXT_BV actflags;
 	int arglen;
@@ -1711,7 +1700,7 @@ void do_say_to_char( CHAR_DATA *ch, char *argument )
 	//if( IS_NPC(ch) )
 	//   xREMOVE_BIT( ch->act, ACT_SECRETIVE );
 
-	sbuf = argument;
+	//sbuf = argument;
 
 /*
 	// Check to see if character is ignoring speaker
@@ -1826,7 +1815,6 @@ void do_osay(CHAR_DATA *ch, char *argument)
 	char *arg;
 	char buf[MAX_INPUT_LENGTH];
 	CHAR_DATA *vch;
-	EXT_BV actflags;
 
 	if ( argument[0] == '\0' )
 	{
@@ -1840,7 +1828,6 @@ void do_osay(CHAR_DATA *ch, char *argument)
 		return;
 	}
 
-	actflags = ch->act;
 	if ( IS_NPC( ch ) )
 		xREMOVE_BIT( ch->act, ACT_SECRETIVE );
 
@@ -3076,61 +3063,45 @@ void do_quit( CHAR_DATA *ch, char *argument )
 
 void send_rip_screen( CHAR_DATA *ch )
 {
-	FILE *rpfile;
-	int num=0;
-	char BUFF[MAX_STRING_LENGTH*2];
-
-	if ((rpfile = fopen(RIPSCREEN_FILE,"r")) !=NULL) {
-		while ((BUFF[num]=fgetc(rpfile)) != EOF)
-			num++;
-		fclose(rpfile);
-		BUFF[num] = 0;
-		write_to_buffer(ch->desc,BUFF,num);
-	}
+	send_rip_title(ch);
 }
 
 void send_rip_title( CHAR_DATA *ch )
 {
 	FILE *rpfile;
-	int num=0;
-	char BUFF[MAX_STRING_LENGTH*2];
-
+	char BUFF[MAX_STRING_LENGTH];
+	strcpy(BUFF, "");
 	if ((rpfile = fopen(RIPTITLE_FILE,"r")) !=NULL) {
-		while ((BUFF[num]=fgetc(rpfile)) != EOF)
-			num++;
+		while( !feof(rpfile))
+			strcat(BUFF, fread_line(rpfile));
 		fclose(rpfile);
-		BUFF[num] = 0;
-		write_to_buffer(ch->desc,BUFF,num);
+		write_to_buffer(ch->desc,BUFF,strlen(BUFF) - 1);
 	}
 }
 
 void send_ansi_title( CHAR_DATA *ch )
 {
 	FILE *rpfile;
-	int num=0;
-	char BUFF[MAX_STRING_LENGTH*2];
-
+	char BUFF[MAX_STRING_LENGTH];
+	strcpy(BUFF, "");
 	if ((rpfile = fopen(ANSITITLE_FILE,"r")) !=NULL) {
-		while ((BUFF[num]=fgetc(rpfile)) != EOF)
-			num++;
+		while( !feof(rpfile))
+			strcat(BUFF, fread_line(rpfile));
 		fclose(rpfile);
-		BUFF[num] = 0;
-		write_to_buffer(ch->desc,BUFF,num);
+		write_to_buffer(ch->desc,BUFF,strlen(BUFF) - 1);
 	}
 }
 
 void send_ascii_title( CHAR_DATA *ch )
 {
 	FILE *rpfile;
-	int num=0;
 	char BUFF[MAX_STRING_LENGTH];
-
+	strcpy(BUFF, "");
 	if ((rpfile = fopen(ASCTITLE_FILE,"r")) !=NULL) {
-		while ((BUFF[num]=fgetc(rpfile)) != EOF)
-			num++;
+		while( !feof(rpfile))
+			strcat(BUFF, fread_line(rpfile));
 		fclose(rpfile);
-		BUFF[num] = 0;
-		write_to_buffer(ch->desc,BUFF,num);
+		write_to_buffer(ch->desc,BUFF,strlen(BUFF) - 1);
 	}
 }
 
