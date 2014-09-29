@@ -120,351 +120,102 @@ extern int      top_exit;
 /*
  * Advancement stuff.
  */
+#define PRIMARY_PROF	50
+#define SECONDARY_PROF	40
 int max_level( CHAR_DATA *ch, int ability)
 {
 	int level = 0;
 
 	if ( IS_NPC(ch) )
-		return 100;
+		return 200;
 
 	if ( IS_IMMORTAL(ch))
 		return 200;
 
 	if ( ability == COMBAT_ABILITY )
 	{
-		if ( ch->main_ability == ability ) level = 30;
-		if ( ch->main_ability == ENGINEERING_ABILITY ) level = 3;
-		if ( ch->main_ability == TECHNICIAN_ABILITY ) level = 3;
-		if ( ch->main_ability == HUNTING_ABILITY ) level = 12;
-		if ( ch->main_ability == ASSASSIN_ABILITY ) level = 12;
-		if ( ch->main_ability == SMUGGLING_ABILITY ) level = 5;
-		if ( ch->secondary_ability == ability ) level = 25;
-		//No Human
-		if ( ch->race == RACE_WOOKIEE ) level += 6;
-		//No Twilek
-		if ( ch->race == RACE_RODIAN ) level += 2;
-		//No hutt
-		//No moncal
-		if ( ch->race == RACE_NOGHRI ) level += 2;
-		if ( ch->race == RACE_GAMORREAN ) level += 3;
-		if ( ch->race == RACE_JAWA ) level -= 3;
-		if ( ch->race == RACE_ADARIAN ) level += 2;
-		//No Ewok
-		//No verpine
-		//No Defel
-		if ( ch->race == RACE_TRANDOSHAN ) level += 2;
-		if ( ch->race == RACE_HAPAN ) level += 1;
-		if ( ch->race == RACE_QUARREN ) level += 2;
-		if ( ch->race == RACE_SHISTAVANEN ) level += 2;
-		if ( ch->race == RACE_FALLEEN ) level += 1;
-		if( ch->race == RACE_ITHORIAN ) level-=1;
-		if( ch->race == RACE_DEVARONIAN ) level+=1;
-		// No Gotal
-		//no droid
-		// No Firrerreo
-		if ( ch->race == RACE_BARABEL ) level -= 2;
-		if ( ch->race == RACE_BOTHAN ) level -= 2;
-		if ( ch->race == RACE_TOGORIAN ) level += 4;
-		if ( ch->race == RACE_DUG ) level -= 3;
-		// No Kubaz
-		if ( ch->race == RACE_SELONIAN ) level -= 1;
-		// No Gran
-		if ( ch->race == RACE_YEVETHA ) level -= 2;
-		if ( ch->race == RACE_GAND ) level += 2;
-		if ( ch->race == RACE_DUROS ) level -= 1;
-		if ( ch->race == RACE_COYNITE ) level -= 1;
-		if ( ch->race == RACE_SELONIAN ) level += 2;
-		if ( ch->race == RACE_PROTOCAL_DROID ) level -= 3;
-		if( ch->race == RACE_ASSASSIN_DROID ) level +=2;
-		if ( ch->race == RACE_GLADIATOR_DROID ) level += 6;
-		if ( ch->race == RACE_ASTROMECH_DROID ) level -= 2;
+		if ( ch->main_ability == ability ) level = PRIMARY_PROF;
+		if ( ch->secondary_ability == ability ) level = SECONDARY_PROF;
 
-		level +=  (ch->perm_con / 5) + (ch->perm_dex / 5);
+		level += ch->perm_str + (ch->perm_dex / 2);
 
 	}
 
 	if ( ability == PILOTING_ABILITY )
 	{
-		if ( ch->main_ability == ability ) level = 30;
-		if ( ch->main_ability == ENGINEERING_ABILITY ) level = 10;
-		if ( ch->main_ability == TECHNICIAN_ABILITY ) level = 10;
-		if ( ch->main_ability == HUNTING_ABILITY ) level = 5;
-		if ( ch->main_ability == ASSASSIN_ABILITY ) level = 5;
-		if ( ch->main_ability == SMUGGLING_ABILITY ) level = 10;
-		if ( ch->secondary_ability == ability ) level = 25;
-		if ( ch->race == RACE_HUTT ) level -= 2;
-		if ( ch->race == RACE_JAWA ) level -= 1;
-		if ( ch->race == RACE_VERPINE ) level += 2;
-		if ( ch->race == RACE_ASTROMECH_DROID ) level += 6;
-		if ( ch->race == RACE_SELONIAN ) level -= 1;
-		if ( ch->race == RACE_DUROS ) level += 2;
-		if ( ch->race == RACE_HUMAN ) level += 1;
-		if ( ch->race == RACE_COYNITE ) level -= 1;
-		if ( ch->race == RACE_KUBAZ ) level -= 1;
-		if ( ch->race == RACE_GAMORREAN ) level -= 2;
-		if ( ch->race == RACE_QUARREN ) level += 2;
-		if ( ch->race == RACE_HAPAN ) level += 3;
-		if( ch->race == RACE_NOGHRI) level =- 7;
-		level += (ch->perm_dex/2) + (ch->perm_int/3);
+		if ( ch->main_ability == ability ) level = PRIMARY_PROF;
+		if ( ch->secondary_ability == ability ) level = SECONDARY_PROF;
+
+		level += ch->perm_dex + (ch->perm_int / 2);
 	}
 
 	if ( ability == ENGINEERING_ABILITY )
 	{
-		if ( ch->main_ability == ability ) level = 30;
-		if ( ch->main_ability == TECHNICIAN_ABILITY ) level = 10;
-		if ( ch->main_ability == PILOTING_ABILITY ) level = 8;
-		if ( ch->main_ability == SLICER_ABILITY ) level = 5;
-		if ( ch->secondary_ability == ability ) level = 25;
-		//No Human
-		if ( ch->race == RACE_WOOKIEE ) level += 2;
-		//No Twilek
-		if ( ch->race == RACE_RODIAN ) level -= 2;
-		if ( ch->race == RACE_HUTT ) level -= 3;
-		if ( ch->race == RACE_MON_CALAMARI ) level += 3;
-		if ( ch->race == RACE_NOGHRI ) level -= 2;
-		if ( ch->race == RACE_GAMORREAN ) level -= 3;
-		if ( ch->race == RACE_JAWA ) level += 3;
-		if ( ch->race == RACE_ADARIAN ) level += 2;
-		//No Ewok
-		if ( ch->race == RACE_VERPINE ) level += 5;
-		//No Defel
-		if ( ch->race == RACE_TRANDOSHAN ) level -= 2;
-		if ( ch->race == RACE_HAPAN ) level += 1;
-		if ( ch->race == RACE_QUARREN ) level += 2;
-		if ( ch->race == RACE_SHISTAVANEN ) level -= 2;
-		if ( ch->race == RACE_FALLEEN ) level += 1;
-		// No Ithorian
-		// No Devaronian
-		// No Gotal
-		if ( ch->race == RACE_DROID ) level += 3;
-		// No Firrerreo
-		if ( ch->race == RACE_BARABEL ) level -= 2;
-		if ( ch->race == RACE_BOTHAN ) level += 1;
-		if ( ch->race == RACE_TOGORIAN ) level -= 2;
-		if ( ch->race == RACE_DUG ) level -= 3;
-		// No Kubaz
-		if ( ch->race == RACE_SELONIAN ) level += 1;
-		// No Gran
-		if ( ch->race == RACE_YEVETHA ) level += 2;
-		if ( ch->race == RACE_GAND ) level += 2;
-		if ( ch->race == RACE_DUROS ) level += 3;
-		if ( ch->race == RACE_COYNITE ) level -= 1;
-		if ( ch->race == RACE_SELONIAN ) level += 1;
-		if ( ch->race == RACE_PROTOCAL_DROID ) level += 3;
-		// no ass droid
-		if ( ch->race == RACE_GLADIATOR_DROID ) level -= 5;
-		if ( ch->race == RACE_ASTROMECH_DROID ) level += 2;
-		level += ch->perm_int / 2;
+		if ( ch->main_ability == ability ) level = PRIMARY_PROF;
+		if ( ch->secondary_ability == ability ) level = SECONDARY_PROF;
+
+		level += ch->perm_int + (ch->perm_wis / 2);
 	}
 
 	if ( ability == SLICER_ABILITY )
 	{
-		if ( ch->main_ability == ability) level = 30;
-		if ( ch->main_ability == SMUGGLING_ABILITY) level = 12;
-		if( ch->main_ability == ASSASSIN_ABILITY ) level = 1;
-		if( ch->main_ability == HUNTING_ABILITY ) level = 1;
-		if( ch->main_ability == ENGINEERING_ABILITY) level = 5;
-		if ( ch->secondary_ability == ability ) level = 25;
-		if ( ch->race == RACE_JAWA) level -= 2;
-		if ( ch->race == RACE_VERPINE) level += 3;
-		if ( ch->race == RACE_BOTHAN) level +=5;
-		if ( ch->race == RACE_HUMAN) level += 3;
-		if ( ch->race == RACE_WOOKIEE) level += 3;
-		if ( ch->race == RACE_KUBAZ ) level += 2;
-		if( ch->race == RACE_ASTROMECH_DROID) level += 3;
-		if( ch->race == RACE_NOGHRI ) level-=4;
-		level += ((ch->perm_wis / 8) + (ch->perm_cha / 8) + (ch->perm_int / 8));
+		if ( ch->main_ability == ability) level = PRIMARY_PROF;
+		if ( ch->secondary_ability == ability ) level = SECONDARY_PROF;
+
+		level += ch->perm_int + (ch->perm_cha / 2);
 	}
 
 	if ( ability == HUNTING_ABILITY )
 	{
-		if ( ch->main_ability == ability ) level = 30;
-		if ( ch->secondary_ability == ability ) level = 25;
+		if ( ch->main_ability == ability ) level = PRIMARY_PROF;
+		if ( ch->secondary_ability == ability ) level = SECONDARY_PROF;
 
-		if(ch->main_ability != ASSASSIN_ABILITY)
+		if ( level != 0)
 		{
-			if ( ch->race == RACE_WOOKIEE ) level += 2;
-			if ( ch->race == RACE_RODIAN) level += 5;
-			if ( ch->race == RACE_NOGHRI) level += 5;
-			if ( ch->race == RACE_TWI_LEK) level += 2;
-			if ( ch->race == RACE_MON_CALAMARI) level += 3;
-			if ( ch->race == RACE_TRANDOSHAN) level += 3;
-			if ( ch->race == RACE_KUBAZ) level += 1;
+			level += ch->perm_con + (ch->perm_wis / 2);
 		}
-
-		if ( ch->race == RACE_HAPAN) level -= 2;
-		if ( ch->race == RACE_JAWA) level -= 2;
-		if ( ch->race == RACE_ADARIAN) level -= 3;
-		if ( ch->race == RACE_HUTT) level -= 3;
 	}
 
 	if ( ability == ASSASSIN_ABILITY )
 	{
-		if ( ch->main_ability == ability ) level = 30;
-		if ( ch->secondary_ability == ability ) level = 25;
-		if(ch->main_ability != HUNTING_ABILITY)
+		if ( ch->main_ability == ability ) level = PRIMARY_PROF;
+		if ( ch->secondary_ability == ability ) level = SECONDARY_PROF;
+
+		if ( level != 0 )
 		{
-			if ( ch->race == RACE_WOOKIEE)
-				level += 2;
-			if ( ch->race == RACE_ASSASSIN_DROID)
-				level += 8;
-			if ( ch->race == RACE_RODIAN)
-				level += 3;
-			if ( ch->race == RACE_TWI_LEK)
-				level += 2;
-			if ( ch->race == RACE_MON_CALAMARI)
-				level += 3;
-			if ( ch->race == RACE_TRANDOSHAN)
-				level += 3;
-			if ( ch->race == RACE_KUBAZ)
-				level += 3;
+			level += ch->perm_dex + (ch->perm_lck / 2);
 		}
-
-		if ( ch->race == RACE_HUTT)
-			level -= 3;
-		if ( ch->race == RACE_HAPAN)
-			level -= 2;
-		if ( ch->race == RACE_JAWA)
-			level -= 2;
-		if ( ch->race == RACE_ADARIAN)
-			level -= 3;
-
 	}
 
 	if ( ability == SMUGGLING_ABILITY )
 	{
-		if ( ch->main_ability == ability ) level = 30;
-		if ( ch->main_ability == PILOTING_ABILITY ) level = 10;
-		if ( ch->main_ability == SLICER_ABILITY ) level = 7;
-		if ( ch->main_ability == HUNTING_ABILITY ) level = 3;
-		if ( ch->secondary_ability == ability ) level = 25;
-		if ( ch->race == RACE_HUMAN ) level += 1;
-		//No Wookiee
-		if ( ch->race == RACE_TWI_LEK ) level += 3;
-		if ( ch->race == RACE_RODIAN ) level += 2;
-		if ( ch->race == RACE_HUTT ) level += 5;
-		if ( ch->race == RACE_MON_CALAMARI ) level += 2;
-		if ( ch->race == RACE_NOGHRI ) level -= 2;
-		if ( ch->race == RACE_GAMORREAN ) level -= 3;
-		if ( ch->race == RACE_JAWA ) level -= 2;
-		//No Adarian
-		if ( ch->race == RACE_EWOK ) level += 2;
-		//No Verpine
-		if ( ch->race == RACE_DEFEL ) level += 4;
-		if ( ch->race == RACE_TRANDOSHAN ) level -= 2;
-		if ( ch->race == RACE_HAPAN ) level += 1;
-		if ( ch->race == RACE_QUARREN ) level += 2;
-		if ( ch->race == RACE_SHISTAVANEN ) level -= 1;
-		if ( ch->race == RACE_FALLEEN ) level += 3;
-		// No Ithorian
-		if ( ch->race == RACE_DEVARONIAN ) level += 1;
-		// No Gotal
-		// No Firrerreo
-		// No Barabel
-		if ( ch->race == RACE_BOTHAN ) level += 3;
-		// No Togororian
-		if ( ch->race == RACE_DUG ) level -= 1;
-		if ( ch->race == RACE_KUBAZ ) level += 3;
-		if ( ch->race == RACE_SELONIAN ) level -= 1;
-		// No Gran
-		if ( ch->race == RACE_YEVETHA ) level += 1;
-		// No Gand
-		if ( ch->race == RACE_DUROS ) level += 2;
-		//No Coynite
-		//No Selonian
-		//No Droids
-		level += ch->perm_lck/2;
+		if ( ch->main_ability == ability ) level = PRIMARY_PROF;
+		if ( ch->secondary_ability == ability ) level = SECONDARY_PROF;
+
+		level += ch->perm_lck + (ch->perm_dex / 2);
 	}
 
 
 	if ( ability == POLITICIAN_ABILITY )
 	{
-		if ( ch->main_ability == ability )    level = 30;
-		if ( ch->main_ability == PILOTING_ABILITY ) level = 10;
-		if ( ch->secondary_ability == ability ) level = 25;
-		//Gonna stop all that 'no race' stuff. Too many nos on politician.
-		if ( ch->race == RACE_HUMAN ) level += 2;
-		if ( ch->race == RACE_WOOKIEE ) level -= 2;
-		if ( ch->race == RACE_TWI_LEK ) level -= 1;
-		if ( ch->race == RACE_RODIAN ) level -= 3;
-		if ( ch->race == RACE_BOTHAN ) level += 4;
-		if ( ch->race == RACE_BARABEL ) level -= 1;
-		if ( ch->race == RACE_FIRRERREO ) level -= 1;
-		if ( ch->race == RACE_HUTT ) level -= 2;
-		if ( ch->race == RACE_COYNITE ) level -= 2;
-		if ( ch->race == RACE_PROTOCAL_DROID ) level += 4;
-		if ( ch->race == RACE_YEVETHA ) level -= 2;
-		if ( ch->race == RACE_ITHORIAN ) level += 2;
-		if ( ch->race == RACE_SELONIAN ) level -= 1;
-		if ( ch->race == RACE_MON_CALAMARI ) level += 3;
-		if ( ch->race == RACE_NOGHRI ) level -= 2;
-		if ( ch->race == RACE_GAMORREAN ) level -= 4;
-		if ( ch->race == RACE_JAWA ) level -= 3;
-		if ( ch->race == RACE_ADARIAN ) level += 4;
-		if ( ch->race == RACE_VERPINE ) level -= 2;
-		if ( ch->race == RACE_DEFEL ) level -= 2;
-		if ( ch->race == RACE_TRANDOSHAN ) level -= 3;
-		if ( ch->race == RACE_HAPAN ) level += 3;
-		if ( ch->race == RACE_QUARREN ) level -= 2;
-		if ( ch->race == RACE_KUBAZ ) level -= 4;
-		if ( ch->race == RACE_DEVARONIAN ) level -= 2;
-		if ( ch->race == RACE_ASSASSIN_DROID ) level -= 4;
-		if ( ch->race == RACE_GLADIATOR_DROID ) level -= 4;
-		if ( ch->race == RACE_ASTROMECH_DROID ) level -= 3;
-		level += ch->perm_cha/3 + ch->perm_wis/3;
+		if ( ch->main_ability == ability )    level = PRIMARY_PROF;
+		if ( ch->secondary_ability == ability ) level = SECONDARY_PROF;
+
+		level += ch->perm_cha + (ch->perm_wis / 2);
 	}
 
 	if ( ability == TECHNICIAN_ABILITY )
 	{
-		if ( ch->main_ability == ability ) level = 30;
-		if ( ch->main_ability == ENGINEERING_ABILITY ) level = 12;
-		if ( ch->main_ability == PILOTING_ABILITY ) level = 10;
-		if ( ch->main_ability == SLICER_ABILITY ) level = 8;
-		if ( ch->secondary_ability == ability ) level = 25;
-		//No Human
-		if ( ch->race == RACE_WOOKIEE ) level += 3;
-		//No Twilek
-		if ( ch->race == RACE_RODIAN ) level -= 1;
-		if ( ch->race == RACE_HUTT ) level -= 2;
-		if ( ch->race == RACE_MON_CALAMARI ) level += 4;
-		if ( ch->race == RACE_NOGHRI ) level -= 1;
-		if ( ch->race == RACE_GAMORREAN ) level -= 3;
-		if ( ch->race == RACE_JAWA ) level += 1;
-		if ( ch->race == RACE_ADARIAN ) level += 2;
-		if ( ch->race == RACE_EWOK ) level -= 1;
-		if ( ch->race == RACE_VERPINE ) level += 3;
-		// No Defel
-		if ( ch->race == RACE_TRANDOSHAN ) level -= 3;
-		if ( ch->race == RACE_HAPAN ) level += 2;
-		if ( ch->race == RACE_QUARREN ) level += 1;
-		if ( ch->race == RACE_SHISTAVANEN ) level -= 2;
-		// No Falleen
-		if ( ch->race == RACE_ITHORIAN ) level += 1;
-		if ( ch->race == RACE_DEVARONIAN ) level -= 1;
-		// No Gotal
-		if ( ch->race == RACE_DROID ) level += 2;
-		// No Firrerreo
-		if ( ch->race == RACE_BARABEL ) level -= 2;
-		// No Bothan
-		if ( ch->race == RACE_TOGORIAN ) level -= 2;
-		if ( ch->race == RACE_DUG ) level -= 3;
-		// No Kubaz
-		// No Selonian
-		// No Gran
-		// No Yevetha
-		if ( ch->race == RACE_GAND ) level += 4;
-		if ( ch->race == RACE_DUROS ) level += 3;
-		if ( ch->race == RACE_COYNITE ) level -= 2;
-		if ( ch->race == RACE_SELONIAN ) level += 1;
-		//No Glad, Ass, Proto Droids
-		if ( ch->race == RACE_ASTROMECH_DROID ) level += 6;
-		level += (ch->perm_int/2) + (ch->perm_wis/6);
+		if ( ch->main_ability == ability ) level = PRIMARY_PROF;
+		if ( ch->secondary_ability == ability ) level = SECONDARY_PROF;
+
+		level += ch->perm_int + (ch->perm_dex / 2);
 	}
 
 	// Level Bonuses for Good RP
 	level += ch->bonus[ability];
 
-	level = URANGE( 1, level, 30 );
+	level = URANGE( 1, level, LEVEL_AVATAR );
 
 	if ( ability == FORCE_ABILITY )
 	{
@@ -481,16 +232,19 @@ int max_level( CHAR_DATA *ch, int ability)
 void advance_level( CHAR_DATA *ch , int ability)
 {
 
-	if ( ch->top_level < ch->skill_level[ability] && ch->top_level < 30 )
+	if ( ch->top_level < ch->skill_level[ability] && ch->top_level < LEVEL_AVATAR )
 	{
-		ch->top_level = URANGE( 1 , ch->skill_level[ability] , 30 );
+		ch->top_level = URANGE( 1 , ch->skill_level[ability] , LEVEL_AVATAR );
 	}
 
 	if ( !IS_NPC(ch) )
 		xREMOVE_BIT( ch->act, PLR_BOUGHT_PET );
 
+	ch->max_hit += number_range(ch->perm_con, ch->perm_con * 2);
+	ch->max_move += number_range(ch->perm_dex, ch->perm_dex * 2);
+
 	return;
-}   
+}
 
 void gain_exp2( CHAR_DATA *ch, int gain , int ability )
 {

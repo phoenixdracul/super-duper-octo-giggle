@@ -288,7 +288,7 @@ typedef ch_ret	SPELL_FUN	args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
 #define LEVEL_CREATOR		   (MAX_LEVEL - 4)
 #define LEVEL_ACOLYTE		   (MAX_LEVEL - 4)
 #define LEVEL_NEOPHYTE		   (MAX_LEVEL - 4)
-#define LEVEL_AVATAR		   (MAX_LEVEL - 5)
+#define LEVEL_AVATAR		   (MAX_LEVEL - 6) // changed this to reflect actual max player level -- Kasji
 
 #include "shell.h"
 #include "pfiles.h"

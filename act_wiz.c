@@ -3091,8 +3091,8 @@ void do_advance( CHAR_DATA *ch, char *argument )
 			victim->experience[iAbility] = 0;
 			victim->skill_level[iAbility] = 1;
 
-			if ( iAbility == COMBAT_ABILITY )
-				victim->max_hit = 500;
+//			if ( iAbility == COMBAT_ABILITY )
+//				victim->max_hit = 500;
 
 			if ( iAbility == FORCE_ABILITY )
 				victim->max_mana = 0;
@@ -3147,8 +3147,8 @@ void do_advance( CHAR_DATA *ch, char *argument )
 		send_to_char( "Cursed and forsaken! The gods have lowered your level.\n\r", victim );
 		victim->experience[ability] = 0;
 		victim->skill_level[ability] = 1;
-		if ( ability == COMBAT_ABILITY )
-			victim->max_hit = 500;
+//		if ( ability == COMBAT_ABILITY )
+//			victim->max_hit = 500;
 		if ( ability == FORCE_ABILITY )
 			victim->max_mana = 0;
 	}
