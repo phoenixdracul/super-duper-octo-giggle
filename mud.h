@@ -2976,7 +2976,7 @@ struct	pc_data
     char *		spouse;
     char *		mentor;
     int			forcerank;
-    char * 		last_name;    
+    char * 		last_name;
     long int            outcast_time;	/* The time at which the char was outcast */
     long int            restore_time;	/* The last time the char did a restore all */
     int			r_range_lo;	/* room range */
@@ -2984,7 +2984,7 @@ struct	pc_data
     int			m_range_lo;	/* mob range  */
     int			m_range_hi;
     int			o_range_lo;	/* obj range  */
-    int			o_range_hi;		
+    int			o_range_hi;
     char *		tell_snoop;	/* Tell snoop */
     sh_int		wizinvis;	/* wizinvis level */
     sh_int		min_snoop;	/* minimum snoop level */
@@ -3012,9 +3012,10 @@ struct	pc_data
     int                 wanted_flags;
     long		bank;
     int			salary;
-   bool hotboot; /* hotboot tracker */
+    bool hotboot; /* hotboot tracker */
 
-
+    // New stuff -- Kasji
+    int skill_points;
 };
 
 
