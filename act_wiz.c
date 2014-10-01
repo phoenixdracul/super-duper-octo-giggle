@@ -1600,7 +1600,8 @@ void do_mstat( CHAR_DATA *ch, char *argument )
 		ch_printf( ch, "&W&z| &GPcflags&W: %-67s &z|\n\r", flag_string(victim->pcdata->flags, pc_flags));
 		ch_printf( ch, "&W&z| &GWanted Flags&W: %-62s &z|\n\r", flag_string(victim->pcdata->wanted_flags, planet_flags));
 		ch_printf( ch, "&W&z| &GBestowments&W: %-63s &z|\n\r", victim->pcdata->bestowments != NULL ? victim->pcdata->bestowments : "None");
-		ch_printf( ch, "&W&z| &GGood RP Points: %4d                                                     &z|\n\r", victim->rppoints);
+		ch_printf( ch, "&W&z| &GGood RP Points: &W%-4d                                                     &z|\n\r", victim->rppoints);
+		ch_printf( ch, "&W&z| &GSkill Points: &W%-4d &GFeat Points: &W%-4d                                     &z|\n\r", victim->pcdata->skill_points, victim->pcdata->feat_points);
 		ch_printf( ch, "&W&z+------------------------------------------------------------------------------+\n\r");
 	}
 	if(IS_NPC(victim))

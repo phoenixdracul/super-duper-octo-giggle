@@ -749,6 +749,11 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 		fprintf( fp, "Rppoints   %d\n",	ch->rppoints		);
 	else
 		fprintf( fp, "Rppoints   0\n"				);
+	if ( ch->pcdata )
+	{
+		fprintf( fp, "SkillPoints  %d\n",	ch->pcdata->skill_points );
+		fprintf( fp, "FeatPoints   %d\n",	ch->pcdata->feat_points );
+	}
 	if ( ch->wimpy )
 		fprintf( fp, "Wimpy        %d\n",	ch->wimpy		);
 	if ( ch->deaf )
@@ -1195,8 +1200,12 @@ bool load_char_obj( DESCRIPTOR_DATA * d, char *name, bool preload, bool hotboot 
 	ch->plr_home = NULL;
 	ch->pheight = 0;
 	ch->build = 0;
+
 	for (i = 0; i < RES_MAX; i++)
 		ch->base_res[i] = 0.0;
+	ch->pcdata->skill_points = 0;
+	ch->pcdata->feat_points = 0;
+
 	ch->pcdata->hotboot = FALSE; /* Never changed except when PC is saved during hotboot save */
 #ifdef IMC
 	imc_initchar( ch );
@@ -1727,6 +1736,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload, bool hotboot )
 
 			/* 'E' was moved to after 'S' */
 		case 'F':
+			KEY( "FeatPoints", ch->pcdata->feat_points,	fread_number( fp ) );
 			KEY( "Flags",	ch->pcdata->flags,	fread_number( fp ) );
 			KEY( "ForceControl",ch->force_control,      fread_number( fp ) );
 			KEY( "ForceSense",ch->force_sense,          fread_number( fp ) );
@@ -1893,6 +1903,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload, bool hotboot )
 			KEY( "MaxColors",   max_colors,             fread_number( fp ) );
 			KEY( "MDeaths",	ch->pcdata->mdeaths,	fread_number( fp ) );
 			KEY( "Mentalstate", ch->mental_state,	fread_number( fp ) );
+                        KEY( "Mentor",          ch->pcdata->mentor,      fread_string ( fp ) );
 			KEY( "MGlory",      ch->pcdata->quest_accum,fread_number( fp ) );
 			KEY( "Minsnoop",	ch->pcdata->min_snoop,	fread_number( fp ) );
 			KEY( "MKills",	ch->pcdata->mkills,	fread_number( fp ) );
@@ -1984,8 +1995,8 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload, bool hotboot )
 			KEY( "Ship",		ch->pcdata->shipname,		fread_string( fp ) );
 			KEY( "SecondAbility",	ch->secondary_ability,		fread_number( fp ) );
 			KEY( "ShortDescr",	ch->short_descr,	fread_string( fp ) );
+			KEY( "SkillPoints",	ch->pcdata->skill_points,	fread_number( fp ) );
 			KEY( "Spouse",	ch->pcdata->spouse,		fread_string( fp ) );
-                        KEY( "Mentor",          ch->pcdata->mentor,      fread_string ( fp ) );
 			KEY( "Susceptible",	ch->susceptible,	fread_number( fp ) );
 			if ( !str_cmp( word, "SavingThrow" ) )
 			{

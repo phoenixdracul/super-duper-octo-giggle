@@ -3016,6 +3016,7 @@ struct	pc_data
 
     // New stuff -- Kasji
     int skill_points;
+    int feat_points;
 };
 
 

@@ -185,7 +185,9 @@ void do_score( CHAR_DATA *ch, char *argument )
     }
   }
   send_to_char("&r+==========================================================+&W\n\r", ch);
-  send_to_char("&r|  &W+&C = Primary Ability, &R&W-&C = Secondary Ability            &r  |\n\r", ch);
+  send_to_char("&r|  &W+&C = Primary Ability, &W-&C = Secondary Ability            &r  |\n\r", ch);
+  send_to_char("&r+==========================================================+&W\n\r", ch);
+  ch_printf(ch, "&r|  &CSkill Points: &W%-4d  &CFeat Points: &W%-4d                 &r  |\n\r", ch->pcdata->skill_points, ch->pcdata->feat_points);
   send_to_char("&r+==========================================================+&W\n\r", ch);
   ch_printf(ch, "&R&r| &CCurrent Comm Frequency: &W%-9s     &CGood RP Points: &W%d  &r|&W\n\r", victim->comfreq, victim->rppoints ? victim->rppoints : 0 );
   if(ch->pcdata->lottery_number > 0)
