@@ -183,7 +183,7 @@ const char *	const	a_types	[] =
 		"res_pierce", "res_slash", "res_explosive", "res_acid", "res_poison", "res_force",
 		"res_disruptor",
 
-		"extra_attack", "armor_pen"
+		"extra_attack", "armor_pen", "shield_deflect"
 };
 
 const char *const npc_position[POS_MAX] = {

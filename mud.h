@@ -1737,19 +1737,6 @@ typedef enum
 /* Postponed for when it's needed */
 #define AFF_NOAMBUSH		BV00
 
-/* Damage types for new combat. -- Kasji */
-#define DAM_GENERIC		0	// Just a placeholder damage type until in game weapons are properly set.
-#define DAM_ENERGY		1	// Blasters, lightsabers
-#define DAM_FIRE		2
-#define DAM_COLD		3
-#define DAM_EXPLOSIVE		4
-#define DAM_ELECTRIC		5
-#define DAM_POISON		6
-#define DAM_ACID		7
-#define DAM_FORCE		8
-#define DAM_BLUNT		9	// Blunt physical
-#define DAM_SHARP		10	// Sharp physical
-
 /*
  * Resistant Immune Susceptible flags
  */
@@ -2251,7 +2238,7 @@ typedef enum
   APPLY_RES_13,
 
   // Other new item bonuses
-  APPLY_EXTRA_ATTACK, APPLY_ARMOR_PEN,
+  APPLY_EXTRA_ATTACK, APPLY_ARMOR_PEN, APPLY_SHIELD_DEFLECT,
 
   MAX_APPLY_TYPE
 } apply_types;
@@ -4825,6 +4812,7 @@ int	get_res		args( ( CHAR_DATA *ch, int dam, OBJ_DATA * wield ) );
 int	get_armor_penalty	args( ( CHAR_DATA * ch ) );
 float	calc_res	args( ( CHAR_DATA *ch, int r ) );
 float	calc_res_min	args( ( CHAR_DATA *ch, int r ) );
+bool	deflect_attack	args( ( CHAR_DATA * ch ) );
 ch_ret	damage		args( ( CHAR_DATA *ch, CHAR_DATA *victim, int dam,
 			    int dt ) );
 void	update_pos	args( ( CHAR_DATA *victim ) );

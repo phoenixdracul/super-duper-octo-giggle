@@ -603,6 +603,7 @@ tiny_affect_loc_name(int location)
 	case APPLY_RES_13:          	return "Disruptor";
 	case APPLY_EXTRA_ATTACK:	return "Extra Attacks";
 	case APPLY_ARMOR_PEN:		return "Armor Pen";
+	case APPLY_SHIELD_DEFLECT:	return "Shield Deflect";
 	}
 
 	bug("Affect_location_name: unknown location %d.", location);

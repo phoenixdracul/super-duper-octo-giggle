@@ -630,8 +630,8 @@ void affect_modify( CHAR_DATA *ch, AFFECT_DATA *paf, bool fAdd )
 		bug( "Affect_modify: unknown location %d.", paf->location );
 		return;
 
+	case APPLY_SHIELD_DEFLECT:	break;
 	case APPLY_ARMOR_PEN:	break;
-
 	case APPLY_EXTRA_ATTACK:	ch->numattacks += mod;	break;
 
 	case APPLY_RES_1:
@@ -2659,6 +2659,7 @@ char *affect_loc_name( int location )
 	case APPLY_RES_13:		return "Resist: Disruptor";
 	case APPLY_EXTRA_ATTACK:	return "Extra Attacks";
 	case APPLY_ARMOR_PEN:		return "Armor Penetration";
+	case APPLY_SHIELD_DEFLECT:	return "Shield Deflect";
 	}
 
 	bug( "Affect_location_name: unknown location %d.", location );

@@ -989,12 +989,20 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 		}
 	}
 
+
 	/*
 	 * check to see if weapon is charged
 	 */
 
 	if ( dt == (TYPE_HIT + WEAPON_BLASTER ) && wield && wield->item_type == ITEM_WEAPON )
 	{
+		if ( deflect_attack(victim) )
+		{
+			act( AT_CYAN, "The bolt from $N's blaster is deflected by your shield.", victim, NULL, ch, TO_CHAR );
+			act( AT_CYAN, "The bolt from your blaster is deflected by $N's shield.", ch, NULL, victim, TO_CHAR );
+			act( AT_CYAN, "The bolt from $n's blaster is deflected by $N's shield.", ch, NULL, victim, TO_NOTVICT );
+			return rNONE;
+		}
 		if ( wield->value[4] < 1  )
 		{
 			act( AT_YELLOW, "$n points their blaster at you but nothing happens.",  ch, NULL, victim, TO_VICT    );
@@ -1418,6 +1426,38 @@ float calc_res_min( CHAR_DATA * ch, int r)
     y = URANGE(0.0, y, 0.999);
 
     return y * (float)q / 1000.0;
+}
+
+bool deflect_attack(CHAR_DATA * ch)
+{
+	OBJ_DATA * obj;
+	AFFECT_DATA * af;
+	int x = 0;
+
+	for (obj = ch->first_carrying; obj; obj = obj->next_content)
+	{
+            for (af = obj->pIndexData->first_affect; af; af = af->next)
+            {
+                if (af->location == APPLY_SHIELD_DEFLECT)
+                {
+                    x = af->modifier;
+                    break;
+                }
+            }
+            for (af = obj->first_affect; af; af = af->next)
+            {
+                if (af->location == APPLY_SHIELD_DEFLECT)
+                {
+                    x = af->modifier;
+                    break;
+                }
+            }
+	}
+
+	if (number_range(1, 100) > x)
+		return FALSE;
+
+	return TRUE;
 }
 
 /*
