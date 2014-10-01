@@ -231,7 +231,7 @@ int max_level( CHAR_DATA *ch, int ability)
 
 void advance_level( CHAR_DATA *ch , int ability)
 {
-
+	int hp, mv;
 	if ( ch->top_level < ch->skill_level[ability] && ch->top_level < LEVEL_AVATAR )
 	{
 		ch->top_level = URANGE( 1 , ch->skill_level[ability] , LEVEL_AVATAR );
@@ -240,8 +240,13 @@ void advance_level( CHAR_DATA *ch , int ability)
 	if ( !IS_NPC(ch) )
 		xREMOVE_BIT( ch->act, PLR_BOUGHT_PET );
 
-	ch->max_hit += number_range(ch->perm_con, ch->perm_con * 2);
-	ch->max_move += number_range(ch->perm_dex, ch->perm_dex * 2);
+	hp = number_range(ch->perm_con, ch->perm_con * 2);
+	mv = number_range(ch->perm_dex, ch->perm_dex * 2);
+	ch->max_hit += hp;
+	ch->max_move += mv;
+
+	set_char_color( AT_WHITE + AT_BLINK, ch );
+	ch_printf( ch, "You gain %d HP and %d MV!\n\r", hp, mv );
 
 	return;
 }

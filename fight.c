@@ -1332,7 +1332,7 @@ int get_res( CHAR_DATA * ch, int dam, OBJ_DATA * wield)
 
     j = number_range(0, 100);
 
-    actual = (min + (max * (float)j) / 100.0) * p;
+    actual = (min + ((max - min) * (float)j) / 100.0) * p;
 
     i = dam * (1.0 - actual);
 
@@ -1353,6 +1353,14 @@ float calc_res( CHAR_DATA * ch, int r)
         if (obj->wear_loc != WEAR_NONE)
         {
             for (af = obj->first_affect; af; af = af->next)
+            {
+                if (af->location == r)
+                {
+                    x += (float)af->modifier;
+                    break;
+                }
+            }
+            for (af = obj->pIndexData->first_affect; af; af = af->next)
             {
                 if (af->location == r)
                 {
@@ -1389,6 +1397,16 @@ float calc_res_min( CHAR_DATA * ch, int r)
                 {
 		    if (obj->item_type == ITEM_ARMOR && obj->value[2] < q)
 			q = obj->value[2];
+                    x += (float)af->modifier;
+                    break;
+                }
+            }
+            for (af = obj->pIndexData->first_affect; af; af = af->next)
+            {
+                if (af->location == r)
+                {
+                    if (obj->item_type == ITEM_ARMOR && obj->value[2] < q)
+                        q = obj->value[2];
                     x += (float)af->modifier;
                     break;
                 }
