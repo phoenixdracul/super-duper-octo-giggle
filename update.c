@@ -231,7 +231,7 @@ int max_level( CHAR_DATA *ch, int ability)
 
 void advance_level( CHAR_DATA *ch , int ability)
 {
-	int hp, mv;
+	int hp, mv, skill, feat;
 	if ( ch->top_level < ch->skill_level[ability] && ch->top_level < LEVEL_AVATAR )
 	{
 		ch->top_level = URANGE( 1 , ch->skill_level[ability] , LEVEL_AVATAR );
@@ -246,6 +246,27 @@ void advance_level( CHAR_DATA *ch , int ability)
 	ch->max_move += mv;
 
 	set_char_color( AT_WHITE + AT_BLINK, ch );
+	if ( ch->pcdata )
+	{
+		skill = URANGE(1, ch->skill_level[ability] / 20, 5);
+		if ( ch->main_ability == ability && (ch->skill_level[ability] % 5) == 0 )
+			feat = 1;
+		else if ( ch->secondary_ability == ability && (ch->skill_level[ability] % 10) == 0 )
+			feat = 1;
+		else
+			feat = 0;
+
+		ch->pcdata->skill_points += skill;
+		ch->pcdata->feat_points += feat;
+
+		if (skill > 0 && feat > 0)
+			ch_printf( ch, "You gain %d skill points and %d feat points!\n\r", skill, feat );
+		else if (skill > 0)
+			ch_printf( ch, "You gain %d skill points!\n\r", skill);
+		else if (feat > 0)
+			ch_printf( ch, "You gain %d feat points!\n\r", feat);
+	}
+
 	ch_printf( ch, "You gain %d HP and %d MV!\n\r", hp, mv );
 
 	return;
