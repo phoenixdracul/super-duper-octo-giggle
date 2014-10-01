@@ -1617,6 +1617,42 @@ void stop_editing( CHAR_DATA *ch )
 		return;
 	 }
 
+         if( !str_cmp( arg2, "skillpoints" ) )
+         {
+                 if( IS_NPC( victim ) )
+                 {
+                         send_to_char( "Not on NPC's.\r\n", ch );
+                         return;
+                 }
+
+                 if( value < 0 || value > 1000 )
+                 {
+                         send_to_char( "The current range is 0 to 1000.\r\n", ch );
+                         return;
+                 }
+
+                 victim->pcdata->skill_points = value;
+                 return;
+         }
+
+         if( !str_cmp( arg2, "featpoints" ) )
+         {
+                 if( IS_NPC( victim ) )
+                 {
+                         send_to_char( "Not on NPC's.\r\n", ch );
+                         return;
+                 }
+
+                 if( value < 0 || value > 1000 )
+                 {
+                         send_to_char( "The current range is 0 to 1000.\r\n", ch );
+                         return;
+                 }
+
+                 victim->pcdata->feat_points = value;
+                 return;
+         }
+
 	 if( !str_cmp( arg2, "armor" ) )
 	 {
 		 if( !can_mmodify( ch, victim ) )

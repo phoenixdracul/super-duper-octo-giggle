@@ -260,14 +260,14 @@ void advance_level( CHAR_DATA *ch , int ability)
 		ch->pcdata->feat_points += feat;
 
 		if (skill > 0 && feat > 0)
-			ch_printf( ch, "You gain %d skill points and %d feat points!\n\r", skill, feat );
+			ch_printf( ch, "&WYou gain &R%d &Wskill points and &R%d &Wfeat points!\n\r", skill, feat );
 		else if (skill > 0)
-			ch_printf( ch, "You gain %d skill points!\n\r", skill);
+			ch_printf( ch, "&WYou gain &R%d &Wskill points!\n\r", skill);
 		else if (feat > 0)
-			ch_printf( ch, "You gain %d feat points!\n\r", feat);
+			ch_printf( ch, "&WYou gain &R%d &Wfeat points!\n\r", feat);
 	}
 
-	ch_printf( ch, "You gain %d HP and %d MV!\n\r", hp, mv );
+	ch_printf( ch, "&WYou gain &R%d &WHP and &R%d &WMV!\n\r", hp, mv );
 
 	return;
 }
@@ -318,7 +318,7 @@ void gain_exp( CHAR_DATA *ch, int gain , int ability )
 			return;
 		}
 		set_char_color( AT_WHITE + AT_BLINK, ch );
-		ch_printf( ch, "You have now obtained %s level %d!\n\r", ability_name[ability], ++ch->skill_level[ability] );
+		ch_printf( ch, "&WYou have now obtained &R%s &Wlevel &R%d&W!\n\r", ability_name[ability], ++ch->skill_level[ability] );
 		advance_level( ch , ability);
 	}
 
