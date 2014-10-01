@@ -248,10 +248,10 @@ void advance_level( CHAR_DATA *ch , int ability)
 	set_char_color( AT_WHITE + AT_BLINK, ch );
 	if ( ch->pcdata )
 	{
-		skill = URANGE(1, ch->skill_level[ability] / 20, 5);
-		if ( ch->main_ability == ability && (ch->skill_level[ability] % 5) == 0 )
+		skill = URANGE(1, (ch->skill_level[ability] + 10) / 20, 4) + (ch->perm_wis - 12) / 4;
+		if ( ch->main_ability == ability && (ch->skill_level[ability] % 10) == 0 )
 			feat = 1;
-		else if ( ch->secondary_ability == ability && (ch->skill_level[ability] % 10) == 0 )
+		else if ( ch->secondary_ability == ability && (ch->skill_level[ability] % 20) == 0 )
 			feat = 1;
 		else
 			feat = 0;
