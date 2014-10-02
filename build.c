@@ -5900,7 +5900,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 
 	 fprintf( fpout, "#AREA   %s~\n\n\n\n", tarea->name );
 
-	 fprintf( fpout, "#VERSION 2" );
+	 fprintf( fpout, "#VERSION 2\n\n" );
 
 	 fprintf( fpout, "#AUTHOR %s~\n\n", tarea->author );
 	 fprintf( fpout, "#RANGES\n");
