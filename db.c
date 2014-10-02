@@ -6591,7 +6591,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 			if (version == 2)
 				load_mobiles2 (tarea, fpArea);
 			else
-				load_mobiles (tarea, fpArea);
+				load_mobiles2 (tarea, fpArea);
 		 }
 		 else if ( !str_cmp( word, "MUDPROGS" ) ) load_mudprogs(tarea, fpArea);
 		 else if ( !str_cmp( word, "OBJECTS"  ) )
@@ -6599,7 +6599,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 			if (version == 2)
 				load_objects2 (tarea, fpArea);
 			else
-				load_objects (tarea, fpArea);
+				load_objects2 (tarea, fpArea);
 		 }
 		 else if ( !str_cmp( word, "OBJPROGS" ) ) load_objprogs(tarea, fpArea);
 		 else if ( !str_cmp( word, "RESETS"   ) ) load_resets  (tarea, fpArea);

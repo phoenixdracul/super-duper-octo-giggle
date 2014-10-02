@@ -1453,6 +1453,9 @@ bool deflect_attack(CHAR_DATA * ch)
 		break;
 	}
 
+	if (!obj)
+	    return FALSE;
+
         for (af = obj->pIndexData->first_affect; af; af = af->next)
         {
             if (af->location == APPLY_SHIELD_DEFLECT)

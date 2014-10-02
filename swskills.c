@@ -2179,6 +2179,7 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 	OBJ_DATA *obj;
 	OBJ_DATA *material;
 	int value;
+	float f;
 
 	argument = one_argument( argument, arg );
 	strcpy ( arg2, argument);
@@ -2260,7 +2261,7 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 					NULL, argument , TO_ROOM );
 		}
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int) (ch->pcdata->learned[gsn_makearmor]);
+				: (int) (ch->pcdata->learned[gsn_makearmor] * 10 + 40);
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "&GYou begin the long process of creating some armor.\n\r", ch);
@@ -2315,8 +2316,8 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 	}
 
 	chance = IS_NPC(ch) ? ch->top_level
-			: (int) (ch->pcdata->learned[gsn_makearmor]) ;
-
+			: (int) (ch->pcdata->learned[gsn_makearmor] * 10 + 40) ;
+bug("chance: %d", chance);
 	if ( number_percent( ) > chance*2  || ( !checkfab ) || ( !checksew ) )
 	{
 		send_to_char( "&RYou hold up your newly created armor.\n\r", ch);
@@ -2348,6 +2349,18 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 	obj->description = STRALLOC( buf );
 	obj->value[0] = obj->value[1];
 	obj->cost *= 10;
+
+	// Armor quality -- Kasji
+	f = ch->pcdata->learned[gsn_makearmor] * (50 * number_range(90, 110) / 100);
+	f = (f < 0 ? 0 : f);
+bug("pre: %f", f);
+	f = f / (f + 100);
+bug("f: %f", f);
+	value = f * 1000;
+//	value = (ch->pcdata->learned[gsn_makearmor] * 50 ) + number_range(-100, 100);
+//	value = UMAX(0, value);
+//	value = (value*100) / (value + 100);
+bug("quality: %d", value);
 
 	obj = obj_to_char( obj, ch );
 
