@@ -1257,25 +1257,25 @@ void learn_from_success( CHAR_DATA *ch, int sn )
     int adept, gain, sklvl, learn, percent, chance;
     if ( IS_NPC(ch) || ch->pcdata->learned[sn] == 0 )
       return;
-    
+
     if ( sn == skill_lookup( "meditate" ) && ch->skill_level[FORCE_ABILITY] < 2 )
          gain_exp( ch, 25, FORCE_ABILITY );
-    
+
     if(!skill_table[sn])
       return;
-    
-    //if (skill_table[sn]->min_level)             
+
+    //if (skill_table[sn]->min_level)
     sklvl = skill_table[sn]->min_level;
-    
+
     if (skill_table[sn]->guild < 0 || skill_table[sn]->guild >= MAX_ABILITY )
             return;
-            
+
     //adept = ( ch->skill_level[skill_table[sn]->guild] - skill_table[sn]->min_level )* 5 + 50;
     //adept = UMIN(adept, 100);
     adept = 100;
     if ( ch->pcdata->learned[sn] >= adept )
        return;
-    
+
     if ( sklvl == 0 || sklvl > ch->skill_level[skill_table[sn]->guild] )
       sklvl = ch->skill_level[skill_table[sn]->guild];
     if ( ch->pcdata->learned[sn] < 100 )
@@ -1289,16 +1289,16 @@ void learn_from_success( CHAR_DATA *ch, int sn )
 	  return;
 	else
 	  learn = 1;
-	ch->pcdata->learned[sn] = UMIN( adept, ch->pcdata->learned[sn] + learn );
+//	ch->pcdata->learned[sn] = UMIN( adept, ch->pcdata->learned[sn] + learn );
 
-	if ( ch->pcdata->learned[sn] == 100 )	 /* fully learned! */
+/*	if ( ch->pcdata->learned[sn] == 100 )
 	{
 	    gain = 50 * sklvl;
      	    set_char_color( AT_WHITE, ch );
 	    ch_printf( ch, "You are now an adept of %s!  You gain %d bonus experience!\n\r",
 		skill_table[sn]->name, gain );
 	}
-	else
+	else */
 	{
 	    gain = 10 * sklvl;
             if ( !ch->fighting && sn != gsn_hide && sn != gsn_sneak )
@@ -1318,25 +1318,25 @@ void learn_from_failure( CHAR_DATA *ch, int sn )
     int adept, gain, sklvl, learn, percent, chance;
     if ( IS_NPC(ch) || ch->pcdata->learned[sn] == 0 )
       return;
-    
+
     if ( sn == skill_lookup( "meditate" ) && ch->skill_level[FORCE_ABILITY] < 2 )
          gain_exp( ch, 25, FORCE_ABILITY );
-    
+
     if(!skill_table[sn])
       return;
-    
-    //if (skill_table[sn]->min_level)             
+
+    //if (skill_table[sn]->min_level)
     sklvl = skill_table[sn]->min_level;
-    
+
     if (skill_table[sn]->guild < 0 || skill_table[sn]->guild >= MAX_ABILITY )
             return;
-            
+
     //adept = ( ch->skill_level[skill_table[sn]->guild] - skill_table[sn]->min_level )* 5 + 50;
     //adept = UMIN(adept, 100);
     adept = 100;
     if ( ch->pcdata->learned[sn] >= adept )
        return;
-    
+
     if ( sklvl == 0 || sklvl > ch->skill_level[skill_table[sn]->guild] )
       sklvl = ch->skill_level[skill_table[sn]->guild];
     if ( ch->pcdata->learned[sn] < 50 )
@@ -1350,13 +1350,13 @@ void learn_from_failure( CHAR_DATA *ch, int sn )
 	  return;
 	else
 	  learn = 1;
-	ch->pcdata->learned[sn] = UMIN( adept, ch->pcdata->learned[sn] + learn );
+//	ch->pcdata->learned[sn] = UMIN( adept, ch->pcdata->learned[sn] + learn );
 	    gain = 10 * sklvl;
-            if ( !ch->fighting && sn != gsn_hide && sn != gsn_sneak )
-	    {
-		set_char_color( AT_WHITE, ch );
-		ch_printf( ch, "You learn a little from your mistakes.\n\r" );
-	    }
+//            if ( !ch->fighting && sn != gsn_hide && sn != gsn_sneak )
+//	    {
+//		set_char_color( AT_WHITE, ch );
+//		ch_printf( ch, "You learn a little from your mistakes.\n\r" );
+//	    }
 
 	//gain_exp( ch, gain, skill_table[sn]->guild );
     }

@@ -3210,6 +3210,7 @@ void do_practice( CHAR_DATA *ch, char *argument )
 {
 	char buf[MAX_STRING_LENGTH];
 	int sn;
+	int cost;
 
 	char arg1[MAX_STRING_LENGTH];
 	char argRemainder[MAX_STRING_LENGTH];
@@ -3309,7 +3310,7 @@ void do_practice( CHAR_DATA *ch, char *argument )
 	else
 	{
 		CHAR_DATA *mob;
-		int adept;
+//		int adept;
 		bool can_prac = TRUE;
 
 		if ( !IS_AWAKE(ch) )
@@ -3384,9 +3385,18 @@ void do_practice( CHAR_DATA *ch, char *argument )
 			return;
 		}
 
-		adept = 20;
+//		adept = 20;
 
-		if ( ch->pcdata->learned[sn] >= adept )
+		cost = ch->pcdata->learned[sn] + 1;
+
+		if (cost > ch->pcdata->skill_points)
+		{
+			act( AT_TELL, "&C$n says: &WYou don't have enough skill points.",
+					mob, NULL, ch, TO_VICT );
+			return;
+		}
+
+/*		if ( ch->pcdata->learned[sn] >= adept )
 		{
 			sprintf( buf, "$n tells you, 'I've taught you everything I can about %s.'",
 					skill_table[sn]->name );
@@ -3394,20 +3404,21 @@ void do_practice( CHAR_DATA *ch, char *argument )
 			act( AT_TELL, "&R&C$n says:&W You'll have to practice it on your own now.",
 					mob, NULL, ch, TO_VICT );
 		}
-		else
+		else */
 		{
-			ch->pcdata->learned[sn] += int_app[get_curr_int(ch)].learn;
+			ch->pcdata->skill_points -= cost;
+			ch->pcdata->learned[sn] += 1;
 			act( AT_ACTION, "You practice $T.",
 					ch, NULL, skill_table[sn]->name, TO_CHAR );
 			act( AT_ACTION, "$n practices $T.",
 					ch, NULL, skill_table[sn]->name, TO_ROOM );
-			if ( ch->pcdata->learned[sn] >= adept )
+/*			if ( ch->pcdata->learned[sn] >= adept )
 			{
 				ch->pcdata->learned[sn] = adept;
 				act( AT_TELL,
 						"&R&C$n says:&W You'll have to practice it on your own now.",
 						mob, NULL, ch, TO_VICT );
-			}
+			} */
 		}
 	}
 	return;

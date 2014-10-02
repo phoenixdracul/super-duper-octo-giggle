@@ -2862,6 +2862,7 @@ struct char_data
     char *		emotecolor;
     char *		afk_msg;		/* Afk message string - Added by Boran */
     float		base_res[RES_MAX];	// New damage resistances -- Kasji
+    int			sh_deflect;		// Shield deflection
 };
 
 

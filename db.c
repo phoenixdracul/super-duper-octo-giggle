@@ -2896,6 +2896,7 @@ OBJ_DATA *create_object( OBJ_INDEX_DATA *pObjIndex, int level )
  */
 void clear_char( CHAR_DATA *ch )
 {
+	int i;
 	ch->editor			= NULL;
 	ch->hunting			= NULL;
 	ch->fearing			= NULL;
@@ -2961,6 +2962,14 @@ void clear_char( CHAR_DATA *ch )
 	ch->inter_editing_vnum	= -1;                /* BUILD INTERFACE */
 	ch->inter_substate    	= SUB_NORTH;         /* BUILD INTERFACE */
 	ch->plr_home                = NULL;
+
+	for (i = 0; i < RES_MAX; ++i)
+	{
+		ch->base_res[i] = 0.0;
+//		ch->curr_res[i] = 0.0;
+	}
+
+
 	return;
 }
 

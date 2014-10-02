@@ -240,8 +240,8 @@ void advance_level( CHAR_DATA *ch , int ability)
 	if ( !IS_NPC(ch) )
 		xREMOVE_BIT( ch->act, PLR_BOUGHT_PET );
 
-	hp = number_range(ch->perm_con / 2, ch->perm_con );
-	mv = number_range(ch->perm_dex / 2, ch->perm_dex );
+	hp = number_range(ch->perm_con, ch->perm_con * 2) / 4;
+	mv = number_range(ch->perm_dex, ch->perm_dex * 2) / 4;
 	ch->max_hit += hp;
 	ch->max_move += mv;
 

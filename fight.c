@@ -712,7 +712,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	int	prof_gsn;
 	ch_ret retcode;
 	int chance;
-	bool fail;
+	bool fail, deflect;
 	AFFECT_DATA af;
 
 
@@ -993,16 +993,13 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	/*
 	 * check to see if weapon is charged
 	 */
+	deflect = FALSE;
+	if ( wield && wield->item_type == ITEM_WEAPON &&
+	    (wield->value[3] == WEAPON_BLASTER || wield->value[3] == WEAPON_BOWCASTER) )
+		deflect = deflect_attack(victim);
 
 	if ( dt == (TYPE_HIT + WEAPON_BLASTER ) && wield && wield->item_type == ITEM_WEAPON )
 	{
-		if ( deflect_attack(victim) )
-		{
-			act( AT_CYAN, "The bolt from $N's blaster is deflected by your shield.", victim, NULL, ch, TO_CHAR );
-			act( AT_CYAN, "The bolt from your blaster is deflected by $N's shield.", ch, NULL, victim, TO_CHAR );
-			act( AT_CYAN, "The bolt from $n's blaster is deflected by $N's shield.", ch, NULL, victim, TO_NOTVICT );
-			return rNONE;
-		}
 		if ( wield->value[4] < 1  )
 		{
 			act( AT_YELLOW, "$n points their blaster at you but nothing happens.",  ch, NULL, victim, TO_VICT    );
@@ -1032,6 +1029,15 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 			dam /= 10;
 			wield->value[4] -= 3;
 			fail = FALSE;
+
+			if ( deflect )
+			{
+				act( AT_CYAN, "The stun rings from $N's blaster is deflected by your shield.", victim, NULL, ch, TO_CHAR );
+				act( AT_CYAN, "The stun rings from your blaster is deflected by $N's shield.", ch, NULL, victim, TO_CHAR );
+				act( AT_CYAN, "The stun rings from $n's blaster is deflected by $N's shield.", ch, NULL, victim, TO_NOTVICT );
+				return rNONE;
+			}
+
 			chance = ris_save( victim, ch->skill_level[COMBAT_ABILITY], RIS_PARALYSIS );
 			if ( chance == 1000 )
 				fail = TRUE;
@@ -1091,7 +1097,6 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 			dam *= 0.5;
 			wield->value[4] -= 1;
 		}
-
 	}
 	else if (
 			dt == (TYPE_HIT + WEAPON_VIBRO_BLADE )
@@ -1147,6 +1152,14 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 		}
 		else
 			wield->value[4]--;
+	}
+
+	if ( deflect )
+	{
+		act( AT_CYAN, "The bolt from $N's attack is deflected by your shield.", victim, NULL, ch, TO_CHAR );
+		act( AT_CYAN, "The bolt from your attack is deflected by $N's shield.", ch, NULL, victim, TO_CHAR );
+		act( AT_CYAN, "The bolt from $n's attack is deflected by $N's shield.", ch, NULL, victim, TO_NOTVICT );
+		return rNONE;
 	}
 
 	if ( dam <= 0 )
@@ -1436,23 +1449,26 @@ bool deflect_attack(CHAR_DATA * ch)
 
 	for (obj = ch->first_carrying; obj; obj = obj->next_content)
 	{
-            for (af = obj->pIndexData->first_affect; af; af = af->next)
-            {
-                if (af->location == APPLY_SHIELD_DEFLECT)
-                {
-                    x = af->modifier;
-                    break;
-                }
-            }
-            for (af = obj->first_affect; af; af = af->next)
-            {
-                if (af->location == APPLY_SHIELD_DEFLECT)
-                {
-                    x = af->modifier;
-                    break;
-                }
-            }
+	    if (obj->wear_loc == WEAR_SHIELD)
+		break;
 	}
+
+        for (af = obj->pIndexData->first_affect; af; af = af->next)
+        {
+            if (af->location == APPLY_SHIELD_DEFLECT)
+            {
+                x = af->modifier;
+                break;
+            }
+        }
+        for (af = obj->first_affect; af; af = af->next)
+        {
+            if (af->location == APPLY_SHIELD_DEFLECT)
+            {
+                x = af->modifier;
+                break;
+            }
+        }
 
 	if (number_range(1, 100) > x)
 		return FALSE;

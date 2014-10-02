@@ -2524,6 +2524,9 @@ case CON_GET_MSP:
 							ch->pcdata->last_changes = d->account->last_changes;
 						else
 							ch->pcdata->last_changes = current_time;
+
+						// Gives some starting skill points... -- Kasji
+						ch->pcdata->skill_points = 3;
 					}
 					d->connected = CON_PRESS_ENTER;
 					return;
