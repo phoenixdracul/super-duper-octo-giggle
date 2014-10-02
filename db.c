@@ -1286,13 +1286,13 @@ void load_mobiles( AREA_DATA *tarea, FILE *fp )
 		pMobIndex->long_descr[0]	= UPPER(pMobIndex->long_descr[0]);
 		pMobIndex->description[0]	= UPPER(pMobIndex->description[0]);
 
-      char *actflags = NULL;
-      char flag[MIL];
+//      char *actflags = NULL;
+//      char flag[MIL];
       int value;
 
-      actflags = fread_flagstring( fp );
+//      actflags = fread_flagstring( fp );
 
-      while( actflags[0] != '\0' )
+/*      while( actflags[0] != '\0' )
       {
          actflags = one_argument( actflags, flag );
          value = get_actflag( flag );
@@ -1301,7 +1301,9 @@ void load_mobiles( AREA_DATA *tarea, FILE *fp )
             bug( "Unknown actflag: %s\r\n", flag );
          else
             SET_ACT_FLAG( pMobIndex, value);
-      }
+      } */
+		value				= fread_number( fp ) | ACT_IS_NPC;
+		xSET_BIT(pMobIndex->act, ACT_IS_NPC);
 
 		pMobIndex->affected_by		= fread_number( fp );
 		pMobIndex->pShop		= NULL;
