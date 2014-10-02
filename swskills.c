@@ -2317,7 +2317,7 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 
 	chance = IS_NPC(ch) ? ch->top_level
 			: (int) (ch->pcdata->learned[gsn_makearmor] * 10 + 40) ;
-bug("chance: %d", chance);
+
 	if ( number_percent( ) > chance*2  || ( !checkfab ) || ( !checksew ) )
 	{
 		send_to_char( "&RYou hold up your newly created armor.\n\r", ch);
@@ -2351,20 +2351,44 @@ bug("chance: %d", chance);
 	obj->cost *= 10;
 
 	// Armor quality -- Kasji
-	f = ch->pcdata->learned[gsn_makearmor] * (50 * number_range(90, 110) / 100);
+	f = ch->pcdata->learned[gsn_makearmor] * ((50 * number_range(50, 150)) / 100);
+//bug("pre: %f", f);
 	f = (f < 0 ? 0 : f);
-bug("pre: %f", f);
 	f = f / (f + 100);
-bug("f: %f", f);
+//bug("f: %f", f);
 	value = f * 1000;
 //	value = (ch->pcdata->learned[gsn_makearmor] * 50 ) + number_range(-100, 100);
 //	value = UMAX(0, value);
 //	value = (value*100) / (value + 100);
-bug("quality: %d", value);
+//bug("quality: %d", value);
+	obj->value[2] = value;
 
 	obj = obj_to_char( obj, ch );
 
 	send_to_char( "&GYou finish your work and hold up your newly created garment.&w\n\r", ch);
+
+	char * word;
+	if (value >= 950)
+		word = "masterful";
+	else if (value >= 850)
+		word = "exceptional";
+	else if (value >= 750)
+		word = "great";
+	else if (value >= 650)
+		word = "decent";
+	else if (value >= 550)
+		word = "fair";
+	else if (value >= 450)
+		word = "mediocre";
+	else if (value >= 350)
+		word = "poor";
+	else if (value >= 100)
+		word = "shabby";
+	else
+		word = "horrible";
+
+	ch_printf(ch, "&WYour armor is of &R%s &wquality.\n\r", word);
+
 	act( AT_PLAIN, "$n finishes sewing some new armor.", ch,
 			NULL, argument , TO_ROOM );
 
@@ -2373,7 +2397,7 @@ bug("quality: %d", value);
 
 		xpgain = UMIN( obj->cost*100 ,( exp_level(ch->skill_level[ENGINEERING_ABILITY]+1) - exp_level(ch->skill_level[ENGINEERING_ABILITY]) ) );
 		gain_exp(ch, xpgain, ENGINEERING_ABILITY);
-		ch_printf( ch , "You gain %d engineering experience.", xpgain );
+		ch_printf( ch , "You gain %d engineering experience.\n\r", xpgain );
 	}
 	learn_from_success( ch, gsn_makearmor );
 }
