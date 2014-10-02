@@ -1378,8 +1378,8 @@ void load_mobiles( AREA_DATA *tarea, FILE *fp )
 			pMobIndex->susceptible	= x6;
 			pMobIndex->attacks		= x7;
 			pMobIndex->defenses		= x8;
-			for (x1 = 0; x1 < RES_MAX; x1++) // note: just re-using x1, since it's done being used.
-				pMobIndex->base_res[x1] = fread_float(fp);
+//			for (x1 = 0; x1 < RES_MAX; x1++) // note: just re-using x1, since it's done being used.
+//				pMobIndex->base_res[x1] = fread_float(fp);
 		}
 		else
 		{
@@ -1544,7 +1544,7 @@ void load_objects( AREA_DATA *tarea, FILE *fp )
 		pObjIndex->weight = UMAX( 1, pObjIndex->weight );
 		pObjIndex->cost			= fread_number( fp );
 		pObjIndex->rent		  	= fread_number( fp ); /* unused */
-		pObjIndex->dam_type		= fread_number( fp );
+//		pObjIndex->dam_type		= fread_number( fp );
 
 		for ( ; ; )
 		{
@@ -6106,6 +6106,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
     is printed when an error occurs during loading the area..
     (bug uses fpArea)
       --TRI  */
+	 int version = 0;
 
 	 if ( fBootDb )
 		 tarea = last_area;
@@ -6149,6 +6150,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 				 tarea->name = fread_string_nohash( fpArea );
 			 }
 		 }
+		 else if ( !str_cmp( word, "VERSION"  ) ) version = fread_number(fpArea);
 		 else if ( !str_cmp( word, "AUTHOR"   ) ) load_author  (tarea, fpArea);
 		 else if ( !str_cmp( word, "FLAGS"    ) ) load_flags   (tarea, fpArea);
 		 else if ( !str_cmp( word, "RANGES"   ) ) load_ranges  (tarea, fpArea);
@@ -6156,9 +6158,21 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 		 else if ( !str_cmp( word, "RESETMSG" ) ) load_resetmsg(tarea, fpArea);
 		 /* Rennard */
 		 else if ( !str_cmp( word, "HELPS"    ) ) load_helps   (tarea, fpArea);
-		 else if ( !str_cmp( word, "MOBILES"  ) ) load_mobiles (tarea, fpArea);
+		 else if ( !str_cmp( word, "MOBILES"  ) )
+		 {
+			if (version == 2)
+				load_mobiles (tarea, fpArea);
+			else
+				load_mobiles (tarea, fpArea);
+		 }
 		 else if ( !str_cmp( word, "MUDPROGS" ) ) load_mudprogs(tarea, fpArea);
-		 else if ( !str_cmp( word, "OBJECTS"  ) ) load_objects (tarea, fpArea);
+		 else if ( !str_cmp( word, "OBJECTS"  ) )
+		 {
+			if (version == 2)
+				load_objects (tarea, fpArea);
+			else
+				load_objects (tarea, fpArea);
+		 }
 		 else if ( !str_cmp( word, "OBJPROGS" ) ) load_objprogs(tarea, fpArea);
 		 else if ( !str_cmp( word, "RESETS"   ) ) load_resets  (tarea, fpArea);
 		 else if ( !str_cmp( word, "ROOMS"    ) ) load_rooms   (tarea, fpArea);
