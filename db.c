@@ -413,7 +413,9 @@ void	load_resetmsg	args( ( AREA_DATA *tarea, FILE *fp ) ); /* Rennard */
 void    load_flags      args( ( AREA_DATA *tarea, FILE *fp ) );
 void	load_helps		args( ( AREA_DATA *tarea, FILE *fp ) );
 void	load_mobiles	args( ( AREA_DATA *tarea, FILE *fp ) );
+void	load_mobiles2	args( ( AREA_DATA *tarea, FILE *fp ) );
 void	load_objects	args( ( AREA_DATA *tarea, FILE *fp ) );
+void	load_objects2	args( ( AREA_DATA *tarea, FILE *fp ) );
 void 	load_projects   args( ( void ) );
 void	load_resets		args( ( AREA_DATA *tarea, FILE *fp ) );
 void	load_rooms		args( ( AREA_DATA *tarea, FILE *fp ) );
@@ -1428,7 +1430,235 @@ void load_mobiles( AREA_DATA *tarea, FILE *fp )
 	return;
 }
 
+void load_mobiles2( AREA_DATA *tarea, FILE *fp )
+{
+	MOB_INDEX_DATA *pMobIndex;
+	char *ln;
+	int x1, x2, x3, x4, x5, x6, x7, x8;
 
+	if ( !tarea )
+	{
+		bug( "Load_mobiles: no #AREA seen yet." );
+		if ( fBootDb )
+		{
+			shutdown_mud( "No #AREA" );
+			exit( 1 );
+		}
+		else
+			return;
+	}
+
+	for ( ; ; )
+	{
+		char buf[MAX_STRING_LENGTH];
+		int vnum;
+		char letter;
+		int iHash;
+		bool oldmob;
+		bool tmpBootDb;
+
+		letter				= fread_letter( fp );
+		if ( letter != '#' )
+		{
+			bug( "Load_mobiles: # not found." );
+			if ( fBootDb )
+			{
+				shutdown_mud( "# not found" );
+				exit( 1 );
+			}
+			else
+				return;
+		}
+
+		vnum				= fread_number( fp );
+		if ( vnum == 0 )
+			break;
+
+		tmpBootDb = fBootDb;
+		fBootDb = FALSE;
+		if ( get_mob_index( vnum ) )
+		{
+			if ( tmpBootDb )
+			{
+				bug( "Load_mobiles: vnum %d duplicated.", vnum );
+				shutdown_mud( "duplicate vnum" );
+				exit( 1 );
+			}
+			else
+			{
+				pMobIndex = get_mob_index( vnum );
+				sprintf( buf, "Cleaning mobile: %d", vnum );
+				log_string_plus( buf, LOG_BUILD, sysdata.log_level );
+				clean_mob( pMobIndex );
+				oldmob = TRUE;
+			}
+		}
+		else
+		{
+			oldmob = FALSE;
+			CREATE( pMobIndex, MOB_INDEX_DATA, 1 );
+		}
+		fBootDb = tmpBootDb;
+
+		pMobIndex->vnum			= vnum;
+		if ( fBootDb )
+		{
+			if ( !tarea->low_m_vnum )
+				tarea->low_m_vnum	= vnum;
+			if ( vnum > tarea->hi_m_vnum )
+				tarea->hi_m_vnum	= vnum;
+		}
+		pMobIndex->player_name		= fread_string( fp );
+		pMobIndex->short_descr		= fread_string( fp );
+		pMobIndex->long_descr		= fread_string( fp );
+		pMobIndex->description		= fread_string( fp );
+
+		pMobIndex->long_descr[0]	= UPPER(pMobIndex->long_descr[0]);
+		pMobIndex->description[0]	= UPPER(pMobIndex->description[0]);
+
+      char *actflags = NULL;
+      char flag[MIL];
+      int value;
+
+      actflags = fread_flagstring( fp );
+
+      while( actflags[0] != '\0' )
+      {
+         actflags = one_argument( actflags, flag );
+         value = get_actflag( flag );
+
+         if( value < 0 || value >= MAX_BITS )
+            bug( "Unknown actflag: %s\r\n", flag );
+         else
+            SET_ACT_FLAG( pMobIndex, value);
+      }
+
+		pMobIndex->affected_by		= fread_number( fp );
+		pMobIndex->pShop		= NULL;
+		pMobIndex->rShop		= NULL;
+		pMobIndex->alignment		= fread_number( fp );
+		letter				= fread_letter( fp );
+		pMobIndex->level		= fread_number( fp );
+
+		pMobIndex->mobthac0		= fread_number( fp );
+		pMobIndex->ac			= fread_number( fp );
+		pMobIndex->hitnodice		= fread_number( fp );
+		/* 'd'		*/		  fread_letter( fp );
+		pMobIndex->hitsizedice		= fread_number( fp );
+		/* '+'		*/		  fread_letter( fp );
+		pMobIndex->hitplus		= fread_number( fp );
+		pMobIndex->damnodice		= fread_number( fp );
+		/* 'd'		*/		  fread_letter( fp );
+		pMobIndex->damsizedice		= fread_number( fp );
+		/* '+'		*/		  fread_letter( fp );
+		pMobIndex->damplus		= fread_number( fp );
+		pMobIndex->gold			= fread_number( fp );
+		pMobIndex->exp			= fread_number( fp );
+		pMobIndex->position		= fread_number( fp );
+		pMobIndex->defposition		= fread_number( fp );
+
+		/*
+		 * Back to meaningful values.
+		 */
+		pMobIndex->sex			= fread_number( fp );
+
+		if ( letter != 'S' && letter != 'C' && letter != 'Z' )
+		{
+			bug( "Load_mobiles: vnum %d: letter '%c' not Z, S or C.", vnum,
+					letter );
+			shutdown_mud( "bad mob data" );
+			exit( 1 );
+		}
+		if ( letter == 'C' || letter == 'Z' ) /* Realms complex mob 	-Thoric  */
+		{
+			pMobIndex->perm_str			= fread_number( fp );
+			pMobIndex->perm_int			= fread_number( fp );
+			pMobIndex->perm_wis			= fread_number( fp );
+			pMobIndex->perm_dex			= fread_number( fp );
+			pMobIndex->perm_con			= fread_number( fp );
+			pMobIndex->perm_cha			= fread_number( fp );
+			pMobIndex->perm_lck			= fread_number( fp );
+			pMobIndex->saving_poison_death	= fread_number( fp );
+			pMobIndex->saving_wand		= fread_number( fp );
+			pMobIndex->saving_para_petri	= fread_number( fp );
+			pMobIndex->saving_breath		= fread_number( fp );
+			pMobIndex->saving_spell_staff	= fread_number( fp );
+			ln = fread_line( fp );
+			x1=x2=x3=x4=x5=x6=x7=0;
+			sscanf( ln, "%d %d %d %d %d %d %d",
+					&x1, &x2, &x3, &x4, &x5, &x6, &x7 );
+			pMobIndex->race		= x1;
+			pMobIndex->height		= x3;
+			pMobIndex->weight		= x4;
+			pMobIndex->speaks		= x5;
+			pMobIndex->speaking		= x6;
+			pMobIndex->numattacks	= x7;
+			if ( !pMobIndex->speaks )
+				pMobIndex->speaks = race_table[pMobIndex->race].language | LANG_BASIC;
+			if ( !pMobIndex->speaking )
+				pMobIndex->speaking = race_table[pMobIndex->race].language;
+
+			ln = fread_line( fp );
+			x1=x2=x3=x4=x5=x6=x7=x8=0;
+			sscanf( ln, "%d %d %d %d %d %d %d %d",
+					&x1, &x2, &x3, &x4, &x5, &x6, &x7, &x8 );
+			pMobIndex->hitroll		= x1;
+			pMobIndex->damroll		= x2;
+			pMobIndex->xflags		= x3;
+			pMobIndex->resistant	= x4;
+			pMobIndex->immune		= x5;
+			pMobIndex->susceptible	= x6;
+			pMobIndex->attacks		= x7;
+			pMobIndex->defenses		= x8;
+			for (x1 = 0; x1 < RES_MAX; x1++) // note: just re-using x1, since it's done being used.
+				pMobIndex->base_res[x1] = fread_float(fp);
+		}
+		else
+		{
+			pMobIndex->perm_str		= 10;
+			pMobIndex->perm_dex		= 10;
+			pMobIndex->perm_int		= 10;
+			pMobIndex->perm_wis		= 10;
+			pMobIndex->perm_cha		= 10;
+			pMobIndex->perm_con		= 10;
+			pMobIndex->perm_lck		= 10;
+			pMobIndex->race		= 0;
+			pMobIndex->xflags		= 0;
+			pMobIndex->resistant	= 0;
+			pMobIndex->immune		= 0;
+			pMobIndex->susceptible	= 0;
+			pMobIndex->numattacks	= 0;
+			pMobIndex->attacks		= 0;
+			pMobIndex->defenses		= 0;
+		}
+		if ( letter == 'Z' ) /*  STar Wars Reality Complex Mob  */
+		{
+			ln = fread_line( fp );
+			x1=x2=x3=x4=x5=x6=x7=x8=0;
+			sscanf( ln, "%d %d %d %d %d %d %d %d",
+					&x1, &x2, &x3, &x4, &x5,  &x6,  &x7,  &x8);
+			pMobIndex->vip_flags		= x1;
+		}
+
+		letter = fread_letter( fp );
+		if ( letter == '>' )
+		{
+			ungetc( letter, fp );
+			mprog_read_programs( fp, pMobIndex );
+		}
+		else ungetc( letter,fp );
+
+		if ( !oldmob )
+		{
+			iHash			= vnum % MAX_KEY_HASH;
+			pMobIndex->next		= mob_index_hash[iHash];
+			mob_index_hash[iHash]	= pMobIndex;
+			top_mob_index++;
+		}
+	}
+
+	return;
+}
 
 /*
  * Load an obj section.
@@ -1545,6 +1775,202 @@ void load_objects( AREA_DATA *tarea, FILE *fp )
 		pObjIndex->cost			= fread_number( fp );
 		pObjIndex->rent		  	= fread_number( fp ); /* unused */
 //		pObjIndex->dam_type		= fread_number( fp );
+
+		for ( ; ; )
+		{
+			letter = fread_letter( fp );
+
+			if ( letter == 'A' )
+			{
+				AFFECT_DATA *paf;
+
+				CREATE( paf, AFFECT_DATA, 1 );
+				paf->type		= -1;
+				paf->duration		= -1;
+				paf->location		= fread_number( fp );
+				if ( paf->location == APPLY_WEAPONSPELL
+						||   paf->location == APPLY_WEARSPELL
+						||   paf->location == APPLY_REMOVESPELL
+						||   paf->location == APPLY_STRIPSN )
+					paf->modifier		= slot_lookup( fread_number(fp) );
+				else
+					paf->modifier		= fread_number( fp );
+				paf->bitvector		= 0;
+				LINK( paf, pObjIndex->first_affect, pObjIndex->last_affect,
+						next, prev );
+				top_affect++;
+			}
+
+			else if ( letter == 'E' )
+			{
+				EXTRA_DESCR_DATA *ed;
+
+				CREATE( ed, EXTRA_DESCR_DATA, 1 );
+				ed->keyword		= fread_string( fp );
+				ed->description		= fread_string( fp );
+				LINK( ed, pObjIndex->first_extradesc, pObjIndex->last_extradesc,
+						next, prev );
+				top_ed++;
+			}
+
+			else if ( letter == '>' )
+			{
+				ungetc( letter, fp );
+				oprog_read_programs( fp, pObjIndex );
+			}
+
+			else
+			{
+				ungetc( letter, fp );
+				break;
+			}
+		}
+
+		/*
+		 * Translate spell "slot numbers" to internal "skill numbers."
+		 */
+		switch ( pObjIndex->item_type )
+		{
+		case ITEM_PILL:
+		case ITEM_POTION:
+			pObjIndex->value[1] = slot_lookup( pObjIndex->value[1] );
+			pObjIndex->value[2] = slot_lookup( pObjIndex->value[2] );
+			pObjIndex->value[3] = slot_lookup( pObjIndex->value[3] );
+			break;
+
+		case ITEM_DEVICE:
+			pObjIndex->value[3] = slot_lookup( pObjIndex->value[3] );
+			break;
+		case ITEM_SALVE:
+			pObjIndex->value[4] = slot_lookup( pObjIndex->value[4] );
+			pObjIndex->value[5] = slot_lookup( pObjIndex->value[5] );
+			break;
+		}
+
+		if ( !oldobj )
+		{
+			iHash			= vnum % MAX_KEY_HASH;
+			pObjIndex->next	= obj_index_hash[iHash];
+			obj_index_hash[iHash]	= pObjIndex;
+			top_obj_index++;
+		}
+	}
+
+	return;
+}
+
+void load_objects2( AREA_DATA *tarea, FILE *fp )
+{
+	OBJ_INDEX_DATA *pObjIndex;
+	char letter;
+	char *ln;
+	int x1, x2, x3, x4, x5, x6;
+
+	if ( !tarea )
+	{
+		bug( "Load_objects: no #AREA seen yet." );
+		if ( fBootDb )
+		{
+			shutdown_mud( "No #AREA" );
+			exit( 1 );
+		}
+		else
+			return;
+	}
+
+	for ( ; ; )
+	{
+		char buf[MAX_STRING_LENGTH];
+		int vnum;
+		int iHash;
+		bool tmpBootDb;
+		bool oldobj;
+
+		letter				= fread_letter( fp );
+		if ( letter != '#' )
+		{
+			bug( "Load_objects: # not found." );
+			if ( fBootDb )
+			{
+				shutdown_mud( "# not found" );
+				exit( 1 );
+			}
+			else
+				return;
+		}
+
+		vnum				= fread_number( fp );
+		if ( vnum == 0 )
+			break;
+
+		tmpBootDb = fBootDb;
+		fBootDb = FALSE;
+		if ( get_obj_index( vnum ) )
+		{
+			if ( tmpBootDb )
+			{
+				bug( "Load_objects: vnum %d duplicated.", vnum );
+				shutdown_mud( "duplicate vnum" );
+				exit( 1 );
+			}
+			else
+			{
+				pObjIndex = get_obj_index( vnum );
+				sprintf( buf, "Cleaning object: %d", vnum );
+				log_string_plus( buf, LOG_BUILD, sysdata.log_level );
+				clean_obj( pObjIndex );
+				oldobj = TRUE;
+			}
+		}
+		else
+		{
+			oldobj = FALSE;
+			CREATE( pObjIndex, OBJ_INDEX_DATA, 1 );
+		}
+		fBootDb = tmpBootDb;
+
+		pObjIndex->vnum			= vnum;
+		if ( fBootDb )
+		{
+			if ( !tarea->low_o_vnum )
+				tarea->low_o_vnum		= vnum;
+			if ( vnum > tarea->hi_o_vnum )
+				tarea->hi_o_vnum		= vnum;
+		}
+		pObjIndex->name			= fread_string( fp );
+		pObjIndex->short_descr		= fread_string( fp );
+		pObjIndex->description		= fread_string( fp );
+		pObjIndex->action_desc		= fread_string( fp );
+
+		/* Commented out by Narn, Apr/96 to allow item short descs like
+           Bonecrusher and Oblivion */
+		/*pObjIndex->short_descr[0]	= LOWER(pObjIndex->short_descr[0]);*/
+		pObjIndex->description[0]	= UPPER(pObjIndex->description[0]);
+
+		ln = fread_line( fp );
+		x1=x2=x3=x4=0;
+		sscanf( ln, "%d %d %d %d",
+				&x1, &x2, &x3, &x4 );
+		pObjIndex->item_type		= x1;
+		pObjIndex->extra_flags		= x2;
+		pObjIndex->wear_flags		= x3;
+		pObjIndex->layers		= x4;
+
+		ln = fread_line( fp );
+		x1=x2=x3=x4=x5=x6=0;
+		sscanf( ln, "%d %d %d %d %d %d",
+				&x1, &x2, &x3, &x4, &x5, &x6 );
+		pObjIndex->value[0]		= x1;
+		pObjIndex->value[1]		= x2;
+		pObjIndex->value[2]		= x3;
+		pObjIndex->value[3]		= x4;
+		pObjIndex->value[4]		= x5;
+		pObjIndex->value[5]		= x6;
+		pObjIndex->weight		= fread_number( fp );
+		pObjIndex->weight = UMAX( 1, pObjIndex->weight );
+		pObjIndex->cost			= fread_number( fp );
+		pObjIndex->rent		  	= fread_number( fp ); /* unused */
+		pObjIndex->dam_type		= fread_number( fp );
 
 		for ( ; ; )
 		{
@@ -6161,7 +6587,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 		 else if ( !str_cmp( word, "MOBILES"  ) )
 		 {
 			if (version == 2)
-				load_mobiles (tarea, fpArea);
+				load_mobiles2 (tarea, fpArea);
 			else
 				load_mobiles (tarea, fpArea);
 		 }
@@ -6169,7 +6595,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 		 else if ( !str_cmp( word, "OBJECTS"  ) )
 		 {
 			if (version == 2)
-				load_objects (tarea, fpArea);
+				load_objects2 (tarea, fpArea);
 			else
 				load_objects (tarea, fpArea);
 		 }
