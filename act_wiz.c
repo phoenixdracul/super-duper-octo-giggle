@@ -117,7 +117,7 @@ void do_wizhelp( CHAR_DATA *ch, char *argument )
 	col = 0;
 	set_pager_color( AT_WHITE, ch );
 
-	for ( curr_lvl = LEVEL_AVATAR; curr_lvl <= get_trust( ch );
+	for ( curr_lvl = LEVEL_AVATAR + 1; curr_lvl <= get_trust( ch );
 			curr_lvl++)
 	{
 		send_to_pager( "\n\r\n\r", ch);
