@@ -2284,12 +2284,6 @@ void stop_editing( CHAR_DATA *ch )
 				 else
 				 {
 					 ftoggle = TRUE;
-					 if(!victim->act)
-					 {
-						ch_printf( ch, "BUG: victim has no act");
-						bug( "do_mset: flags: NULL victim->act", 0 );
-						return;
-					}
 					 xTOGGLE_BIT( victim->act, 1 << value );
 				 }
 			 }
