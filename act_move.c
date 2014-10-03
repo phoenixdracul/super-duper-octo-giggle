@@ -1337,12 +1337,15 @@ void do_build_walk( CHAR_DATA *ch, char *argument )
 					ch->in_room->vnum, vnum, arg );
 
 			location = make_room( vnum, pArea );
+			
 			if ( !location )
 			{
 				bug( "buildwalking: make_room failed", 0 );
 				return;
 			}
 			location->area = pArea;
+			location->sector_type = ch_location->sector_type;
+			location->room_flags = ch_location->room_flags;
 			sprintf( tmpcmd, "bexit %s %d", arg, vnum );
 			do_redit( ch, tmpcmd );
 		}
@@ -1351,9 +1354,6 @@ void do_build_walk( CHAR_DATA *ch, char *argument )
 			vnum = xit->vnum;
 			location = get_room_index( vnum );
 		}
-
-		location->sector_type = ch_location->sector_type;
-		location->room_flags = ch_location->room_flags;
 		sprintf( buf, "%d", vnum );
 		do_goto( ch, buf );
 
