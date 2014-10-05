@@ -162,6 +162,7 @@ typedef struct	system_data		SYSTEM_DATA;
 typedef	struct	smaug_affect		SMAUG_AFF;
 typedef struct  who_data                WHO_DATA;
 typedef	struct	skill_type		SKILLTYPE;
+typedef struct	skill_req		SKILL_REQ;
 typedef	struct	social_type		SOCIALTYPE;
 typedef	struct	cmd_type		CMDTYPE;
 typedef	struct	killed_data		KILLED_DATA;
@@ -3452,6 +3453,17 @@ struct	skill_type
     char	participants;		/* # of required participants	*/
     struct	timerset	userec;	/* Usage record			*/
     int         alignment;              /* for jedi powers */
+    // New skill stuff -- Kasji
+    int		max_level;
+    SKILL_REQ *	prereqs;
+};
+
+// Skill prerequisites
+struct skill_req
+{
+    SKILL_REQ *	next_req;
+    int level;
+//    union { int hash, int id; } skill;
 };
 
 

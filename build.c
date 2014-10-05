@@ -3255,6 +3255,12 @@ void stop_editing( CHAR_DATA *ch )
 	 {
 		 if( !can_omodify( ch, obj ) )
 			 return;
+		 if (obj->item_type == ITEM_DRINK_CON && (value < 0 || value > LIQ_MAX))
+		 {
+			ch_printf( ch, "Invalid value. Must be 0 to %d.\r\n", LIQ_MAX );
+			return;
+		 }
+
 		 obj->value[2] = value;
 		 if( IS_OBJ_STAT( obj, ITEM_PROTOTYPE ) )
 			 obj->pIndexData->value[2] = value;
@@ -3321,6 +3327,7 @@ void stop_editing( CHAR_DATA *ch )
 			 return;
 		 }
 		 obj->item_type = ( short )value;
+		 obj->value[2] = 0;
 		 if( IS_OBJ_STAT( obj, ITEM_PROTOTYPE ) )
 			 obj->pIndexData->item_type = obj->item_type;
 		 return;

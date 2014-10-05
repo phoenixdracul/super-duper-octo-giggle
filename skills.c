@@ -501,6 +501,11 @@ void do_slookup( CHAR_DATA *ch, char *argument )
 	    ch_printf( ch, "Components: %s\n\r", skill->components );
 	if ( skill->participants )
 	    ch_printf( ch, "Participants: %d\n\r", (int) skill->participants );
+
+	// Insert new skill stuff here -- Kasji
+	if ( skill->max_level )
+	    ch_printf( ch, "Max Skill Level: %d\n\r", skill->max_level );
+
 	if ( skill->userec.num_uses )
 	    send_timer(&skill->userec, ch);
 	for ( aff = skill->affects; aff; aff = aff->next )
@@ -616,7 +621,7 @@ void do_sset( CHAR_DATA *ch, char *argument )
 	  send_to_char( "  name code target minpos slot mana beats dammsg wearoff guild minlevel\n\r", ch );
 	  send_to_char( "  type damtype acttype classtype powertype flag dice value difficulty affect\n\r", ch );
 	  send_to_char( "  rmaffect level adept hit miss die imm (char/vict/room)\n\r", ch );
-	  send_to_char( "  components teachers\n\r",			ch );
+	  send_to_char( "  components teachers maxlevel\n\r",		ch );
 	  send_to_char( "Affect having the fields: <location> <modfifier> [duration] [bitvector]\n\r", ch );
 	  send_to_char( "(See AFFECTTYPES for location, and AFFECTED_BY for bitvector)\n\r", ch );
 	}
@@ -874,6 +879,15 @@ void do_sset( CHAR_DATA *ch, char *argument )
 	    send_to_char( "Ok.\n\r", ch );
 	    return;
 	}
+
+	// Inserting new skill stuff here -- Kasji
+	if ( !str_cmp( arg2, "maxlevel" ) )
+	{
+	   skill->max_level = atoi( argument );
+	   send_to_char( "Ok.\n\r", ch );
+	   return;
+	}
+
 	if ( !str_cmp( arg2, "slot" ) )
 	{
 	    skill->slot = URANGE( 0, atoi( argument ), 30000 );

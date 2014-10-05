@@ -172,6 +172,7 @@ void fwrite_skill( FILE *fpout, SKILLTYPE *skill )
 	{
 	    fprintf( fpout, "Minlevel     %d\n",	skill->min_level	);
 	}
+	fprintf( fpout, "Maxlevel     %d\n",		skill->max_level	);
 	fprintf( fpout, "End\n\n" );
 }
 
@@ -342,7 +343,7 @@ SKILLTYPE *fread_skill( FILE *fp )
     SKILLTYPE *skill;
 
     CREATE( skill, SKILLTYPE, 1 );
-    
+
     skill->guild = -1;
 
     for ( ; ; )
@@ -381,7 +382,7 @@ SKILLTYPE *fread_skill( FILE *fp )
 		SPELL_FUN *spellfun;
 		DO_FUN *dofun;
 		char *w = fread_word( fp );
-		
+
 		fMatch = TRUE;
 		if( !str_prefix( "do_", w ) && ( dofun = skill_function(w) ) != skill_notfound )
 		{
@@ -404,7 +405,7 @@ SKILLTYPE *fread_skill( FILE *fp )
 	    }
 	    KEY( "Components",	skill->components,	fread_string_nohash( fp ) );
 	    break;
- 
+
 	case 'D':
             KEY( "Dammsg",	skill->noun_damage,	fread_string_nohash( fp ) );
 	    KEY( "Dice",	skill->dice,		fread_string_nohash( fp ) );
@@ -418,7 +419,7 @@ SKILLTYPE *fread_skill( FILE *fp )
 	    if ( !str_cmp( word, "End" ) )
 		return skill;
 	    break;
-	    
+
 	case 'F':
 	    KEY( "Flags",	skill->flags,		fread_number( fp ) );
 	    break;
@@ -441,19 +442,32 @@ SKILLTYPE *fread_skill( FILE *fp )
 
 	case 'M':
 	    KEY( "Mana",	skill->min_mana,	fread_number( fp ) );
+	    KEY( "Maxlevel",	skill->max_level,	fread_number( fp ) );
 	    KEY( "Minlevel",	skill->min_level,	fread_number( fp ) );
 	    KEY( "Minpos",	skill->minimum_position, fread_number( fp ) );
 	    KEY( "Misschar",	skill->miss_char,	fread_string_nohash( fp ) );
 	    KEY( "Missroom",	skill->miss_room,	fread_string_nohash( fp ) );
 	    KEY( "Missvict",	skill->miss_vict,	fread_string_nohash( fp ) );
 	    break;
-	
+
 	case 'N':
             KEY( "Name",	skill->name,		fread_string_nohash( fp ) );
 	    break;
 
 	case 'P':
 	    KEY( "Participants",skill->participants,	fread_number( fp ) );
+
+	    if ( !str_cmp(word, "Prereq") )
+	    {
+		SKILL_REQ * req;
+		char * name;
+
+		CREATE(req, SKILL_REQ, 1);
+		req->level = fread_number( fp );
+		name = fread_string( fp );
+		// bkm
+	    }
+
 	    break;
 
 	case 'R':
@@ -479,7 +493,7 @@ SKILLTYPE *fread_skill( FILE *fp )
 	    KEY( "Wearoff",	skill->msg_off,		fread_string_nohash( fp ) );
 	    break;
 	}
-	
+
 	if ( !fMatch )
 	{
             sprintf( buf, "Fread_skill: no match: %s", word );
