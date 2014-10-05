@@ -2275,7 +2275,7 @@ void stop_editing( CHAR_DATA *ch )
 			 {
 				 value = get_actflag( arg3 );
 
-				 if( value < 0 || value >= 31 )
+				 if( value < 0 || value >= MAX_BITS )
 					 ch_printf( ch, "Unknown flag: %s\r\n", arg3 );
 				 else if( 1 << value == ACT_PROTOTYPE && ch->top_level < sysdata.level_modify_proto )
 					 send_to_char( "You cannot change the prototype flag.\r\n", ch );
@@ -2284,21 +2284,21 @@ void stop_editing( CHAR_DATA *ch )
 				 else
 				 {
 					 ftoggle = TRUE;
-					 xTOGGLE_BIT( victim->act, 1 << value );
+					 xTOGGLE_BIT( victim->act, value );
 				 }
 			 }
 			 else
 			 {
 				 value = get_plrflag( arg3 );
 
-				 if( value < 0 || value >= 31 )
+				 if( value < 0 || value >= MAX_BITS )
 					 ch_printf( ch, "Unknown flag: %s\r\n", arg3 );
 				 else if( 1 << value == ACT_IS_NPC )
 					 send_to_char( "If the NPC flag could be changed, it would cause many problems.\r\n", ch );
 				 else
 				 {
 					 ftoggle = TRUE;
-					 xTOGGLE_BIT( victim->act, 1 << value );
+					 xTOGGLE_BIT( victim->act, value );
 				 }
 			 }
 		 }
