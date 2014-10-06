@@ -3387,6 +3387,14 @@ void do_practice( CHAR_DATA *ch, char *argument )
 
 //		adept = 20;
 
+		if (skill_table[sn]->max_level >= 0 && ch->pcdata->learned[sn] >= skill_table[sn]->max_level)
+		{
+                        sprintf( buf, "$n tells you, 'There is nothing more I can teach you about %s.'",
+                                        skill_table[sn]->name );
+                        act( AT_TELL, buf, mob, NULL, ch, TO_VICT );
+			return;
+		}
+
 		cost = ch->pcdata->learned[sn] + 1;
 
 		if (cost > ch->pcdata->skill_points)

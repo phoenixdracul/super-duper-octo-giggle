@@ -3391,9 +3391,9 @@ bool check_dodge( CHAR_DATA *ch, CHAR_DATA *victim )
       return FALSE;
 
     if ( IS_NPC(victim) )
-	chances  = UMIN( 60, victim->top_level );
+	chances  = UMIN( 10, victim->top_level );
     else
-        chances  = (int) (victim->pcdata->learned[gsn_dodge] / 2);
+        chances  = 10 + ((int)victim->pcdata->learned[gsn_dodge]);
 
     if ( number_range( 1, 100 ) > chances )
     {
@@ -3401,11 +3401,11 @@ bool check_dodge( CHAR_DATA *ch, CHAR_DATA *victim )
         return FALSE;
     }
 
-    if ( !IS_NPC(victim) && !IS_SET( victim->pcdata->flags, PCFLAG_GAG) )    
-    act( AT_SKILL, "You dodge $n's attack.", ch, NULL, victim, TO_VICT    );
-    
+    if ( !IS_NPC(victim) && !IS_SET( victim->pcdata->flags, PCFLAG_GAG) )
+	act( AT_SKILL, "You dodge $n's attack.", ch, NULL, victim, TO_VICT    );
+
     if ( !IS_NPC(ch) && !IS_SET( ch->pcdata->flags, PCFLAG_GAG) ) 
-    act( AT_SKILL, "$N dodges your attack.", ch, NULL, victim, TO_CHAR    );
+	act( AT_SKILL, "$N dodges your attack.", ch, NULL, victim, TO_CHAR    );
 
     learn_from_success( victim, gsn_dodge );
     return TRUE;
