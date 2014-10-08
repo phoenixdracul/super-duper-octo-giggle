@@ -770,7 +770,7 @@ void do_makecommsystem ( CHAR_DATA *ch, char *argument )
      }
 
      chance = IS_NPC(ch) ? ch->top_level
-        : (int) (ch->pcdata->learned[gsn_makecommsystem]);
+        : (int) (ch->pcdata->learned[gsn_makecommsystem] * 10 + 40);
 
     if ( number_percent( ) < chance )
       {
@@ -855,7 +855,7 @@ void do_makecommsystem ( CHAR_DATA *ch, char *argument )
           }
        }
     chance = IS_NPC(ch) ? ch->top_level
-                : (int) (ch->pcdata->learned[gsn_makecommsystem]) ;
+                : (int) (ch->pcdata->learned[gsn_makecommsystem] * 10 + 40) ;
 
     if ( number_percent( ) > chance*2  || ( !checktool ) || ( !checkdura ) || ( !checkcrystal ) || ( !checkbattery ) || (
 !checkcircuit ) )

@@ -2932,7 +2932,7 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 					NULL, argument , TO_ROOM );
 		}
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int) (ch->pcdata->learned[gsn_makecontainer]);
+				: (int) (ch->pcdata->learned[gsn_makecontainer] * 10 + 40);
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "&GYou begin the long process of creating a bag.\n\r", ch);
@@ -2987,7 +2987,7 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 	}
 
 	chance = IS_NPC(ch) ? ch->top_level
-			: (int) (ch->pcdata->learned[gsn_makecontainer]) ;
+			: (int) (ch->pcdata->learned[gsn_makecontainer] * 10 + 40) ;
 
 	if ( number_percent( ) > chance*2  || ( !checkfab ) || ( !checksew ) )
 	{
@@ -3019,10 +3019,10 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 	STRFREE( obj->description );
 	strcat( buf, " was dropped here." );
 	obj->description = STRALLOC( buf );
-	obj->value[0] = level;
+	obj->value[0] = IS_NPC(ch) ? ch->top_level / 10 + 1 : ch->pcdata->learned[gsn_makecontainer] + 4;
 	obj->value[1] = 0;
 	obj->value[2] = 0;
-	obj->value[3] = 10;
+	obj->value[3] = IS_NPC(ch) ? 10 : ch->pcdata->learned[gsn_makecontainer] + 9;
 	obj->cost *= 2;
 
 	obj = obj_to_char( obj, ch );
