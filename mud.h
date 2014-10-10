@@ -3950,6 +3950,10 @@ do								\
 				    +str_app[get_curr_str(ch)].todam	    \
 				    +(((ch)->mental_state > 5		    \
 				    &&(ch)->mental_state < 15) ? 1 : 0) )
+#define GET_DEX_DAMROLL(ch)	((ch)->damroll				    \
+				    +str_app[get_curr_dex(ch)].todam	    \
+				    +(((ch)->mental_state > 5		    \
+				    &&(ch)->mental_state < 15) ? 1 : 0) )
 
 #define IS_OUTSIDE(ch)		(!IS_SET(				    \
 				    (ch)->in_room->room_flags,		    \

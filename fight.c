@@ -889,26 +889,65 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	 * Bonuses.
 	 */
 
-	dam += GET_DAMROLL(ch);
+//	dam += GET_DAMROLL(ch);
+	if (wield)
+	{
+		switch(wield->value[3])
+		{
+		case WEAPON_NONE:
+			dam += GET_DAMROLL(ch);
+			break;
+		case WEAPON_VIBRO_AXE:
+			dam += GET_DAMROLL(ch);
+			break;
+		case WEAPON_VIBRO_BLADE:
+			dam += GET_DAMROLL(ch);
+			break;
+		case WEAPON_LIGHTSABER:
+			dam += GET_DAMROLL(ch);
+			break;
+		case WEAPON_WHIP:
+			dam += GET_DEX_DAMROLL(ch);
+			break;
+		case WEAPON_CLAW:
+			dam += GET_DAMROLL(ch);
+			break;
+		case WEAPON_BLASTER:
+			dam += GET_DEX_DAMROLL(ch);
+			break;
+		case WEAPON_BLUDGEON:
+			dam += GET_DAMROLL(ch);
+			break;
+		case WEAPON_BOWCASTER:
+			dam += GET_DEX_DAMROLL(ch);
+			break;
+		case WEAPON_FORCE_PIKE:
+			dam += GET_DAMROLL(ch);
+			break;
+		case WEAPON_DUAL_LIGHTSABER:
+			dam += GET_DEX_DAMROLL(ch);
+			break;
+		}
+	}
 
 	if ( prof_bonus )
-		dam *= ( 1 + (prof_bonus / 100) );
+		dam += ( prof_bonus * dam / 20);
 
 
 	if ( !IS_NPC(ch) && ch->pcdata->learned[gsn_enhanced_damage] > 0 )
 	{
-		dam += (int) (dam * (ch->pcdata->learned[gsn_enhanced_damage] / 500.0f));
+		dam += (dam * ch->pcdata->learned[gsn_enhanced_damage] / 50);
 		learn_from_success( ch, gsn_enhanced_damage );
 	}
 
 
 	if ( !IS_AWAKE(victim) )
-		dam *= 2;
+		dam = dam * 3 / 2;
 	if ( dt == gsn_backstab || dt == gsn_dualstab)
-		dam *= (2 + URANGE( 2, ch->skill_level[HUNTING_ABILITY] - (victim->skill_level[COMBAT_ABILITY]/4), 30 ) / 8);
+		dam += dam * (2 + URANGE( 2, ch->skill_level[HUNTING_ABILITY] - (victim->skill_level[COMBAT_ABILITY]/4), 30 ) / 8) / 10;
 
 	if ( dt == gsn_circle )
-		dam *= (2 + URANGE( 2, ch->skill_level[HUNTING_ABILITY] - (victim->skill_level[COMBAT_ABILITY]/4), 30 ) / 16);
+		dam += dam * (2 + URANGE( 2, ch->skill_level[HUNTING_ABILITY] - (victim->skill_level[COMBAT_ABILITY]/4), 30 ) / 16) / 10;
 
 	plusris = 0;
 

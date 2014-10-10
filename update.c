@@ -235,15 +235,17 @@ void advance_level( CHAR_DATA *ch , int ability)
 	if ( ch->top_level < ch->skill_level[ability] && ch->top_level < LEVEL_AVATAR )
 	{
 		ch->top_level = URANGE( 1 , ch->skill_level[ability] , LEVEL_AVATAR );
+		hp = 1 + number_range(ch->perm_con, ch->perm_con * 2) / 10;
+		mv = 1 + number_range(ch->perm_dex, ch->perm_dex * 2) / 10;
+		ch->max_hit += hp;
+		ch->max_move += mv;
+
+		ch_printf( ch, "&WYou gain &R%d &WHP and &R%d &WMV!\n\r", hp, mv );
 	}
 
 	if ( !IS_NPC(ch) )
 		xREMOVE_BIT( ch->act, PLR_BOUGHT_PET );
 
-	hp = number_range(ch->perm_con, ch->perm_con * 2) / 4;
-	mv = number_range(ch->perm_dex, ch->perm_dex * 2) / 4;
-	ch->max_hit += hp;
-	ch->max_move += mv;
 
 	set_char_color( AT_WHITE + AT_BLINK, ch );
 	if ( ch->pcdata )
@@ -266,8 +268,6 @@ void advance_level( CHAR_DATA *ch , int ability)
 		else if (feat > 0)
 			ch_printf( ch, "&WYou gain &R%d &Wfeat points!\n\r", feat);
 	}
-
-	ch_printf( ch, "&WYou gain &R%d &WHP and &R%d &WMV!\n\r", hp, mv );
 
 	return;
 }
