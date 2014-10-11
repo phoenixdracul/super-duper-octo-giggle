@@ -241,6 +241,45 @@ void advance_level( CHAR_DATA *ch , int ability)
 		ch->max_move += mv;
 
 		ch_printf( ch, "&WYou gain &R%d &WHP and &R%d &WMV!\n\r", hp, mv );
+
+		if (ch->top_level % 5 == 0)
+		{
+			switch (ch->main_ability)
+			{
+			case COMBAT_ABILITY:
+				ch->damroll += 3;
+				break;
+			case PILOTING_ABILITY:
+				ch->damroll += 1;
+				break;
+			case ENGINEERING_ABILITY:
+				ch->damroll += 1;
+				break;
+			case HUNTING_ABILITY:
+				ch->damroll += 2;
+				break;
+			case SMUGGLING_ABILITY:
+				ch->damroll += 2;
+				break;
+			case POLITICIAN_ABILITY:
+				ch->damroll += 1;
+				break;
+			case FORCE_ABILITY:
+				ch->damroll += 2;
+				break;
+			case SLICER_ABILITY:
+				ch->damroll += 1;
+				break;
+			case ASSASSIN_ABILITY:
+				ch->damroll += 2;
+				break;
+			case TECHNICIAN_ABILITY:
+				ch->damroll += 1;
+				break;
+			default:
+				break;
+			}
+		}
 	}
 
 	if ( !IS_NPC(ch) )

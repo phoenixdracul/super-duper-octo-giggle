@@ -1876,6 +1876,12 @@ void wear_obj( CHAR_DATA *ch, OBJ_DATA *obj, bool fReplace, sh_int wear_bit )
 		 }
 	 }
 
+	 if ( obj->level > ch->top_level)
+	 {
+		act( AT_MAGIC, "You are not skilled enough to use this item.", ch, NULL, NULL, TO_CHAR );
+		return;
+	 }
+
 	 /* currently cannot have a light in non-light position */
 	 if ( obj->item_type == ITEM_LIGHT )
 	 {
