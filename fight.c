@@ -1401,11 +1401,10 @@ int get_res( CHAR_DATA * ch, int dam, OBJ_DATA * wield)
 
 float calc_res( CHAR_DATA * ch, int r)
 {
-    float x, y;
+    float x = 0.0, y;
     OBJ_DATA * obj;
     AFFECT_DATA * af;
 
-    x = ch->base_res[r] / 100.0;
     // Add resistance affects to armor and calculate resistance stacking here.
     r += APPLY_RES_1;
     for (obj = ch->first_carrying; obj; obj = obj->next_content)
@@ -1434,17 +1433,16 @@ float calc_res( CHAR_DATA * ch, int r)
     y = x / (x + 100.0);
     y = URANGE(0.0, y, 0.999);
 
-    return y;
+    return y + ch->base_res[r - APPLY_RES_1];
 }
 
 float calc_res_min( CHAR_DATA * ch, int r)
 {
-    float x, y;
+    float x = 0.0, y;
     OBJ_DATA * obj;
     AFFECT_DATA * af;
     int q = 1000;
 
-    x = ch->base_res[r] / 100.0;
     // Add resistance affects to armor and calculate resistance stacking here.
     r += APPLY_RES_1;
     for (obj = ch->first_carrying; obj; obj = obj->next_content)
@@ -1477,7 +1475,7 @@ float calc_res_min( CHAR_DATA * ch, int r)
     y = x / (x + 100.0);
     y = URANGE(0.0, y, 0.999);
 
-    return y * (float)q / 1000.0;
+    return y * (float)q / 1000.0 + ch->base_res[r - APPLY_RES_1];
 }
 
 bool deflect_attack(CHAR_DATA * ch)
