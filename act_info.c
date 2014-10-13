@@ -3302,7 +3302,7 @@ void do_practice( CHAR_DATA *ch, char *argument )
 					ch->pcdata->learned[sn],skill_table[sn]->alignment == 0 ? "&w" : skill_table[sn]->alignment == -1001 ? "&R" : "&B",skill_table[sn]->name );
 			if ( ++col % 3 == 0 )
 				send_to_pager( "\n\r", ch );
-			send_to_pager("&Y** Note: Skills are now level based, instead of percentage.\n\r", ch);
+			send_to_pager("&Y** Note: Skills are now level based, instead of percentage based.\n\r", ch);
 		}
 
 		if ( col % 3 != 0 )

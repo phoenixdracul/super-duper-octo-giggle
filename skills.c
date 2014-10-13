@@ -1256,7 +1256,7 @@ void do_sset( CHAR_DATA *ch, char *argument )
             if ( skill_table[sn]->name 
             && ( victim->skill_level[skill_table[sn]->guild] >= skill_table[sn]->min_level 
                       || value == 0 ) )
-              victim->pcdata->learned[sn] = value;
+              victim->pcdata->learned[sn] = skill_table[sn]->max_level;
 	}
     }
     else
