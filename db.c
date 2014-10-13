@@ -579,7 +579,7 @@ void boot_db( bool fCopyOver )
 	load_changes();
 
 	log_string("Loading Idea Log");
-	load_ideas();
+//	load_ideas();
 	
 	load_force_skills();
 	load_force_help();
