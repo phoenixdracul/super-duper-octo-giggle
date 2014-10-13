@@ -3248,6 +3248,11 @@ void do_practice( CHAR_DATA *ch, char *argument )
 	{
 		int	col;
 		sh_int	lasttype, cnt;
+		int	color = 0;
+		const char * const colors[6] = {
+			"&w", "&b", "&r",
+			"&W", "&B", "&R"
+		};
 
 		col = cnt = 0;	lasttype = SKILL_SPELL;
 
@@ -3298,15 +3303,29 @@ void do_practice( CHAR_DATA *ch, char *argument )
 				continue;
 
 			++cnt;
-			pager_printf( ch, "&B[&W%3d&B] %s%-18.18s ",
-					ch->pcdata->learned[sn],skill_table[sn]->alignment == 0 ? "&w" : skill_table[sn]->alignment == -1001 ? "&R" : "&B",skill_table[sn]->name );
+
+			if (skill_table[sn]->alignment == 0)
+				color = 0;
+			else if (skill_table[sn]->alignment <= 300)
+				color = 1;
+			else if (skill_table[sn]->alignment <= -300)
+				color = 2;
+
+			if (ch->pcdata->learned[sn] >= skill_table[sn]->max_level)
+				color += 3;
+
+			pager_printf( ch, "&B[&W%s%3d&w/%-3d&B] %s%-18.18s ",
+					ch->pcdata->learned[sn] == 0 ? colors[2] : colors[0],
+					ch->pcdata->learned[sn], skill_table[sn]->max_level,
+					colors[color], skill_table[sn]->name );
 			if ( ++col % 3 == 0 )
 				send_to_pager( "\n\r", ch );
-			send_to_pager("&Y** Note: Skills are now level based, instead of percentage based.\n\r", ch);
 		}
 
 		if ( col % 3 != 0 )
 			send_to_pager( "\n\r", ch );
+
+		send_to_pager("&Y** Note: Skills are now level based, instead of percentage based.\n\r", ch);
 	}
 	else
 	{
