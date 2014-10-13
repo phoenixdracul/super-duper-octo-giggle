@@ -836,8 +836,8 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 
 	// New hit/miss -- Kasji
 	diceroll = number_range(1, 20);
-	ch_roll  = diceroll + (prof_bonus / 10) + (get_curr_lck(ch) / 6);
-	vict_def = get_curr_dex(victim) - get_armor_penalty(victim);
+	ch_roll  = diceroll + (prof_bonus / 2);
+	vict_def = get_curr_dex(victim) - get_armor_penalty(victim) + number_range(0, get_curr_lck(victim));
 
 	/* if you can't see what's coming... */
 	if ( wield && !can_see_obj( victim, wield) )
@@ -931,7 +931,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	}
 
 	if ( prof_bonus )
-		dam += ( prof_bonus * dam / 20);
+		dam += number_range(prof_bonus, prof_bonus*2);
 
 
 	if ( !IS_NPC(ch) && ch->pcdata->learned[gsn_enhanced_damage] > 0 )
