@@ -1240,7 +1240,12 @@ void do_sset( CHAR_DATA *ch, char *argument )
     }
 
     value = atoi( argument );
-    if ( value < 0 || value > 100 )
+
+    if (!str_cmp( argument, "max" ))
+    {
+        value = -1;
+    }
+    else if ( value < 0 || value > 100 )
     {
 	send_to_char( "Value range is 0 to 100.\n\r", ch );
 	return;
@@ -1251,12 +1256,17 @@ void do_sset( CHAR_DATA *ch, char *argument )
 	for ( sn = 0; sn < top_sn; sn++ )
 	{
             /* Fix by Narn to prevent ssetting skills the player shouldn't have. */ 
-	      if (skill_table[sn]->guild < 0 || skill_table[sn]->guild >= MAX_ABILITY )
+	    if (skill_table[sn]->guild < 0 || skill_table[sn]->guild >= MAX_ABILITY )
                continue;
             if ( skill_table[sn]->name 
             && ( victim->skill_level[skill_table[sn]->guild] >= skill_table[sn]->min_level 
                       || value == 0 ) )
-              victim->pcdata->learned[sn] = skill_table[sn]->max_level;
+	    {
+		if (value >= 0)
+		    victim->pcdata->learned[sn] = value;
+		else
+		    victim->pcdata->learned[sn] = skill_table[sn]->max_level;
+	    }
 	}
     }
     else
