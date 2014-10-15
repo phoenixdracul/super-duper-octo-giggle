@@ -3409,12 +3409,16 @@ void do_rpconvert( CHAR_DATA *ch, char *argument )
 	if(argument[0] == '\0')
 	{
 		send_to_char("&w&WSpend your RP points on what? The various options are:\n\r", ch);
-		send_to_char("&G+-----------------------------------------------------+\n\r", ch);
-		send_to_char("&G| &W1&G | &WBonus Level to any Class  &G| &W             10 RPP &G|&W\n\r", ch);
-		send_to_char("&G| &W2&G | &WClone                     &G| &W              4 RPP &G|&W\n\r", ch);
-		send_to_char("&G| &W3&G | &W5% to any skill(max 100%) &G| &W              1 RPP &G|&W\n\r", ch);
-//		send_to_char("&G| &W4&G | &W1 Feat Point              &G| &W             30 RPP &G|&W\n\r", ch);
-		send_to_char("&G+-----------------------------------------------------+\n\r\n\r", ch);
+		send_to_char("&G+------------------------------------------------------------+\n\r", ch);
+		send_to_char("&G| &W*&G | &W1 Custom Weapon (Contact an Imm)      &G| &W       200 RPP &G|&W\n\r", ch);
+		send_to_char("&G| &W*&G | &W1 Custom Armor Piece (Contact an Imm) &G| &W       100 RPP &G|&W\n\r", ch);
+		send_to_char("&G| &W*&G | &W1 Custom Item (Contact an Imm)        &G| &W        50 RPP &G|&W\n\r", ch);
+		send_to_char("&G+------------------------------------------------------------+\n\r", ch);
+		send_to_char("&G| &W1&G | &WBonus Level to any Class              &G| &W        50 RPP &G|&W\n\r", ch);
+		send_to_char("&G| &W2&G | &W1 Feat Point                          &G| &W        40 RPP &G|&W\n\r", ch);
+		send_to_char("&G| &W3&G | &WClone                                 &G| &W        20 RPP &G|&W\n\r", ch);
+		send_to_char("&G| &W4&G | &W1 Skill Point                         &G| &W        10 RPP &G|&W\n\r", ch);
+		send_to_char("&G+------------------------------------------------------------+\n\r\n\r", ch);
 
 		send_to_char("&WFor more information on any bonus, type 'help rpconvert'\n\r", ch);
 		send_to_char("&WTo buy your bonus, type 'rpconvert <number of bonus> [extra arguments]'\n\r", ch);
@@ -3434,9 +3438,9 @@ void do_rpconvert( CHAR_DATA *ch, char *argument )
 			return;
 		}
 
-		if(total_points < 10)
+		if(total_points < 50)
 		{
-			send_to_char("&RThis bonus costs 10 RP points. You don't have enough.\n\r", ch);
+			send_to_char("&RThis bonus costs 50 RP points. You don't have enough.\n\r", ch);
 			return;
 		}
 
@@ -3450,16 +3454,16 @@ void do_rpconvert( CHAR_DATA *ch, char *argument )
 				sprintf(buf, "%s increased class %s with rpconvert.", ch->name, ability_name[iClass]);
 				log_string(buf);
 
-				int remainder = 10;
+				int remainder = 50;
 
-				if(ch->rppoints < 10)
+				if(ch->rppoints < 50)
 				{
 					remainder -= ch->rppoints;
 					ch->rppoints = 0;
 					ch->desc->account->points -= remainder;
 				}
 				else
-					ch->rppoints = ch->rppoints - 10;
+					ch->rppoints = ch->rppoints - 50;
 				break;
 			}
 		}
@@ -3475,56 +3479,53 @@ void do_rpconvert( CHAR_DATA *ch, char *argument )
 
 	if(atoi(argument) == 2)
 	{
-		send_to_char("&RJust type 'clone' or 'backup' at a cloning facility!\n\r", ch);
+		if(total_points < 40)
+		{
+			send_to_char("&RThis bonus costs 40 RP point. You don't have enough.\n\r", ch);
+			return;
+		}
+
+		ch->rppoints -= 40;
+		if (ch->rppoints < 0)
+		{
+			ch->desc->account->points += ch->rppoints;
+			ch->rppoints = 0;
+		}
+
+		ch->pcdata->feat_points += 1;
+
+		ch_printf( ch, "&GYou have spent 10 RPP and gained 1 Feat Point!\n\r" );
+		sprintf(buf, "%s increased Feat Points by 1 with rpconvert.\n\r", ch->name);
+		log_string(buf);
+
 		return;
 	}
 
 	if(atoi(argument) == 3)
 	{
-		char arg1[MAX_STRING_LENGTH];
-		int sn;
-		argument = one_argument( argument, arg1 );
+		send_to_char("&RJust type 'clone' or 'backup' at a cloning facility!\n\r", ch);
+		return;
+	}
 
-		if(argument[0] == '\0' || !argument)
+	if(atoi(argument) == 4)
+	{
+		if(total_points < 10)
 		{
-			send_to_char("&RSyntax: rpconvert 2 <skill>\n\r", ch);
+			send_to_char("&RThis bonus costs 10 RP point. You don't have enough.\n\r", ch);
 			return;
 		}
 
-		if(total_points < 1)
+		ch->rppoints -= 10;
+		if (ch->rppoints < 0)
 		{
-			send_to_char("&RThis bonus costs 1 RP point. You don't have enough.\n\r", ch);
-			return;
+			ch->desc->account->points += ch->rppoints;
+			ch->rppoints = 0;
 		}
 
-		sn = skill_lookup( argument );
+		ch->pcdata->skill_points += 1;
 
-		if(!sn || sn < 1)
-		{
-			send_to_char("&RNo such skill.\n\r", ch);
-			return;
-		}
-
-		if(ch->pcdata->learned[sn] < 1)
-		{
-			send_to_char("&RYou must have at least practiced the skill to increase its percentage!\n\r", ch);
-			return;
-		}
-
-		if(ch->pcdata->learned[sn] >= 100)
-		{
-			send_to_char("&RYou already have this skill adepted!\n\r", ch);
-			return;
-		}
-
-		ch->pcdata->learned[sn] = UMIN(ch->pcdata->learned[sn] + 5, 100);
-		if(ch->rppoints > 0)
-			ch->rppoints -= 1;
-		else
-			ch->desc->account->points -= 1;
-
-		ch_printf( ch, "&GYou have spent 1 RPP to increase %s by 5%!\n\r", skill_table[sn]->name);
-		sprintf(buf, "%s increased %s by 5%% with rpconvert.\n\r", ch->name, skill_table[sn]->name);
+		ch_printf( ch, "&GYou have spent 10 RPP and gained 1 Skill Point!\n\r" );
+		sprintf(buf, "%s increased SP by 1 with rpconvert.\n\r", ch->name);
 		log_string(buf);
 
 		return;

@@ -7509,11 +7509,11 @@ void do_reward( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( IS_IMMORTAL(victim) )
-	{
-		send_to_char( "Immortals have no use for such things!\n\r", ch );
-		return;
-	}
+//	if ( IS_IMMORTAL(victim) )
+//	{
+//		send_to_char( "Immortals have no use for such things!\n\r", ch );
+//		return;
+//	}
 
 	if ( argument[0] == '\0' )
 	{
