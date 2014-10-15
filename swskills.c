@@ -143,7 +143,7 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 		}
 
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int) (ch->pcdata->learned[gsn_makeblade]);
+				: (int) (ch->pcdata->learned[gsn_makeblade] * 10 + 40);
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "&GYou begin the long process of crafting a vibroblade.\n\r", ch);
@@ -211,7 +211,7 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 	}
 
 	chance = IS_NPC(ch) ? ch->top_level
-			: (int) (ch->pcdata->learned[gsn_makeblade]) ;
+			: (int) (ch->pcdata->learned[gsn_makeblade] * 10 + 40) ;
 
 	if ( number_percent( ) > chance*2  || ( !checktool ) || ( !checkdura ) || ( !checkbatt ) || ( !checkoven ) )
 	{
@@ -244,7 +244,7 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 	paf->type               = -1;
 	paf->duration           = -1;
 	paf->location           = get_atype( "backstab" );
-	paf->modifier           = level/3;
+	paf->modifier           = level / 4;
 	paf->bitvector          = 0;
 	paf->next               = NULL;
 	LINK( paf, obj->first_affect, obj->last_affect, next, prev );
@@ -253,18 +253,19 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 	paf2->type               = -1;
 	paf2->duration           = -1;
 	paf2->location           = get_atype( "hitroll" );
-	paf2->modifier           = -2;
+	paf2->modifier           = level / 5;
 	paf2->bitvector          = 0;
 	paf2->next               = NULL;
 	LINK( paf2, obj->first_affect, obj->last_affect, next, prev );
 	++top_affect;
 	obj->value[0] = INIT_WEAPON_CONDITION;
-	obj->value[1] = (int) (level/10+15);      /* min dmg  */
-	obj->value[2] = (int) (level/5+20);      /* max dmg */
+	obj->value[1] = (int) (level+4);      /* min dmg  */
+	obj->value[2] = (int) (level*+9);      /* max dmg */
 	obj->value[3] = WEAPON_VIBRO_BLADE;
 	obj->value[4] = charge;
 	obj->value[5] = charge;
 	obj->cost = obj->value[2]*10;
+	obj->dam_type = RES_PIERCE;
 
 	obj = obj_to_char( obj, ch );
 

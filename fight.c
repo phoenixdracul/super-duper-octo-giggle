@@ -576,15 +576,15 @@ ch_ret multi_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	 }
 
 	 chance = IS_NPC(ch) ? ch->top_level
-			 : (int) ((ch->pcdata->learned[gsn_second_attack]+dual_bonus)/1.5);
+			 : (int) ((ch->pcdata->learned[gsn_second_attack])*2 + 10);
 	 if ( number_percent( ) < chance )
 	 {
 		 learn_from_success( ch, gsn_second_attack );
-		 retcode = one_hit( ch, victim, dt );
+		 retcode = one_hit( ch, victim, gsn_second_attack );
 		 if ( retcode != rNONE || who_fighting( ch ) != victim )
 			 return retcode;
 	 }
-	 else	;
+	 else
 		 learn_from_failure( ch, gsn_second_attack );
 
 	 chance = IS_NPC(ch) ? ch->top_level
@@ -948,6 +948,9 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 
 	if ( dt == gsn_circle )
 		dam += dam * (2 + URANGE( 2, ch->skill_level[HUNTING_ABILITY] - (victim->skill_level[COMBAT_ABILITY]/4), 30 ) / 16) / 10;
+
+	if ( dt == gsn_second_attack )
+		dam = dam/3 + (dam * ch->pcdata->learned[gsn_second_attack] / 30); // 1/3 damage at level 1, 2/3 damage at level 20
 
 	plusris = 0;
 
