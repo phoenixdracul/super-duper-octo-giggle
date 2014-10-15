@@ -714,6 +714,15 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	int chance;
 	bool fail, deflect;
 	AFFECT_DATA af;
+	bool second;
+
+	if (dt == gsn_second_attack)
+	{
+		dt = TYPE_UNDEFINED;
+		second = TRUE;
+	}
+	else
+		second = FALSE;
 
 
 	/*
@@ -940,7 +949,6 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 		learn_from_success( ch, gsn_enhanced_damage );
 	}
 
-
 	if ( !IS_AWAKE(victim) )
 		dam = dam * 3 / 2;
 	if ( dt == gsn_backstab || dt == gsn_dualstab)
@@ -949,8 +957,13 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	if ( dt == gsn_circle )
 		dam += dam * (2 + URANGE( 2, ch->skill_level[HUNTING_ABILITY] - (victim->skill_level[COMBAT_ABILITY]/4), 30 ) / 16) / 10;
 
-	if ( dt == gsn_second_attack )
-		dam = dam/3 + (dam * ch->pcdata->learned[gsn_second_attack] / 30); // 1/3 damage at level 1, 2/3 damage at level 20
+	if ( second == TRUE )
+	{
+		if (!IS_NPC(ch))
+			dam = dam/3 + (dam * ch->pcdata->learned[gsn_second_attack] / 30); // 1/3 damage at level 1, 2/3 damage at level 20
+		else
+			dam = dam/3 + (dam * ch->top_level / 120);
+	}
 
 	plusris = 0;
 

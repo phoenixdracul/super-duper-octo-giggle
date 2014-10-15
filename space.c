@@ -8246,7 +8246,7 @@ void do_status(CHAR_DATA *ch, char *argument )
 	}
 
 	chance = IS_NPC(ch) ? ch->top_level
-			: (int)  (ch->pcdata->learned[gsn_shipsystems]) ;
+			: (int)  (ch->pcdata->learned[gsn_shipsystems] * 10 + 40) ;
 	if ( number_percent( ) > chance )
 	{
 		send_to_char("&RYou cant figure out what the readout means.\n\r",ch);
@@ -8615,13 +8615,13 @@ void do_hyperspace(CHAR_DATA *ch, char *argument )
 
 	if ( ship->class >= SHIP_FIGHTER && ship->class <= SHIP_BOMBER )
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int)  (ch->pcdata->learned[gsn_smallspace]) ;
+				: (int)  (ch->pcdata->learned[gsn_smallspace] * 10 + 40) ;
 	if ( ship->class >= SHIP_SHUTTLE && ship->class<= SHIP_CORVETTE )
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int)  (ch->pcdata->learned[gsn_mediumspace]) ;
+				: (int)  (ch->pcdata->learned[gsn_mediumspace] * 10 + 40) ;
 	if ( ship->class >= SHIP_LFRIGATE )
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int) (ch->pcdata->learned[gsn_largespace]);
+				: (int) (ch->pcdata->learned[gsn_largespace] * 10 + 40);
 	if ( number_percent( ) > chance )
 	{
 		send_to_char("&RYou can't figure out which lever to use.\n\r",ch);
@@ -8765,7 +8765,7 @@ void do_target(CHAR_DATA *ch, char *argument )
 		}
 
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int)  (ch->pcdata->learned[gsn_weaponsystems]) ;
+				: (int)  (ch->pcdata->learned[gsn_weaponsystems] * 10 + 40) ;
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "&GTracking target.\n\r", ch);
@@ -8917,8 +8917,8 @@ void do_fire(CHAR_DATA *ch, char *argument )
 
 
 	chance = IS_NPC(ch) ? ch->top_level
-			: (int) ( ch->perm_dex*2 + ch->pcdata->learned[gsn_spacecombat]/3
-					+ ch->pcdata->learned[gsn_spacecombat2]/3 + ch->pcdata->learned[gsn_spacecombat3]/3 );
+			: (int) ( ch->perm_dex*2 + ch->pcdata->learned[gsn_spacecombat]
+					+ ch->pcdata->learned[gsn_spacecombat2] + ch->pcdata->learned[gsn_spacecombat3] );
 
 	if ( ch->in_room->vnum == ship->gunseat && !str_prefix( arg , "primary") )
 	{
@@ -13351,7 +13351,7 @@ void do_calculate(CHAR_DATA *ch, char *argument )
 		return;
 	}
 	chance = IS_NPC(ch) ? ch->top_level
-			: (int)  (ch->pcdata->learned[gsn_navigation]) ;
+			: (int)  (ch->pcdata->learned[gsn_navigation] * 10 + 40) ;
 	if ( number_percent( ) > chance )
 	{
 		send_to_char("&RYou cant seem to figure the charts out today.\n\r",ch);
@@ -13503,7 +13503,7 @@ void do_recharge(CHAR_DATA *ch, char *argument )
 	}
 
 	chance = IS_NPC(ch) ? ch->top_level
-			: (int) (ch->pcdata->learned[gsn_shipsystems]);
+			: (int) (ch->pcdata->learned[gsn_shipsystems] * 10 + 40);
 	if ( number_percent( ) > chance )
 	{
 		send_to_char("&RYou fail to work the controls properly.\n\r",ch);
@@ -13709,7 +13709,7 @@ void do_radar( CHAR_DATA *ch, char *argument )
     }
 
     chance = IS_NPC( ch ) ? ch->top_level
-             : ( int ) ( ch->pcdata->learned[ gsn_navigation ] ) ;
+             : ( int ) ( ch->pcdata->learned[ gsn_navigation ] * 10 + 40) ;
     if ( number_percent( ) > chance )
     {
         send_to_char( "&RYou fail to work the controls properly.\n\r", ch );
@@ -13832,7 +13832,7 @@ void do_autotrack( CHAR_DATA *ch, char *argument )
 	}
 
 	chance = IS_NPC(ch) ? ch->top_level
-			: (int)  (ch->pcdata->learned[gsn_shipsystems]) ;
+			: (int)  (ch->pcdata->learned[gsn_shipsystems] * 10 + 40) ;
 	if ( number_percent( ) > chance )
 	{
 		send_to_char("&RYou're not sure which switch to flip.\n\r",ch);
@@ -14291,7 +14291,7 @@ void do_tractorbeam( CHAR_DATA *ch, char *argument )
 		}
 
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int)  (ch->pcdata->learned[gsn_tractorbeams]);
+				: (int)  (ch->pcdata->learned[gsn_tractorbeams] * 10 + 40);
 
 		if ( number_percent( ) < chance )
 		{
@@ -14383,7 +14383,7 @@ void do_tractorbeam( CHAR_DATA *ch, char *argument )
 		}
 
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int)  (ch->pcdata->learned[gsn_tractorbeams]);
+				: (int)  (ch->pcdata->learned[gsn_tractorbeams] * 10 + 40);
 
 		if ( number_percent( ) < chance )
 		{
@@ -14911,7 +14911,7 @@ void do_bomb( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	chance = IS_NPC(ch) ? ch->top_level : (int)(ch->pcdata->learned[gsn_bomb]) ;
+	chance = IS_NPC(ch) ? ch->top_level : (int)(ch->pcdata->learned[gsn_bomb] * 10 + 40) ;
 	if ( number_percent( ) > chance )
 	{
 		send_to_char("&RYou can't seem to maneuver into the right position to unleash your payload.\n\r", ch);
@@ -15023,7 +15023,7 @@ void do_chaff( CHAR_DATA *ch, char *argument )
 		return;
 	}
 	chance = IS_NPC(ch) ? ch->top_level
-			: (int)  (ch->pcdata->learned[gsn_weaponsystems]) ;
+			: (int)  (ch->pcdata->learned[gsn_weaponsystems] * 10 + 40) ;
 	if ( number_percent( ) > chance )
 	{
 		send_to_char("&RYou can't figure out which switch it is.\n\r",ch);
@@ -15550,7 +15550,7 @@ void do_sabotage(CHAR_DATA *ch, char *argument )
 		}
 
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int) (ch->pcdata->learned[gsn_sabotage]);
+				: (int) (ch->pcdata->learned[gsn_sabotage] * 20);
 		if ( number_percent( ) < chance )
 
 		{
@@ -15711,7 +15711,7 @@ void do_makeshipbomb(CHAR_DATA *ch, char *argument)
 		}
 
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int) (ch->pcdata->learned[gsn_makeshipbomb]);
+				: (int) (ch->pcdata->learned[gsn_makeshipbomb] * 10 + 40);
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "&GYou begin the long process of making a shipbomb.\n\r", ch);
@@ -15839,9 +15839,9 @@ void do_makeshipbomb(CHAR_DATA *ch, char *argument)
 	}
 
 	chance = IS_NPC(ch) ? ch->top_level
-			: (int) (ch->pcdata->learned[gsn_makeshipbomb]) ;
+			: (int) (ch->pcdata->learned[gsn_makeshipbomb] * 10 + 40) ;
 
-	if ( number_percent( ) > chance*2  || ( !checktool ) || ( !checkdrink ) || ( !checkbatt ) || (chemNum < 1) || (circNum< 2) )
+	if ( number_percent( ) > chance  || ( !checktool ) || ( !checkdrink ) || ( !checkbatt ) || (chemNum < 1) || (circNum< 2) )
 	{
 		sprintf(buf,"%d %d", chemNum, circNum);
 		log_string(buf);
@@ -15962,7 +15962,7 @@ void do_shiprepair(CHAR_DATA *ch, char *argument )
 			return;
 		}
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int) (ch->pcdata->learned[gsn_shiprepair]);
+				: (int) (ch->pcdata->learned[gsn_shiprepair] * 10 + 40);
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "&GYou begin your repairs.\n\r", ch);
@@ -16987,7 +16987,7 @@ void do_split_s(CHAR_DATA *ch, char *argument)
 
 	if(!ship->target0)
 	{
-		chance = IS_NPC(ch) ? ch->top_level*2 : ch->pcdata->learned[gsn_split_s]-5;
+		chance = IS_NPC(ch) ? ch->top_level*2 : ch->pcdata->learned[gsn_split_s] * 3 + 20;
 		if( number_percent() > chance )
 		{
 			send_to_char("&wYou attempt to do a split-S...\n\r", ch);
@@ -17037,7 +17037,7 @@ void do_split_s(CHAR_DATA *ch, char *argument)
 		}
 	}
 	// Target.
-	chance = IS_NPC(ch) ? ch->top_level*2 : ch->pcdata->learned[gsn_split_s];
+	chance = IS_NPC(ch) ? ch->top_level*2 : ch->pcdata->learned[gsn_split_s] * 3 + 20;
 	if(number_percent() > chance)
 	{
 		ch_printf(ch, "&wYou attempt to do a split-S%s",
