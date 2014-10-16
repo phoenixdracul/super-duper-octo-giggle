@@ -2430,13 +2430,16 @@ void do_punch( CHAR_DATA *ch, char *argument )
     }
 
     WAIT_STATE( ch, skill_table[gsn_punch]->beats );
-    if ( IS_NPC(ch) || number_percent( ) < ch->pcdata->learned[gsn_punch] )
+    if ( IS_NPC(ch) )
+    {
+	global_retcode = damage( ch, victim, number_range( 5,
+                       ((5+ch->top_level/4)) ), gsn_punch );
+    }
+    else if ( number_percent( ) < ch->pcdata->learned[gsn_punch] * 20 )
     {
 	learn_from_success( ch, gsn_punch );
-	global_retcode = damage( ch, victim, number_range( 20, 
-                       ((20+ch->skill_level[COMBAT_ABILITY])*2) ), 
-gsn_punch 
-);
+	global_retcode = damage( ch, victim, number_range( 5,
+                       ((5+ch->skill_level[COMBAT_ABILITY]/4)) ), gsn_punch );
     }
     else
     {
@@ -2500,14 +2503,14 @@ void do_bash( CHAR_DATA *ch, char *argument )
       chance += 19;
     WAIT_STATE( ch, skill_table[gsn_bash]->beats );
     if ( IS_NPC(ch)
-    || (number_percent( ) + chance) < ch->pcdata->learned[gsn_bash] )
+    || (number_percent( ) + chance) < ch->pcdata->learned[gsn_bash]*20 )
     {
 	learn_from_success( ch, gsn_bash );
 	/* do not change anything here!  -Thoric */
 	WAIT_STATE( ch,     2 * PULSE_VIOLENCE );
 	WAIT_STATE( victim, 2 * PULSE_VIOLENCE );
 	victim->position = POS_SITTING;
-	global_retcode = damage( ch, victim, number_range( 1, ch->skill_level[COMBAT_ABILITY]  ), gsn_bash );
+	global_retcode = damage( ch, victim, number_range( 1, ch->skill_level[COMBAT_ABILITY]/2  ), gsn_bash );
     }
     else
     {
@@ -2570,7 +2573,7 @@ void do_stun( CHAR_DATA *ch, char *argument )
       chance += sysdata.stun_regular;
     if ( !fail
     && (  IS_NPC(ch)
-    || (number_percent( ) + chance) < ch->pcdata->learned[gsn_stun] ) )
+    || (number_percent( ) + chance) < ch->pcdata->learned[gsn_stun]*20 ) )
     {
 	learn_from_success( ch, gsn_stun );
 	/*    DO *NOT* CHANGE!    -Thoric    */
@@ -3595,7 +3598,7 @@ bool check_grip( CHAR_DATA *ch, CHAR_DATA *victim )
     if ( IS_NPC(victim) )
 	chance  = UMIN( 60, 2 * victim->top_level );
     else
-        chance  = (int) (victim->pcdata->learned[gsn_grip] / 2);
+        chance  = (int) (victim->pcdata->learned[gsn_grip] * 20);
 
     /* Consider luck as a factor */
     chance += (2 * (get_curr_lck(victim) - 13 ) );
@@ -3683,7 +3686,7 @@ void do_circle( CHAR_DATA *ch, char *argument )
     percent = (number_percent() - ((get_curr_dex(ch) - 16) + (get_curr_dex(victim) - 16)) - ((get_curr_lck(ch) - 16) - (get_curr_lck(ch) - 16)));
     
      WAIT_STATE( ch, skill_table[gsn_circle]->beats );
-    if ( percent < (IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_circle]) )
+    if ( percent < (IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_circle] * 20) )
     {
 	learn_from_success( ch, gsn_circle );
 	global_retcode = multi_hit( ch, victim, gsn_circle );
