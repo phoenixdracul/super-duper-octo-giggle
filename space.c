@@ -6641,13 +6641,13 @@ void do_launch( CHAR_DATA *ch, char *argument )
 
 	if ( ship->class >= SHIP_FIGHTER && ship->class <= SHIP_BOMBER )
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int)  (ch->pcdata->learned[gsn_smallspace]) ;
+				: (int)  (ch->pcdata->learned[gsn_smallspace] * 10 + 40) ;
 	if ( ship->class >= SHIP_SHUTTLE && ship->class<= SHIP_CORVETTE )
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int)  (ch->pcdata->learned[gsn_mediumspace]) ;
+				: (int)  (ch->pcdata->learned[gsn_mediumspace] * 10 + 40) ;
 	if ( ship->class >= SHIP_LFRIGATE )
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int) (ch->pcdata->learned[gsn_largespace]);
+				: (int) (ch->pcdata->learned[gsn_largespace] * 10 + 40);
 	if ( number_percent( ) < chance )
 	{
 		if ( is_rental(ch,ship) )
@@ -7175,7 +7175,7 @@ void do_land( CHAR_DATA *ch, char *argument )
 	}
 
 	chance = IS_NPC(ch) ? 100
-			: (int)  (ch->pcdata->learned[gsn_shipsystems]) ;
+			: (int)  (ch->pcdata->learned[gsn_shipsystems] * 10 + 40) ;
 	if ( number_percent( ) < chance )
 	{
 		set_char_color( AT_GREEN, ch );
@@ -7382,13 +7382,13 @@ void do_accelerate( CHAR_DATA *ch, char *argument )
 
 	if ( ship->class >= SHIP_FIGHTER && ship->class <= SHIP_BOMBER )
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int)  (ch->pcdata->learned[gsn_smallspace]) ;
+				: (int)  (ch->pcdata->learned[gsn_smallspace] * 10 + 40) ;
 	if ( ship->class >= SHIP_SHUTTLE && ship->class<= SHIP_CORVETTE )
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int)  (ch->pcdata->learned[gsn_mediumspace]) ;
+				: (int)  (ch->pcdata->learned[gsn_mediumspace] * 10 + 40) ;
 	if ( ship->class >= SHIP_LFRIGATE )
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int) (ch->pcdata->learned[gsn_largespace]);
+				: (int) (ch->pcdata->learned[gsn_largespace] * 10 + 40);
 
 	if ( number_percent( ) >= chance )
 	{
@@ -7509,13 +7509,13 @@ void do_trajectory( CHAR_DATA *ch, char *argument )
 
 	if ( ship->class >= SHIP_FIGHTER && ship->class <= SHIP_BOMBER )
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int)  (ch->pcdata->learned[gsn_smallspace]) ;
+				: (int)  (ch->pcdata->learned[gsn_smallspace] * 10 + 40) ;
 	if ( ship->class >= SHIP_SHUTTLE && ship->class<= SHIP_CORVETTE )
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int)  (ch->pcdata->learned[gsn_mediumspace]) ;
+				: (int)  (ch->pcdata->learned[gsn_mediumspace] * 10 + 40) ;
 	if ( ship->class >= SHIP_LFRIGATE )
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int) (ch->pcdata->learned[gsn_largespace]);
+				: (int) (ch->pcdata->learned[gsn_largespace] * 10 + 40);
 	if ( number_percent( ) > chance )
 	{
 		send_to_char("&RYou fail to work the controls properly.\n\r",ch);
@@ -7929,7 +7929,7 @@ void do_autorecharge(CHAR_DATA *ch, char *argument )
 	}
 
 	chance = IS_NPC(ch) ? ch->top_level
-			: (int)  (ch->pcdata->learned[gsn_shipsystems]) ;
+			: (int)  (ch->pcdata->learned[gsn_shipsystems] * 10 + 40) ;
 	if ( number_percent( ) > chance )
 	{
 		send_to_char("&RYou fail to work the controls properly.\n\r",ch);

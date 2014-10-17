@@ -1841,7 +1841,7 @@ void do_search( CHAR_DATA *ch, char *argument )
 	if ( (pexit = get_exit( ch->in_room, door )) != NULL
 	&&   IS_SET( pexit->exit_info, EX_SECRET )
 	&&   IS_SET( pexit->exit_info, EX_xSEARCHABLE )
-	&&   percent < (IS_NPC(ch) ? 80 : ch->pcdata->learned[gsn_search]) )
+	&&   percent < (IS_NPC(ch) ? 80 : (ch->pcdata->learned[gsn_search] * 100 / (ch->pcdata->learned[gsn_search] + 1)) ) )
 	{
 	    act( AT_SKILL, "Your search reveals the $d!", ch, NULL, pexit->keyword, TO_CHAR );
 	    act( AT_SKILL, "$n finds the $d!", ch, NULL, pexit->keyword, TO_ROOM );
@@ -1854,7 +1854,7 @@ void do_search( CHAR_DATA *ch, char *argument )
     for ( obj = startobj; obj; obj = obj->next_content )
     {
        if ( (IS_OBJ_STAT( obj, ITEM_HIDDEN ) || IS_OBJ_STAT( obj, ITEM_BURRIED))
-       &&   percent < ch->pcdata->learned[gsn_search] )
+       &&   percent < (ch->pcdata->learned[gsn_search] * 100 / (ch->pcdata->learned[gsn_search] + 1)) )
        {
 	  found = TRUE;
 	  break;
