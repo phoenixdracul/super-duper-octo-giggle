@@ -1694,6 +1694,11 @@ void do_slicebank(CHAR_DATA *ch, char *argument )
   int  chance;
   bool found;
 
+  if (IS_NPC(ch) || ch->pcdata->learned[gsn_slicebank] < 1)
+  {
+    send_to_char("Huh?\n\r", ch);
+    return;
+  }
 
   argument = one_argument(argument, arg2);
   strcpy( arg , argument );

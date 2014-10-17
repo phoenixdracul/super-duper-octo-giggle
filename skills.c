@@ -1246,13 +1246,14 @@ void do_sset( CHAR_DATA *ch, char *argument )
     else
     {
 	value = atoi( argument );
+
+	if ( value < 0 || value > 100 )
+	{
+	    send_to_char( "Value range is 0 to 100.\n\r", ch );
+	    return;
+	}
     }
 
-    if ( value < 0 || value > 100 )
-    {
-	send_to_char( "Value range is 0 to 100.\n\r", ch );
-	return;
-    }
 
     if ( fAll )
     {
