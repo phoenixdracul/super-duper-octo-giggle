@@ -515,9 +515,11 @@ ch_ret multi_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	/* -- Altrag */
 	chance = IS_NPC(ch) ? 100 : (ch->pcdata->learned[gsn_berserk]*5/2);
 	if ( IS_AFFECTED(ch, AFF_BERSERK) && number_percent() < chance )
+	{
 		if ( (retcode = one_hit( ch, victim, dt )) != rNONE ||
 				who_fighting( ch ) != victim )
 			return retcode;
+	}
 
 	if ( get_eq_char( ch, WEAR_DUAL_WIELD ) )
 	{
@@ -553,7 +555,7 @@ ch_ret multi_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 
 	}
 
-	for(chance=0;chance <=extrahits;chance++){
+	for(chance=0;chance < extrahits;chance++){
 		retcode = one_hit( ch, victim, dt );
 		if ( retcode != rNONE || who_fighting( ch ) != victim )
 			return retcode;
@@ -617,6 +619,7 @@ ch_ret multi_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 		 if ( ch->move )
 			 ch->move = UMAX( 0, ch->move - move );
 	 }
+bug("multi_hit: end");
 	 return retcode;
 }
 
