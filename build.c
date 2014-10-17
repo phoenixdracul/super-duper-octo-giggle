@@ -1588,6 +1588,38 @@ void stop_editing( CHAR_DATA *ch )
 		 return;
 	 }
 
+	 if (!str_cmp(arg2, "damtype"))
+	 {
+		int x;
+
+		if ( !IS_NPC(victim) )
+		{
+			send_to_char("Not on players.\n\r", ch);
+			return;
+		}
+
+                if( !can_mmodify( ch, victim ) )
+                        return;
+
+		argument = one_argument(argument, arg3);
+
+                for (x = 0; x < sizeof( dam_type_table ) / sizeof(dam_type_table[0]); x++)
+                        if (!str_cmp(arg3, dam_type_table[x]))
+                        	break;
+
+                if (x >= RES_MAX)
+                        send_to_char("Invalid damage type.\n\r", ch);
+                else
+		{
+                        victim->dam_type = x;
+			if( xIS_SET( victim->act, ACT_PROTOTYPE ) )
+                        	victim->pIndexData->dam_type = x;
+			send_to_char("Done.\n\r", ch);
+                }
+
+		return;
+	 }
+
 	 if (!str_cmp(arg2, "baseres"))
 	 {
 		int x;

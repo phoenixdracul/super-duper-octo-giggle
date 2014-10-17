@@ -985,7 +985,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	else
 	{
 		// Consider changing this for races that may have natural melee? -- Kasji
-		dam = get_res( victim, dam, NULL );
+		dam = get_res2( victim, dam, IS_NPC(ch) ? ch->dam_type : RES_BLUNT );
 		dam = UMAX(1, dam);
 		dam = ris_damage( victim, dam, RIS_NONMAGIC );
 	}
@@ -1409,6 +1409,30 @@ int get_res( CHAR_DATA * ch, int dam, OBJ_DATA * wield)
     j = number_range(0, 100);
 
     actual = (min + ((max - min) * (float)j) / 100.0) * p;
+
+    i = dam * (1.0 - actual);
+
+    return i;
+}
+
+int get_res2( CHAR_DATA * ch, int dam, short type)
+{
+    float min, max, actual;
+    int i, j, r;
+    AFFECT_DATA * af;
+
+//    if (wield != NULL)
+//        r = wield->dam_type;
+//    else
+//        r = RES_BLUNT;
+    r = type;
+
+    min = calc_res_min(ch, r);
+    max = calc_res(ch, r);
+
+    j = number_range(0, 100);
+
+    actual = (min + ((max - min) * (float)j) / 100.0);
 
     i = dam * (1.0 - actual);
 

@@ -2653,6 +2653,7 @@ struct	mob_index_data
     sh_int		saving_spell_staff;
     int                 vip_flags;
     float		base_res[RES_MAX]; // New RIS by Kasji
+    short		dam_type; // damage type of the mob
 };
 
 
@@ -2863,7 +2864,8 @@ struct char_data
     char *		emotecolor;
     char *		afk_msg;		/* Afk message string - Added by Boran */
     float		base_res[RES_MAX];	// New damage resistances -- Kasji
-    int			sh_deflect;		// Shield deflection
+    short		sh_deflect;		// Shield deflection
+    short		dam_type;		// for NPCs, damage type
 };
 
 
@@ -4826,6 +4828,7 @@ void	violence_update	args( ( void ) );
 ch_ret	multi_hit	args( ( CHAR_DATA *ch, CHAR_DATA *victim, int dt ) );
 sh_int	ris_damage	args( ( CHAR_DATA *ch, sh_int dam, int ris ) );
 int	get_res		args( ( CHAR_DATA *ch, int dam, OBJ_DATA * wield ) );
+int	get_res2	args( ( CHAR_DATA * ch, int dam, short type) );
 int	get_armor_penalty	args( ( CHAR_DATA * ch ) );
 float	calc_res	args( ( CHAR_DATA *ch, int r ) );
 float	calc_res_min	args( ( CHAR_DATA *ch, int r ) );

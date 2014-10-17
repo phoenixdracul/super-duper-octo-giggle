@@ -93,7 +93,7 @@ void do_tellsnoop( CHAR_DATA *ch, char *argument )
   }
 
   chance = IS_NPC(ch) ? ch->top_level
-    : (int)  (ch->pcdata->learned[gsn_spy]) ;
+    : (int)  (ch->pcdata->learned[gsn_spy] * 10 + 10) ; // a harder chance
 
   if ( number_percent( ) < chance )
    {
@@ -615,7 +615,7 @@ void do_inquire(CHAR_DATA *ch, char *argument )
 		send_to_char("You must be in a bank.\n\r", ch);
 		return;
       }
-     chance = IS_NPC(ch) ? ch->top_level : (int) (ch->pcdata->learned[gsn_inquire]);
+     chance = IS_NPC(ch) ? ch->top_level : (int) (ch->pcdata->learned[gsn_inquire] * 10 + 40);
      if ( number_percent( ) < chance )
       {
         
@@ -640,11 +640,11 @@ void do_inquire(CHAR_DATA *ch, char *argument )
      ch->substate = SUB_NONE;
 
      chance = IS_NPC(ch) ? ch->top_level
-                : (int) (ch->pcdata->learned[gsn_inquire]);
+                : (int) (ch->pcdata->learned[gsn_inquire] * 10 + 40);
 
     x = number_percent( );
 
-    if ( number_percent( ) > chance*2 )
+    if ( number_percent( ) > chance )
      {
 		ch_printf(ch,"&z|+---------------------------------------------------------------------+|&w\n\r");
 		ch_printf(ch,"&z|^g                                                                       &z^x|\n\r");
@@ -857,7 +857,7 @@ void do_makecommsystem ( CHAR_DATA *ch, char *argument )
     chance = IS_NPC(ch) ? ch->top_level
                 : (int) (ch->pcdata->learned[gsn_makecommsystem] * 10 + 40) ;
 
-    if ( number_percent( ) > chance*2  || ( !checktool ) || ( !checkdura ) || ( !checkcrystal ) || ( !checkbattery ) || (
+    if ( number_percent( ) > chance  || ( !checktool ) || ( !checkdura ) || ( !checkcrystal ) || ( !checkbattery ) || (
 !checkcircuit ) )
     {
        send_to_char( "&RYou hold up your new commsystem and press a couple of buttons\n\r", ch);
@@ -991,7 +991,7 @@ void do_makedatapad ( CHAR_DATA *ch, char *argument )
      }
 
      chance = IS_NPC(ch) ? ch->top_level
-        : (int) (ch->pcdata->learned[gsn_makedatapad] * 20 + 40);
+        : (int) (ch->pcdata->learned[gsn_makedatapad] * 10 + 40);
 
     if ( number_percent( ) < chance )
       {
@@ -1079,9 +1079,9 @@ void do_makedatapad ( CHAR_DATA *ch, char *argument )
           }
        }
     chance = IS_NPC(ch) ? ch->top_level
-                : (int) (ch->pcdata->learned[gsn_makedatapad]) * 20 + 40;
+                : (int) (ch->pcdata->learned[gsn_makedatapad]) * 10 + 40;
 
-    if ( number_percent( ) > chance*2  || ( !checktool ) || ( !checkdura ) || ( !checksuper ) || ( !checkbattery ) || (
+    if ( number_percent( ) > chance  || ( !checktool ) || ( !checkdura ) || ( !checksuper ) || ( !checkbattery ) || (
 !checkcircuit ) || ( !checklens ) )
     {
        send_to_char( "&RYou hold up your new datapad and begin entering data.\n\r", ch);
@@ -1172,7 +1172,7 @@ void do_codecrack( CHAR_DATA *ch, char *argument )
       }
 
      chance = IS_NPC(ch) ? ch->top_level
-        : (int) (ch->pcdata->learned[gsn_codecrack]);
+        : (int) (ch->pcdata->learned[gsn_codecrack] * 10 + 40);
      if ( number_percent( ) < chance )
       {
 
@@ -1221,7 +1221,7 @@ void do_codecrack( CHAR_DATA *ch, char *argument )
            checkdata = TRUE;
       }
      chance = IS_NPC(ch) ? ch->top_level
-                : (int) (ch->pcdata->learned[gsn_codecrack]);
+                : (int) (ch->pcdata->learned[gsn_codecrack] * 10 + 40);
 
     ship = ship_in_room(ch->in_room,arg);
     if (!ship)
@@ -1232,7 +1232,7 @@ void do_codecrack( CHAR_DATA *ch, char *argument )
     x = number_percent( );
     if (ship->alarm == 1)
       x = x * 2;
-    if ( x > chance*2  || !checkdata  || ( !ship ) )
+    if ( x > chance  || !checkdata  || ( !ship ) )
      {
         ch_printf(ch,"&B[+-----+-----+-----+-----+-----+-----+-----+-----+-]&W\r\n");
         ch_printf(ch,"&B[&r^O Terminal startup&W^O: %-30.30s &B^x]&W^x\r\n",ship->name);
@@ -1377,7 +1377,7 @@ void do_disableship ( CHAR_DATA *ch, char *argument )
   }
 
   chance = IS_NPC(ch) ? ch->top_level
-   : (int) (ch->pcdata->learned[gsn_disable]);
+   : (int) (ch->pcdata->learned[gsn_disable] * 10 + 40);
  if ( number_percent( ) < chance )
  {
   if ( !str_cmp(arg2, "launcher") )
@@ -1450,12 +1450,12 @@ void do_disableship ( CHAR_DATA *ch, char *argument )
   }
 
   chance = IS_NPC(ch) ? ch->top_level
-   : (int) (ch->pcdata->learned[gsn_disable]);
+   : (int) (ch->pcdata->learned[gsn_disable] * 10 + 40);
 
   ship = get_ship(arg1);
   x = number_percent( );
 
-  if ( number_percent( ) > chance*2  || (!checkdata) || (!checkcomm) || ( !ship ) )
+  if ( number_percent( ) > chance  || (!checkdata) || (!checkcomm) || ( !ship ) )
   {
     ch_printf(ch,"&B[+-----+-----+-----+-----+-----+-----+-----+-----+-]&W\r\n");
     ch_printf(ch,"&B[&r^O Terminal startup&W^O: %-30.30s &B^x]&W^x\r\n",ship->name);
@@ -1583,9 +1583,9 @@ void do_assignpilot ( CHAR_DATA *ch, char *argument )
   }
 
   chance = IS_NPC(ch) ? ch->top_level
-   : (int) (ch->pcdata->learned[gsn_assignpilot]);
+   : (int) (ch->pcdata->learned[gsn_assignpilot] * 10 + 40);
  if ( number_percent( ) < chance )
- {   
+ {
     strcpy(disable, arg2);
     send_to_char("You take out your datapad working on changing this ships pilot.\n\r", ch);
     act(AT_PLAIN, "$n takes out $s datapad and begins working on something.\n\r", ch, NULL, argument, TO_ROOM);
@@ -1618,11 +1618,11 @@ void do_assignpilot ( CHAR_DATA *ch, char *argument )
   }
 
   chance = IS_NPC(ch) ? ch->top_level
-   : (int) (ch->pcdata->learned[gsn_assignpilot]);
+   : (int) (ch->pcdata->learned[gsn_assignpilot] * 10 + 40);
 
   ship = ship_from_cockpit(ch->in_room->vnum);
   if (ship == NULL) return;
-  if ( number_percent( ) > chance*2  || (!checkdata) || ( !ship ) )
+  if ( number_percent( ) > chance  || (!checkdata) || ( !ship ) )
   {
     ch_printf(ch,"&B[+-----+-----+-----+-----+-----+-----+-----+-----+-]&W\r\n");
     ch_printf(ch,"&B[&r^O Terminal startup&W^O: %-30.30s &B^x]&W^x\r\n",ship->name);
@@ -1694,7 +1694,7 @@ void do_slicebank(CHAR_DATA *ch, char *argument )
   int  chance;
   bool found;
 
-  
+
   argument = one_argument(argument, arg2);
   strcpy( arg , argument );
   checkdata = FALSE;
@@ -1778,7 +1778,7 @@ void do_slicebank(CHAR_DATA *ch, char *argument )
            checkdata = TRUE;
       }
      chance = IS_NPC(ch) ? ch->top_level
-                : (int) (ch->pcdata->learned[gsn_slicebank]);
+                : (int) (ch->pcdata->learned[gsn_slicebank] * 10 + 10); // a harder skill to succeed
      chance = UMIN(chance, 70);
       found = FALSE;
 
@@ -1961,7 +1961,7 @@ void do_checkprints(CHAR_DATA *ch, char *argument )
      }
      
      chance = IS_NPC(ch) ? ch->top_level
-        : (int) (ch->pcdata->learned[gsn_checkprints]);
+        : (int) (ch->pcdata->learned[gsn_checkprints] * 10 + 40);
      if ( number_percent( ) < chance )
       {
       	  ch->dest_buf   = str_dup(arg);
@@ -1999,7 +1999,7 @@ void do_checkprints(CHAR_DATA *ch, char *argument )
            checkcomm = TRUE;
       }
      chance = IS_NPC(ch) ? ch->top_level
-                : (int) (ch->pcdata->learned[gsn_checkprints]);
+                : (int) (ch->pcdata->learned[gsn_checkprints] * 10 + 40);
     
      obj = get_obj_list( ch, arg, ch->in_room->first_content );
      if (!obj){
@@ -2018,7 +2018,7 @@ void do_checkprints(CHAR_DATA *ch, char *argument )
      }
     x = number_percent( );
 
-    if ( number_percent( ) > chance*2 )
+    if ( number_percent( ) > chance )
      {
         ch_printf(ch,"&B[+-----+-----+-----+-----+-----+-----+-----+-----+-]&W\r\n");
         ch_printf(ch,"&B[^O &rTerminal startup&W: %-30.30s &B^x]&W^x\r\n",obj->name);

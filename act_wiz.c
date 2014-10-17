@@ -1645,6 +1645,17 @@ void do_mstat( CHAR_DATA *ch, char *argument )
 		ch_printf( ch, "&W&z|       &GParts&W: %-63s &z|\n\r", flag_string(victim->xflags, part_flags));
 		ch_printf( ch, "&W&z+------------------------------------------------------------------------------+\n\r");
 	}
+	if (IS_NPC(victim))
+	{
+		ch_printf( ch, "&W&z|  &GDam Type&W: %-10s                                                        &z|\n\r", dam_type_table[victim->dam_type] );
+		ch_printf( ch, "&W&z+------------------------------------------------------------------------------+\n\r");
+	}
+
+	ch_printf( ch, "&W&z| &GResistance &z| &GBase Res &z| &GApplied Res                                          &z|\n\r" );
+	for (x = 0; x < RES_MAX; x++)
+		ch_printf( ch, "&z| &W%10s &z| &W%-2.1f%% &z| &W%-2.1f%%                                       &z|\n\r", dam_type_table[x], victim->base_res[x], calc_res(victim, x));
+	ch_printf( ch, "&W&z+------------------------------------------------------------------------------+\n\r");
+
 	if(IS_NPC(victim))
 	{
 		ch_printf( ch, "&GAct flags&W: %s\n\r", ext_flag_string(&victim->act, act_flags));
