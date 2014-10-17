@@ -1233,19 +1233,22 @@ void do_sset( CHAR_DATA *ch, char *argument )
     /*
      * Snarf the value.
      */
-    if ( !is_number( argument ) )
-    {
-	send_to_char( "Value must be numeric.\n\r", ch );
-	return;
-    }
-
-    value = atoi( argument );
 
     if (!str_cmp( argument, "max" ))
     {
         value = -1;
     }
-    else if ( value < 0 || value > 100 )
+    else if ( !is_number( argument ) )
+    {
+	send_to_char( "Value must be numeric.\n\r", ch );
+	return;
+    }
+    else
+    {
+	value = atoi( argument );
+    }
+
+    if ( value < 0 || value > 100 )
     {
 	send_to_char( "Value range is 0 to 100.\n\r", ch );
 	return;
@@ -1841,7 +1844,7 @@ void do_search( CHAR_DATA *ch, char *argument )
 	if ( (pexit = get_exit( ch->in_room, door )) != NULL
 	&&   IS_SET( pexit->exit_info, EX_SECRET )
 	&&   IS_SET( pexit->exit_info, EX_xSEARCHABLE )
-	&&   percent < (IS_NPC(ch) ? 80 : (ch->pcdata->learned[gsn_search] * 100 / (ch->pcdata->learned[gsn_search] + 1)) ) )
+	&&   percent < (IS_NPC(ch) ? 80 : (ch->pcdata->learned[gsn_search] * 100 / (ch->pcdata->learned[gsn_search] + 2)) ) )
 	{
 	    act( AT_SKILL, "Your search reveals the $d!", ch, NULL, pexit->keyword, TO_CHAR );
 	    act( AT_SKILL, "$n finds the $d!", ch, NULL, pexit->keyword, TO_ROOM );
@@ -1854,7 +1857,7 @@ void do_search( CHAR_DATA *ch, char *argument )
     for ( obj = startobj; obj; obj = obj->next_content )
     {
        if ( (IS_OBJ_STAT( obj, ITEM_HIDDEN ) || IS_OBJ_STAT( obj, ITEM_BURRIED))
-       &&   percent < (ch->pcdata->learned[gsn_search] * 100 / (ch->pcdata->learned[gsn_search] + 1)) )
+       &&   percent < (ch->pcdata->learned[gsn_search] * 100 / (ch->pcdata->learned[gsn_search] + 2)) )
        {
 	  found = TRUE;
 	  break;
@@ -2261,10 +2264,10 @@ void do_backstab( CHAR_DATA *ch, char *argument )
     WAIT_STATE( ch, skill_table[gsn_backstab]->beats );
     if ( !IS_AWAKE(victim)
     ||   IS_NPC(ch)
-    ||   percent < ch->pcdata->learned[gsn_backstab] )
+    ||   percent < (ch->pcdata->learned[gsn_backstab] * 100 / (ch->pcdata->learned[gsn_backstab] + 4)) )
     {
       if(percent <= 85)
-       { 
+       {
 	learn_from_success( ch, gsn_backstab );
 	global_retcode = multi_hit( ch, victim, gsn_backstab );
        }
