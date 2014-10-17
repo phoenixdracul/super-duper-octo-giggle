@@ -521,8 +521,8 @@ ch_ret multi_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 
 	if ( get_eq_char( ch, WEAR_DUAL_WIELD ) )
 	{
-		dual_bonus = IS_NPC(ch) ? (ch->skill_level[COMBAT_ABILITY] / 10) : (ch->pcdata->learned[gsn_dual_wield] / 10);
-		chance = IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_dual_wield];
+		dual_bonus = IS_NPC(ch) ? (ch->skill_level[COMBAT_ABILITY] / 10) : (ch->pcdata->learned[gsn_dual_wield]);
+		chance = IS_NPC(ch) ? ch->top_level : (ch->pcdata->learned[gsn_dual_wield] * 100 / (ch->pcdata->learned[gsn_dual_wield] + 5));
 		if ( number_percent( ) < chance )
 		{
 			learn_from_success( ch, gsn_dual_wield );
@@ -576,7 +576,7 @@ ch_ret multi_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	 }
 
 	 chance = IS_NPC(ch) ? ch->top_level
-			 : (int) ((ch->pcdata->learned[gsn_second_attack])*2 + 10);
+			 : (int) ((ch->pcdata->learned[gsn_second_attack] * 100 / (ch->pcdata->learned[gsn_second_attack] + 5)));
 	 if ( number_percent( ) < chance )
 	 {
 		 learn_from_success( ch, gsn_second_attack );
@@ -588,7 +588,7 @@ ch_ret multi_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 		 learn_from_failure( ch, gsn_second_attack );
 
 	 chance = IS_NPC(ch) ? ch->top_level
-			 : (int) ((ch->pcdata->learned[gsn_third_attack]+(dual_bonus*1.5))/2);
+			 : (int) (((ch->pcdata->learned[gsn_third_attack] * 100 / (ch->pcdata->learned[gsn_third_attack] + 5))+(dual_bonus*1.5))/2);
 	 if ( number_percent( ) < chance )
 	 {
 		 learn_from_success( ch, gsn_third_attack );

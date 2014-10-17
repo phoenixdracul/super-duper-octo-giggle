@@ -3689,7 +3689,7 @@ void do_circle( CHAR_DATA *ch, char *argument )
     percent = (number_percent() - ((get_curr_dex(ch) - 16) + (get_curr_dex(victim) - 16)) - ((get_curr_lck(ch) - 16) - (get_curr_lck(ch) - 16)));
     
      WAIT_STATE( ch, skill_table[gsn_circle]->beats );
-    if ( percent < (IS_NPC(ch) ? ch->top_level : ch->pcdata->learned[gsn_circle] * 20) )
+    if ( percent < (IS_NPC(ch) ? ch->top_level : (ch->pcdata->learned[gsn_circle] * 100 / (ch->pcdata->learned[gsn_circle] + 4))) )
     {
 	learn_from_success( ch, gsn_circle );
 	global_retcode = multi_hit( ch, victim, gsn_circle );
