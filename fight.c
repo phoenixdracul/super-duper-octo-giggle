@@ -619,7 +619,7 @@ ch_ret multi_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 		 if ( ch->move )
 			 ch->move = UMAX( 0, ch->move - move );
 	 }
-bug("multi_hit: end");
+
 	 return retcode;
 }
 
