@@ -2337,7 +2337,7 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 		SET_BIT( obj->wear_flags, ITEM_WEAR_BODY );
 	else
 		SET_BIT( obj->wear_flags, 1 << value );
-	obj->level = level;
+//	obj->level = level;
 	STRFREE( obj->name );
 	sprintf(buf, "%s ", arg2);
 	strcat( buf, remand(buf));
