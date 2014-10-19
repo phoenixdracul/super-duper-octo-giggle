@@ -3418,6 +3418,7 @@ void do_rpconvert( CHAR_DATA *ch, char *argument )
 		send_to_char("&G| &W2&G | &W1 Feat Point                          &G| &W        40 RPP &G|&W\n\r", ch);
 		send_to_char("&G| &W3&G | &WClone                                 &G| &W        20 RPP &G|&W\n\r", ch);
 		send_to_char("&G| &W4&G | &W1 Skill Point                         &G| &W        10 RPP &G|&W\n\r", ch);
+		send_to_char("&G| &W5&G | &WReallocate One Skill (Recoup SP)      &G| &W         2 RPP &G|&W\n\r", ch);
 		send_to_char("&G+------------------------------------------------------------+\n\r\n\r", ch);
 
 		send_to_char("&WFor more information on any bonus, type 'help rpconvert'\n\r", ch);
@@ -3511,7 +3512,7 @@ void do_rpconvert( CHAR_DATA *ch, char *argument )
 	{
 		if(total_points < 10)
 		{
-			send_to_char("&RThis bonus costs 10 RP point. You don't have enough.\n\r", ch);
+			send_to_char("&RThis bonus costs 10 RP points. You don't have enough.\n\r", ch);
 			return;
 		}
 
@@ -3527,6 +3528,59 @@ void do_rpconvert( CHAR_DATA *ch, char *argument )
 		ch_printf( ch, "&GYou have spent 10 RPP and gained 1 Skill Point!\n\r" );
 		sprintf(buf, "%s increased SP by 1 with rpconvert.\n\r", ch->name);
 		log_string(buf);
+
+		return;
+	}
+
+	if (atoi(argument) == 5)
+	{
+		char arg1[MAX_STRING_LENGTH];
+		int sn, i;
+		argument = one_argument( argument, arg1 );
+
+		if(argument[0] == '\0' || !argument)
+		{
+			send_to_char("&RSyntax: rpconvert 5 <skill>\n\r", ch);
+			return;
+		}
+
+		sn = skill_lookup(argument);
+
+		if (sn == -1 || (skill_table[sn]->type != SKILL_SKILL && skill_table[sn]->type != SKILL_WEAPON))
+		{
+			send_to_char("&RNo such skill exists.\n\r", ch);
+			return;
+		}
+
+		if (ch->pcdata->learned[sn] < 1)
+		{
+			send_to_char("&RYou haven't practiced that skill.\n\r", ch);
+			return;
+		}
+
+		if (total_points < 2)
+		{
+			send_to_char("&RThis costs 2 RP points. You don't have enough.\n\r", ch);
+			return;
+		}
+
+		ch->rppoints -= 2;
+		if (ch->rppoints < 0)
+		{
+			ch->desc->account->points += ch->rppoints;
+			ch->rppoints = 0;
+		}
+
+		i = 0;
+		while (ch->pcdata->learned[sn] > 0)
+		{
+			i += ch->pcdata->learned[sn];
+			--ch->pcdata->learned[sn];
+		}
+
+		ch->pcdata->skill_points += i;
+
+		ch_printf(ch, "&GYou've recovered %d skill points from %s!\n\r", i, skill_table[sn]->name);
 
 		return;
 	}
