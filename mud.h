@@ -2338,7 +2338,7 @@ typedef enum
 #define ROOM_BANK		BV08
 #define ROOM_PRIVATE		BV09
 #define ROOM_SAFE		BV10
-#define ROOM_SOLITARY		BV11
+#define ROOM_LOGOUT		BV11
 #define ROOM_PET_SHOP		BV12
 #define ROOM_NO_RECALL		BV13
 #define ROOM_DONATION		BV14
