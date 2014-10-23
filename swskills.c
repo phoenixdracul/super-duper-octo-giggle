@@ -3020,7 +3020,7 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 	STRFREE( obj->description );
 	strcat( buf, " was dropped here." );
 	obj->description = STRALLOC( buf );
-	obj->value[0] = IS_NPC(ch) ? ch->top_level / 10 + 1 : ch->pcdata->learned[gsn_makecontainer]*2 + 5;
+	obj->value[0] = IS_NPC(ch) ? ch->top_level / 10 + 1 : ch->pcdata->learned[gsn_makecontainer]*5 + 10;
 	obj->value[1] = 0;
 	obj->value[2] = 0;
 	obj->value[3] = IS_NPC(ch) ? 10 : ch->pcdata->learned[gsn_makecontainer]*10;
