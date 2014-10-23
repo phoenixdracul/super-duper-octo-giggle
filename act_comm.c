@@ -2973,7 +2973,7 @@ void do_quit( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( !IS_IMMORTAL(ch) && ch->in_room && !IS_SET( ch->in_room->room_flags , ROOM_HOTEL) && !NOT_AUTHED(ch) && ch->desc || !IS_SET( ch->in_room->room_flags , ROOM_LOGOUT))
+	if ( !IS_IMMORTAL(ch) && ch->in_room && !IS_SET( ch->in_room->room_flags , ROOM_HOTEL) && !IS_SET( ch->in_room->room_flags , ROOM_LOGOUT) && !NOT_AUTHED(ch) && ch->desc )
 	{
 		send_to_char("You may not quit here.\n\r", ch);
 		send_to_char("You will have to find a safer resting place such as a hotel...\n\r", ch);
