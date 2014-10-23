@@ -3988,9 +3988,9 @@ void do_first_aid( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	heal = number_range( 1, 150 );
+	heal = number_range( 1, 100 );
 
-	if ( heal > ch->pcdata->learned[gsn_first_aid]*2 )
+	if ( heal > (ch->pcdata->learned[gsn_first_aid] * 100 / (ch->pcdata->learned[gsn_first_aid] + 2) )
 	{
 		ch_printf( ch, "You fail in your attempt at first aid.\n\r");
 		learn_from_failure( ch , gsn_first_aid );
@@ -4511,7 +4511,7 @@ void do_throw( CHAR_DATA *ch, char *argument )
 	{
 
 		WAIT_STATE( ch, skill_table[gsn_throw]->beats );
-		if ( IS_NPC(ch) || number_percent( ) < ch->pcdata->learned[gsn_throw] )
+		if ( IS_NPC(ch) || number_percent( ) < (ch->pcdata->learned[gsn_throw] * 100 / (ch->pcdata->learned[gsn_throw] + 2)) )
 		{
 			learn_from_success( ch, gsn_throw );
 			global_retcode = damage( ch, victim, number_range( obj->weight*2 , (obj->weight*2 + ch->perm_str) ), TYPE_HIT );
@@ -4938,7 +4938,7 @@ void do_special_forces ( CHAR_DATA *ch , char *argument )
 			return;
 		}
 
-		chance = (int) (ch->pcdata->learned[gsn_specialforces] * 100 / (ch->pcdata->learned[gsn_specialforces]));
+		chance = (int) (ch->pcdata->learned[gsn_specialforces] * 100 / (ch->pcdata->learned[gsn_specialforces] + 2));
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "&GYou begin making the call for reinforcements.\n\r", ch);
@@ -5018,7 +5018,7 @@ void do_elite_guard ( CHAR_DATA *ch , char *argument )
 			return;
 		}
 
-		chance = (int) (ch->pcdata->learned[gsn_eliteguard] * 100 / (ch->pcdata->learned[gsn_eliteguard]));
+		chance = (int) (ch->pcdata->learned[gsn_eliteguard] * 100 / (ch->pcdata->learned[gsn_eliteguard] + 2));
 		if ( number_percent( ) < chance )
 		{
 			send_to_char( "&GYou begin making the call for reinforcements.\n\r", ch);
@@ -5322,7 +5322,7 @@ void do_smalltalk ( CHAR_DATA *ch , char *argument )
 
 	WAIT_STATE( ch, skill_table[gsn_smalltalk]->beats );
 
-	if ( percent - ch->skill_level[POLITICIAN_ABILITY] + victim->top_level > ch->pcdata->learned[gsn_smalltalk]  )
+	if ( percent - ch->skill_level[POLITICIAN_ABILITY] + victim->top_level > (ch->pcdata->learned[gsn_smalltalk] * 100 / (ch->pcdata->learned[gsn_smalltalk] + 2))  )
 	{
 		/*
 		 * Failure.
@@ -5462,7 +5462,7 @@ void do_propeganda ( CHAR_DATA *ch , char *argument )
 
 	percent = number_percent();
 
-	if ( percent - get_curr_cha(ch) + victim->top_level > ch->pcdata->learned[gsn_propeganda]  )
+	if ( percent - get_curr_cha(ch) + victim->top_level > (ch->pcdata->learned[gsn_propeganda] * 100 / (ch->pcdata->learned[gsn_propeganda] + 2))  )
 	{
 
 		if ( planet->governed_by != clan )
@@ -5608,7 +5608,7 @@ void do_bribe ( CHAR_DATA *ch , char *argument )
 	WAIT_STATE( ch, skill_table[gsn_bribe]->beats );
 
 	percent = number_range(1, 100);
-	if ( percent - amount + victim->top_level > ch->pcdata->learned[gsn_bribe]  )
+	if ( percent - amount + victim->top_level > (ch->pcdata->learned[gsn_bribe] * 100 / (ch->pcdata->learned[gsn_bribe] + 2))  )
 		return;
 
 	if ( ( clan = ch->pcdata->clan->mainclan ) == NULL )
@@ -5777,7 +5777,7 @@ void do_mass_propeganda ( CHAR_DATA *ch , char *argument )
 
 	WAIT_STATE( ch, skill_table[gsn_masspropeganda]->beats );
 
-	if ( number_percent() < ch->pcdata->learned[gsn_masspropeganda]  )
+	if ( number_percent() < (ch->pcdata->learned[gsn_masspropeganda] * 100 / (ch->pcdata->learned[gsn_masspropeganda] + 2))  )
 	{
 		for ( rch = ch->in_room->first_person; rch; rch = rch->next_in_room )
 		{
@@ -6457,19 +6457,19 @@ void do_makepike( CHAR_DATA *ch, char *argument )
 	paf->type               = -1;
 	paf->duration           = -1;
 	paf->location           = get_atype( "parry" );
-	paf->modifier           = level/3;
+	paf->modifier           = level;
 	paf->bitvector          = 0;
 	paf->next               = NULL;
 	LINK( paf, obj->first_affect, obj->last_affect, next, prev );
 	++top_affect;
 	obj->description = STRALLOC( buf );
 	obj->value[0] = INIT_WEAPON_CONDITION;
-	obj->value[1] = (int) (level/10+10);      /* min dmg  */
-	obj->value[2] = (int) (level/2+20);      /* max dmg */
+	obj->value[1] = (int) (level/5+5);      /* min dmg  */
+	obj->value[2] = (int) (level/4+10);      /* max dmg */
 	obj->value[3] = WEAPON_FORCE_PIKE;
 	obj->value[4] = charge;
 	obj->value[5] = charge;
-	obj->cost = obj->value[2]*10;
+	obj->cost = obj->value[2]*100;
 
 	obj = obj_to_char( obj, ch );
 
@@ -6480,7 +6480,7 @@ void do_makepike( CHAR_DATA *ch, char *argument )
 	{
 		long xpgain;
 
-		xpgain = UMIN( obj->cost*200 ,( exp_level(ch->skill_level[ENGINEERING_ABILITY]+1) - exp_level(ch->skill_level[ENGINEERING_ABILITY]) ) );
+		xpgain = UMIN( obj->cost*20 ,( exp_level(ch->skill_level[ENGINEERING_ABILITY]+1) - exp_level(ch->skill_level[ENGINEERING_ABILITY]) ) );
 		gain_exp(ch, xpgain, ENGINEERING_ABILITY);
 		ch_printf( ch , "You gain %d engineering experience.", xpgain );
 	}
