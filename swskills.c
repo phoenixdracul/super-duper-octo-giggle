@@ -3990,7 +3990,7 @@ void do_first_aid( CHAR_DATA *ch, char *argument )
 
 	heal = number_range( 1, 100 );
 
-	if ( heal > (ch->pcdata->learned[gsn_first_aid] * 100 / (ch->pcdata->learned[gsn_first_aid] + 2) )
+	if ( heal > (ch->pcdata->learned[gsn_first_aid] * 100 / (ch->pcdata->learned[gsn_first_aid] + 2)) )
 	{
 		ch_printf( ch, "You fail in your attempt at first aid.\n\r");
 		learn_from_failure( ch , gsn_first_aid );
