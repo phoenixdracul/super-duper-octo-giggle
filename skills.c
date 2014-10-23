@@ -2833,7 +2833,7 @@ void do_pick( CHAR_DATA *ch, char *argument )
 	}
         x = number_percent( );
         
-        if ( !IS_NPC(ch) && x > ch->pcdata->learned[gsn_pick_lock] )
+        if ( !IS_NPC(ch) && x > (ch->pcdata->learned[gsn_pick_lock] * 100 / (ch->pcdata->learned[gsn_pick_lock] + 2)) )
         {
 	  send_to_char( "You failed.\n\r", ch);
 	  learn_from_failure( ch, gsn_pick_lock );
@@ -2872,7 +2872,7 @@ void do_pick( CHAR_DATA *ch, char *argument )
 	   return;
 	}
                   
-        if ( !IS_NPC(ch) && number_percent( ) > ch->pcdata->learned[gsn_pick_lock] )
+        if ( !IS_NPC(ch) && number_percent( ) > (ch->pcdata->learned[gsn_pick_lock] * 100 / (ch->pcdata->learned[gsn_pick_lock] + 2)) )
         {
 	  send_to_char( "You failed.\n\r", ch);
 	  learn_from_failure( ch, gsn_pick_lock );
@@ -2908,7 +2908,7 @@ void do_pick( CHAR_DATA *ch, char *argument )
              y = number_percent( );
                if (ship->alarm == 1)
                   y = y * 2;
-   	     if ( IS_NPC(ch) || !ch->pcdata || y > ch->pcdata->learned[gsn_pickshiplock] )
+   	     if ( IS_NPC(ch) || !ch->pcdata || y > (ch->pcdata->learned[gsn_pickshiplock] * 100 / (ch->pcdata->learned[gsn_pickshiplock] + 2)) )
              {
 		send_to_char( "You failed.\n\r", ch);
 //        	sprintf ( buf , "[ALARM] %s attempting to pick %s.", ch->name, ship->name ); 
@@ -2958,7 +2958,7 @@ void do_sneak( CHAR_DATA *ch, char *argument )
     send_to_char( "You attempt to move silently.\n\r", ch );
     affect_strip( ch, gsn_sneak );
 
-    if ( IS_NPC(ch) || number_percent( ) < ch->pcdata->learned[gsn_sneak] )
+    if ( IS_NPC(ch) || number_percent( ) < (ch->pcdata->learned[gsn_sneak] * 100 / (ch->pcdata->learned[gsn_sneak] + 2)) )
     {
 	af.type      = gsn_sneak;
 	af.duration  = ch->skill_level[SMUGGLING_ABILITY]  * DUR_CONV;
@@ -2999,7 +2999,7 @@ void do_hide( CHAR_DATA *ch, char *argument )
     if ( IS_AFFECTED(ch, AFF_HIDE) )
 	REMOVE_BIT(ch->affected_by, AFF_HIDE);
 
-    if ( IS_NPC(ch) || number_percent( ) < ch->pcdata->learned[gsn_hide] )
+    if ( IS_NPC(ch) || number_percent( ) < (ch->pcdata->learned[gsn_hide] * 100 / (ch->pcdata->learned[gsn_hide] + 2)) )
     {
 	SET_BIT(ch->affected_by, AFF_HIDE);
 	learn_from_success( ch, gsn_hide );
@@ -3028,7 +3028,7 @@ void do_concealment( CHAR_DATA *ch, char *argument )
     if ( IS_AFFECTED(ch, AFF_HIDE) )
 	REMOVE_BIT(ch->affected_by, AFF_HIDE);
 
-    if ( IS_NPC(ch) || number_percent( ) < ch->pcdata->learned[gsn_concealment] )
+    if ( IS_NPC(ch) || number_percent( ) < (ch->pcdata->learned[gsn_concealment] * 100 / (ch->pcdata->learned[gsn_concealment] + 2)) )
     {
 	SET_BIT(ch->affected_by, AFF_HIDE);
 	learn_from_success( ch, gsn_concealment );
