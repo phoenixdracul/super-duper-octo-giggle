@@ -104,7 +104,7 @@ const char *  const   ex_flags [] =
 const char *	const	r_flags	[] =
 {
 		"dark", "reserved", "nomob", "indoors", "can_land", "can_fly", "no_drive",
-		"nomagic", "bank", "private", "safe", "remove_this_flag", "petshop", "norecall",
+		"nomagic", "bank", "private", "safe", "logout", "petshop", "norecall",
 		"donation", "nodropall", "silence", "sconsole", "nodrop", "clanstoreroom",
 		"plr_home", "empty_home", "teleport", "hotel", "nofloor", "refinery", "factory",
 		"republic_recruit", "empire_recruit", "spacecraft", "prototype", "auction"
@@ -4434,7 +4434,7 @@ void stop_editing( CHAR_DATA *ch )
 			 send_to_char( "private, safe, petshop, norecall, donation, nodropall, silence,\r\n", ch );
 			 send_to_char( "sconsole, nodrop, clanstoreroom, plr_home, empty_home, teleport\r\n", ch );
 			 send_to_char( "nofloor, prototype, refinery, factory, republic_recruit, empire_recruit\r\n", ch );
-			 send_to_char( "spacecraft, auction, no_drive, can_land, can_fly, hotel\r\n", ch );
+			 send_to_char( "spacecraft, auction, no_drive, can_land, can_fly, hotel, logout\r\n", ch );
 			 return;
 		 }
 		 while( argument[0] != '\0' )
@@ -4459,7 +4459,7 @@ void stop_editing( CHAR_DATA *ch )
 			 send_to_char( "Toggle the room flags.\r\n", ch );
 			 send_to_char( "Usage: redit flags <flag> [flag]...\r\n", ch );
 			 send_to_char( "\r\nPossible Flags: \r\n", ch );
-			 send_to_char( "emptyshop logspeech pshop shipyard locker garage barraks control clanland clanjail arena\r\n", ch );
+			 send_to_char( "emptyshop logspeech pshop shipyard locker garage barraks control clanland clanjail arena, hiddenpad\r\n", ch );
 			 return;
 		 }
 		 while( argument[0] != '\0' )
