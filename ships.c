@@ -137,7 +137,7 @@ char *tertiary_beam_name_proto(int shiptype);
 
 void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allow naming ships and buying anything smaller than a capital
 {
-   int x, size, ship_type, vnum;
+   int x, size, ship_type, vnum, caps, count;
    SHIP_DATA *ship;
    SHIP_DATA *sship;
    char arg[MAX_STRING_LENGTH];
@@ -149,7 +149,7 @@ void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allo
    CLAN_DATA *mainclan;
    SPACE_DATA *system;
    PLANET_DATA *planet;
-   bool fsys, fplan;
+   bool fsys, fplan, fcap;
 
    argument = one_argument( argument, arg );
 
@@ -376,7 +376,7 @@ void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allo
 
    for( planet = system->first_planet; planet; planet = planet->next_in_system )
    {
-      if( !str_cmp( planet->governed_by, clan->name ) || !str_cmp( mainclan->name, planet->governed_by ) )
+	   if(ch->pcdata->clan == planet->governed_by)
          fplan = TRUE;
 
       shipcap += planet->shipcap;
