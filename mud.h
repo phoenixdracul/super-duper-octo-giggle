@@ -1680,6 +1680,7 @@ typedef enum
 #define VIP_CORELLIA            BV08
 #define VIP_BAKURA	        	BV09
 #define VIP_HOTH				BV10
+#define VIP_BYSS                BV11
 
 /* player wanted bits */
 
@@ -1693,6 +1694,9 @@ typedef enum
 #define WANTED_NAL_HUTTA   	VIP_NAL_HUTTA
 #define WANTED_CORELLIA   	VIP_CORELLIA
 #define WANTED_BAKURA   	VIP_BAKURA
+#define WANTED_HOTH         VIP_HOTH
+#define WANTED_BYSS         VIP_BYSS
+
 
 /*
  * Bits for 'affected_by'.
