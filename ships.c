@@ -180,7 +180,7 @@ void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allo
       return;
    }
 
-   if( NULLSTR( arg ) )
+   if( arg[0] == '\0' )
    {
       send_to_char( "\r\n&z+&W-----------------------------------------------------------------------------&z+\r\n", ch );
       send_to_char( "&W|&w                               Available ships                               &W|\r\n", ch );
@@ -398,15 +398,15 @@ void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allo
 		   return;
 		}
 
-   for( tarea = first_area; tarea; tarea = tarea->next )
-      if( !str_cmp( SHIP_AREA_FILENAME, tarea->filename ) )
-         break;
-   if( make_prototype_rooms( ship_type, vnum, tarea, shipname ) == -1 )
-   {
-      send_to_char( "There was a problem with your ship: unable to create a room. Notify an administrator.\r\n", ch );
-      bug( "Ship area unable to make_room." );
+    for ( tarea = first_area; tarea; tarea = tarea->next )
+      if ( !str_cmp( SHIP_AREA, tarea->filename ) )
+        break;
+    if(make_prototype_rooms(ship_type,vnum,tarea,shipname) == -1)
+    {
+    	send_to_char("There was a problem with your ship: unable to create a room. Notify an administrator.\r\n",ch);
+    	bug("Ship area unable to make_room.",0);
       return;
-   }
+    }
 
    ch->pcdata->clan->funds -= ( int )( ship_prototypes[ship_type].cost * 1.3 );
 
