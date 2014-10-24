@@ -7000,7 +7000,6 @@ void do_land( CHAR_DATA *ch, char *argument )
    ROOM_INDEX_DATA *room;
    bool rfound = FALSE;
    int vnum;
-   CLAN_DATA *clan;
 
    strcpy( arg, argument );
    argument = one_argument( argument, arg1 );
@@ -7238,7 +7237,8 @@ void do_land( CHAR_DATA *ch, char *argument )
    {
       set_char_color( AT_GREEN, ch );
       send_to_char( "&G[&gShip Computer&G] &wLanding sequence initiated.\r\n", ch );
-      act( "plain", "$n begins the landing sequence.", ch, NULL, NULL, TO_ROOM );
+		act( AT_PLAIN, "$n begins the landing sequence.", ch,
+						NULL, "" , TO_ROOM );
       echo_to_ship( AT_YELLOW, ship, "The ship slowly begins its landing approach." );
       STRFREE( ship->dest );
       ship->dest = STRALLOC( arg );
@@ -7295,7 +7295,7 @@ void landship( SHIP_DATA * ship, char *argument )
             {
                if( ( room = get_room_index( vnum ) ) == NULL )
                   continue;
-               if( xIS_SET( room->room_flags, ROOM_CAN_LAND ) && !str_prefix( argument, strip_color( room->name ) ) )
+               if( IS_SET( room->room_flags, ROOM_CAN_LAND ) && !str_prefix( argument, strip_color( room->name ) ) )
                {
                   destination = room->vnum;
                   break;
