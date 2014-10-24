@@ -387,22 +387,20 @@ void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allo
 	   send_to_char("Your organization does not control any planets in that starsystem.\n\r", ch);
 	   return;
 	}
-   count = 0;
-   for(sship = system->first_ship; sship; sship = sship->next_in_starsystem)
-	{
-	   if(sship->type == MOB_SHIP) count++;
-	   if(sship->class >= SHIP_LFRIGATE) { fcap = TRUE; caps++; }
-	}
-   if(!fcap)
-	{
-	   send_to_char("There isn't a capital class ship in that starsystem.\n\r", ch);
-	   return;
-	}
-	   if(count > 3*caps)
-		{
-		   send_to_char("You can only have 3 mobile ships per capital-class ship in a system.\n\r", ch);
-		   return;
-		}
+	
+   int currships = 0;
+
+   for( sship = system->first_ship; sship; sship = sship->next_in_starsystem )
+   {
+      if( sship->type == MOB_SHIP )
+         currships += get_ship_size( sship );
+   }
+
+   if( (shipcap - currships) < get_proto_size( ship_type )  )
+   {
+      send_to_char( "That system will not support a defense ship of that size.\r\n", ch );
+      return;
+   }
 
     for ( tarea = first_area; tarea; tarea = tarea->next )
       if ( !str_cmp( SHIP_AREA, tarea->filename ) )
