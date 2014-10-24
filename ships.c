@@ -153,7 +153,7 @@ void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allo
 
    argument = one_argument( argument, arg );
 
-   if( NULLSTR( arg ) || NULLSTR( argument ) )
+   if( (arg[0] != '\0') && (argument[0] == '\0') )
    {
       send_to_char( "Usage: buymobship <ship type> <ship name>  <starsystem to be sent to>\r\n", ch );
       return;
@@ -192,18 +192,18 @@ void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allo
             continue;
          if( ch->pcdata->clan && str_cmp( ship_prototypes[x].clan, ch->pcdata->clan->name ) )
             continue;
-         if( ship_prototypes[x].sclass != 0 && ship_prototypes[x].sclass != 1 && ship_prototypes[x].sclass != 2 )
+         if( ship_prototypes[x].class != 0 && ship_prototypes[x].class != 1 && ship_prototypes[x].class != 2 )
             continue;
 
          ch_printf( ch, "&W|&w %s%-39.39s&W Type:  &w%-13.13s &WCost:&w %8d &W|\r\n",
                     !str_cmp( ship_prototypes[x].clan, "The Republic" ) ? "&G" : "&w",
                     ship_prototypes[x].name,
-		 ship_prototypes[x].sclass == 1 ? "Starfighter" :
-		 ship_prototypes[x].sclass == 2 ? "Bomber" : 
-		 ship_prototypes[x].sclass == 3 ? "Shuttle" : 
-		 ship_prototypes[x].sclass == 4 ? "Freighter" : 
-		 ship_prototypes[x].sclass == 5 ? "Frigate" :
-		 ship_prototypes[x].sclass == 7 ? "Corvette" : "Spacecraft", ship_prototypes[x].cost );
+		 ship_prototypes[x].class == 1 ? "Starfighter" :
+		 ship_prototypes[x].class == 2 ? "Bomber" : 
+		 ship_prototypes[x].class == 3 ? "Shuttle" : 
+		 ship_prototypes[x].class == 4 ? "Freighter" : 
+		 ship_prototypes[x].class == 5 ? "Frigate" :
+		 ship_prototypes[x].class == 7 ? "Corvette" : "Spacecraft", ship_prototypes[x].cost );
       }
 
       send_to_char( "&z+&W-----------------------------------------------------------------------------&z+\r\n", ch );
@@ -233,18 +233,18 @@ void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allo
             continue;
          if( ch->pcdata->clan && str_cmp( ship_prototypes[x].clan, ch->pcdata->clan->name ) )
             continue;
-         if( ship_prototypes[x].sclass != 0 && ship_prototypes[x].sclass != 1 && ship_prototypes[x].sclass != 2 )
+         if( ship_prototypes[x].class != 0 && ship_prototypes[x].class != 1 && ship_prototypes[x].class != 2 )
             continue;
 
          ch_printf( ch, "&W|&w %s%-39.39s&W Type:  &w%-13.13s &WCost:&w %8d &W|\r\n",
                     !str_cmp( ship_prototypes[x].clan, "The Republic" ) ? "&G" : "&w",
                     ship_prototypes[x].name,
-                 ship_prototypes[x].sclass == 1 ? "Starfighter" :
-                 ship_prototypes[x].sclass == 2 ? "Bomber" :
-                 ship_prototypes[x].sclass == 3 ? "Shuttle" :
-                 ship_prototypes[x].sclass == 4 ? "Freighter" :
-                 ship_prototypes[x].sclass == 5 ? "Frigate" :
-                 ship_prototypes[x].sclass == 7 ? "Corvette" : "Spacecraft", ship_prototypes[x].cost );
+                 ship_prototypes[x].class == 1 ? "Starfighter" :
+                 ship_prototypes[x].class == 2 ? "Bomber" :
+                 ship_prototypes[x].class == 3 ? "Shuttle" :
+                 ship_prototypes[x].class == 4 ? "Freighter" :
+                 ship_prototypes[x].class == 5 ? "Frigate" :
+                 ship_prototypes[x].class == 7 ? "Corvette" : "Spacecraft", ship_prototypes[x].cost );
       }
       send_to_char( "&z+&W-----------------------------------------------------------------------------&z+\r\n", ch );
       send_to_char( "&W|&w               Refer to 'shiplist' for a complete ship listing               &W|\r\n", ch );
@@ -260,7 +260,7 @@ void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allo
       send_to_char( "Your organization may only purchase its own ship models.\r\n", ch );
       return;
    }
-   if( ship_prototypes[x].sclass != 1 && ship_prototypes[x].sclass != 2 && ship_prototypes[x].sclass != 3 && ship_prototypes[x].sclass != 4 && ship_prototypes[x].sclass != 5  && ship_prototypes[x].sclass != 7 )
+   if( ship_prototypes[x].class != 1 && ship_prototypes[x].class != 2 && ship_prototypes[x].class != 3 && ship_prototypes[x].class != 4 && ship_prototypes[x].class != 5  && ship_prototypes[x].class != 7 )
    {
       send_to_char( "You may only purchase fighters, bombers, or midtargets for mobile ships.\r\n", ch );
       return;
@@ -357,49 +357,46 @@ void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allo
       return;
    }
 
-   fsys = fplan = FALSE;
-   for( system = first_starsystem; system; system = system->next )
-   {
-      if( nifty_is_name( argument, system->name ) )
-      {
-         fsys = TRUE;
-         break;
-      }
-   }
-   if( !fsys )
-   {
-      send_to_char( "No such starsystem.\r\n", ch );
-      return;
-   }
-
-   int shipcap = 0;
-
-   for( planet = system->first_planet; planet; planet = planet->next_in_system )
-   {
-      if( !str_cmp( planet->governed_by, clan->name ) || !str_cmp( mainclan->name, planet->governed_by ) )
-         fplan = TRUE;
-
-      shipcap += planet->shipcap;
-   }
-   if( !fplan )
-   {
-      send_to_char( "Your organization does not control any planets in that starsystem.\r\n", ch );
-      return;
-   }
-
-   int currships = 0;
-
-   for( sship = system->first_ship; sship; sship = sship->next_in_starsystem )
-   {
-      if( sship->type == MOB_SHIP )
-         currships += get_ship_size( sship );
-   }
-
-   if( (shipcap - currships) < get_proto_size( ship_type )  )
-   {
-      send_to_char( "That system will not support a defense ship of that size.\r\n", ch );
-      return;
-   }
+   fsys = fplan = fcap = FALSE;
+   for(system = first_starsystem; system; system = system->next)
+	{
+	   if(nifty_is_name(argument, system->name))
+		{
+		   fsys = TRUE;
+		   break;
+		}
+	}
+   if(!fsys)
+	{
+	   send_to_char("No such starsystem.\n\r", ch);
+	   return;
+	}
+   for(planet = system->first_planet; planet; planet = planet->next_in_system)
+	{
+	   if(ch->pcdata->clan == planet->governed_by)
+		   fplan = TRUE;
+	}
+   if(!fplan)
+	{
+	   send_to_char("Your organization does not control any planets in that starsystem.\n\r", ch);
+	   return;
+	}
+   count = 0;
+   for(sship = system->first_ship; sship; sship = sship->next_in_starsystem)
+	{
+	   if(sship->type == MOB_SHIP) count++;
+	   if(sship->class >= SHIP_LFRIGATE) { fcap = TRUE; caps++; }
+	}
+   if(!fcap)
+	{
+	   send_to_char("There isn't a capital class ship in that starsystem.\n\r", ch);
+	   return;
+	}
+	   if(count > 3*caps)
+		{
+		   send_to_char("You can only have 3 mobile ships per capital-class ship in a system.\n\r", ch);
+		   return;
+		}
 
    for( tarea = first_area; tarea; tarea = tarea->next )
       if( !str_cmp( SHIP_AREA_FILENAME, tarea->filename ) )
