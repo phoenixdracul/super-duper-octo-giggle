@@ -271,6 +271,12 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
 	case 'B':	// TODO
 	               KEY( "BaseValue", planet->base_value, fread_number( fp ) );
 	               break;
+				   
+	case 'D':
+
+        KEY("DefenseShips", planet->defships, fread_number( fp ) );
+        break;
+
 	case 'E':
 	    if ( !str_cmp( word, "End" ) )
 	    {
