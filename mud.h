@@ -1034,6 +1034,8 @@ struct  planet_data
     int              size;
     bool 	     flags;    
     int             base_value;
+	int          shipcap;
+    int          defships;
     int		     citysize;
     int              wilderness;
     int		     wildlife;
