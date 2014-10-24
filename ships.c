@@ -271,9 +271,9 @@ void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allo
       return;
    }
 
-   vnum = find_vnum_block( ship_prototypes[ship_type].num_rooms, FALSE );
-   if( vnum == -1 )
-   {
+    vnum = find_vnum_block(ship_prototypes[ship_type].num_rooms);
+    if(vnum == -1)
+    {
       send_to_char( "There was a problem with your ship: free vnums. Notify an administrator.\r\n", ch );
       bug( "Ship area is low on vnums." );
       return;
@@ -357,25 +357,31 @@ void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allo
       return;
    }
 
-   fsys = fplan = fcap = FALSE;
-   for(system = first_starsystem; system; system = system->next)
-	{
-	   if(nifty_is_name(argument, system->name))
-		{
-		   fsys = TRUE;
-		   break;
-		}
+   fsys = fplan = FALSE;
+
+   for( system = first_starsystem; system; system = system->next )
+   {
+      if( nifty_is_name( argument, system->name ) )
+      {
+         fsys = TRUE;
+         break;
+      }
 	}
    if(!fsys)
 	{
 	   send_to_char("No such starsystem.\n\r", ch);
 	   return;
 	}
-   for(planet = system->first_planet; planet; planet = planet->next_in_system)
-	{
-	   if(ch->pcdata->clan == planet->governed_by)
-		   fplan = TRUE;
-	}
+   int shipcap = 0;
+
+   for( planet = system->first_planet; planet; planet = planet->next_in_system )
+   {
+      if( !str_cmp( planet->governed_by, clan->name ) || !str_cmp( mainclan->name, planet->governed_by ) )
+         fplan = TRUE;
+
+      shipcap += planet->shipcap;
+   }
+
    if(!fplan)
 	{
 	   send_to_char("Your organization does not control any planets in that starsystem.\n\r", ch);
