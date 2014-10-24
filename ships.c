@@ -2554,7 +2554,7 @@ void do_shipstat( CHAR_DATA *ch, char *argument )
     ch_printf( ch, "&z+&W---------------------------------------------------------------&z+\r\n" );
     ch_printf( ch, "&z|&W  &cOrdinance&B:&W                                                   &z|\r\n" );
     ch_printf( ch, "&z|&W    &gMissiles:&w %-5s&W   &gTorpedos:&w %-5s&W   &gRockets:&w %-5s         &z|\r\n", buf3, buf5, buf7 );
-    ch_printf( ch, "&z|&W       &gPlanetary bombs:&w %-5s&W       &gCountermeasures:&w %-5s               &z|\r\n", buf8, buf10 );
+    ch_printf( ch, "&z|&W       &gPlanetary bombs:&w %-5s&W       &gCountermeasures:&w %-5s     &z|\r\n", buf8, buf10 );
     ch_printf( ch, "&z+&W---------------------------------------------------------------&z+\r\n" );
     ch_printf( ch, "&z|&W  &cMisc&B:&W                                                        &z|\r\n" );
     if( ship_prototypes[shiptype].turrets > 0 )    ch_printf( ch, "&z|&W    &gTurrets:&w %-5s                                             &z|\r\n", buf9  );
