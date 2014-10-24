@@ -143,7 +143,7 @@ int get_proto_size( int protonum )
 
 
 
-    shipclass = ship_prototypes[protonum].sclass;
+    shipclass = ship_prototypes[protonum].class;
 
 
 
