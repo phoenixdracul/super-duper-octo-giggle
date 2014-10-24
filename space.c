@@ -6872,20 +6872,101 @@ void launchship( SHIP_DATA *ship )
 	ship->inship = NULL;
 	save_ship(ship);
 }
+int get_ship_size( SHIP_DATA *ship )
 
-int get_ship_count(int vnum)
 {
-	int i = 0;
-	ROOM_INDEX_DATA * room;
-	SHIP_DATA * ship;
 
-	room = get_room_index(vnum);
-	if (!room)
-		return 0;
-	for (ship = room->first_ship; ship; ship = ship->next_in_room)
-		i++;
-	return i;
+    int shipclass;
+
+
+
+    shipclass = ship->sclass;
+
+
+
+    switch( shipclass )
+
+    {
+
+        case SHIP_FIGHTER:
+
+            return 1;
+
+        case SHIP_BOMBER:
+
+            return 1;
+
+        case SHIP_SHUTTLE:
+
+            return 2;
+
+        case SHIP_TT:
+
+            return 4;
+
+        case SHIP_FREIGHTER:
+
+            return 4;
+
+        case SHIP_CORVETTE:
+
+            return 8;
+
+        case SHIP_FRIGATE:
+
+            return 6;
+
+        case SHIP_LFRIGATE:
+
+            return 25;
+			
+        case SHIP_CRUISER:
+
+            return 35;
+
+        case SHIP_DREADNAUGHT:
+
+            return 40;
+
+        case SHIP_DESTROYER:
+
+            return 40;
+
+        default:
+
+            return 2;
+
+    }
+
+    return 2;
+
 }
+
+			
+int get_ship_count(int vnum)
+
+{
+
+        int i = 0;
+
+        ROOM_INDEX_DATA * room;
+
+        SHIP_DATA * ship;
+
+        room = get_room_index(vnum);
+
+        if (!room)
+    {
+                return 0;
+    }
+
+        for (ship = room->first_ship; ship; ship = ship->next_in_room)
+    {
+                i += get_ship_size( ship );
+    }
+        return i;
+}
+
 
 void showland( AREA_DATA *tarea, CHAR_DATA *ch){
 	ROOM_INDEX_DATA *room;
@@ -7112,28 +7193,25 @@ void do_land( CHAR_DATA *ch, char *argument )
 				send_to_char("&RYou can't land your ship inside itself!\n\r",ch);
 				return;
 			}
-			if((target->hangar1 &&
-					(ship->class >= SHIP_FIGHTER && ship->class<= SHIP_BOMBER))
-					|| (target->hangar2 && (ship->class >= SHIP_SHUTTLE && ship->class<= SHIP_CORVETTE) ))
-			{
-				if ( (target->hangar1 && !target->hangar2)
-						&& (ship->class >= SHIP_FREIGHTER && ship->class <= SHIP_CORVETTE))
-				{
-					send_to_char("&RThat ship only has a small-sized ship hangar.\n\r", ch);
-					return;
-				}
-				if (ship->class >= SHIP_FREIGHTER && target->hangar2 == 0)
-				{
-					send_to_char("&RThat ship doesn't have a midsized ship hangar.\n\r", ch);
-					return;
-				}
-				if (!target->hangar1 && !target->hangar2 )
-				{
-					send_to_char("&RThat ship has no hangar to land in!\n\r", ch);
-					return;
-				}
+         if( !target->hangar1 || ((target->hangar1space - get_ship_count( target->hangar1 ) ) <= get_ship_size( ship ) ) )
+          {
+             if( !target->hangar2 || ((target->hangar2space - get_ship_count( target->hangar2 ) ) <= get_ship_size( ship ) ) )
+              {
+                 if( !target->hangar3 || ((target->hangar3space - get_ship_count( target->hangar3 ) ) <= get_ship_size( ship ) ) )
+                  {
+                      if( !target->hangar4 || ((target->hangar4space - get_ship_count( target->hangar4 ) ) <= get_ship_size( ship ) ) )
+                      {
+                          send_to_char("That ship does not have a hangar with enough room to land in!\r\n", ch );
+                          return;
 
-			}
+                      }
+                  }
+              }
+          }
+
+      }
+   }
+
 			if (  (target->vx > ship->vx + 200) || (target->vx < ship->vx - 200) ||
 					(target->vy > ship->vy + 200) || (target->vy < ship->vy - 200) ||
 					(target->vz > ship->vz + 200) || (target->vz < ship->vz - 200) )
@@ -7149,11 +7227,22 @@ void do_land( CHAR_DATA *ch, char *argument )
 				return;
 			}
 
-			if (target->hangar1space - get_ship_count(target->hangar1) < ship->class)
-			{
-				send_to_char("&RThat hangar is too full for the ship to fit in.\n\r", ch);
-				return;
-			}
+         if( target->hangar1 && ((target->hangar1space - get_ship_count( target->hangar1 ) ) >= get_ship_size( ship ) ) )
+
+             room = get_room_index( target->hangar1 );
+
+         else if( target->hangar2 && ((target->hangar2space - get_ship_count( target->hangar2 ) ) >= get_ship_size( ship ) ) )
+
+             room = get_room_index( target->hangar2 );
+
+         else if( target->hangar3 && ((target->hangar3space - get_ship_count( target->hangar3 ) ) >= get_ship_size( ship ) ) )
+
+             room = get_room_index( target->hangar3 );
+
+         else if( target->hangar4 && ((target->hangar4space - get_ship_count( target->hangar4 ) ) >= get_ship_size( ship ) ) )
+
+             room = get_room_index( target->hangar4 );
+
 		}
 		else
 		{
