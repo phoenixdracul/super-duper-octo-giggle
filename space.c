@@ -7122,93 +7122,40 @@ void do_land( CHAR_DATA *ch, char *argument )
             return;
          }
 
-         if( argument[0] != '\0' )
-         {
-            AREA_DATA *pArea;
-            bool canland = FALSE;
+			if ( argument[0] != '\0' ){
+				AREA_DATA *pArea;
+				for ( pArea = planet->first_area; pArea; pArea = pArea->next_on_planet ){
+					for ( vnum = pArea->low_r_vnum; vnum <= pArea->hi_r_vnum; vnum++ )
+					{
+						if ( (room = get_room_index( vnum )) == NULL )
+							continue;
+						if ( IS_SET( room->room_flags , ROOM_CAN_LAND ) && !str_prefix( argument , room->name) )
+						{
+							if (IS_SET(room->room_flags2, ROOM_CLANLAND))
+							{
+								if( room->area
+										&& room->area->planet
+										&& room->area->planet->governed_by
+										&& ch->pcdata->clan
+										&& str_cmp(room->area->planet->governed_by->name, ship->owner)
+								&& str_cmp(room->area->planet->governed_by->name, ch->pcdata->clan->name)  )
+								{
+									act(AT_RED, "Just as you're about to land, several planetary defense ships appear from the clouds and order you to fall back.", ch, NULL, NULL, TO_CHAR);
+									act(AT_RED, "Just as $n is about to land, several planetary defense ships appear from the clouds and order $m to fall back.", ch, NULL, NULL, TO_ROOM);
+									return;
+								}
+								if(!ch->pcdata->clan)
+								{
+									act(AT_RED, "Just as you're about to land, several planetary defense ships appear from the clouds and order you to fall back.", ch, NULL, NULL, TO_CHAR);
+									act(AT_RED, "Just as $n is about to land, several planetary defense ships appear from the clouds and order $m to fall back.", ch, NULL, NULL, TO_ROOM);
+									return;
+								}
+							}
 
-            for( pArea = planet->first_area; pArea; pArea = pArea->next_on_planet )
-            {
-               for( vnum = pArea->low_vnum; vnum <= pArea->hi_vnum; vnum++ )
-               {
-                  if( ( room = get_room_index( vnum ) ) == NULL )
-                     continue;
 
-                  if( xIS_SET( room->room_flags, ROOM_GOVERNLAND ) && !str_prefix( argument, strip_color( room->name ) ) )
-                  {  
-                     if( xIS_SET( room->room_flags, ROOM_GOVERNLAND ) )
-                     {
-                           clan = get_clan( ship->owner );
+							rfound = TRUE;
+							break;
 
-                           if( !clan )
-                           {
-                               if( ch->pcdata && ch->pcdata->clan )
-                                   clan = ch->pcdata->clan;
-                           }
-
-                           if( clan )
-                           {
-                                 if( !str_cmp( clan->name, room->area->planet->governed_by) || !str_cmp( clan->mainclan->name, room->area->planet->governed_by ) )
-                                 {
-                                    canland = TRUE;
-                                 }
-                           }
-
-                        if( !canland )
-                        {
-                           ch_printf( ch, "As you enter the landing queue, several defense ships move to block your approach!\r\n" );
-                           return;
-                        }
-                     }
-
-                     rfound = TRUE;
-                     break;
-                  }
-                  if( xIS_SET( room->room_flags, ROOM_CAN_LAND ) && !str_prefix( argument, strip_color( room->name ) ) )
-                  {  /*clan land area */
-                     int i;
-                     if( xIS_SET( room->room_flags, ROOM_CLANLAND ) )
-                     {
-                        if( ch->pcdata && ch->pcdata->clan )
-                        {
-                           clan = get_clan( ch->pcdata->clan->name );
-
-                           for( i = 0; i < 10; i++ )
-                           {
-                              if( clan->clanland[i] == room->vnum )
-                              {
-                                 canland = TRUE;
-                                 break;
-                              }
-                           }
-                        }
-                        else
-                        {
-                           clan = get_clan( ship->owner );
-                           if( clan )
-                           {
-                              for( i = 0; i < 10; i++ )
-                              {
-                                 if( clan->clanland[i] == room->vnum
-                                     || ( clan->mainclan && clan->mainclan->clanland[i] == room->vnum ) )
-                                 {
-                                    canland = TRUE;
-                                    break;
-                                 }
-                              }
-                           }
-                        }
-
-                        if( !canland )
-                        {
-                           ch_printf( ch,
-                                      "As you enter the landing queue, several defense ships move to block your approach!\r\n" );
-                           return;
-                        }
-                     }
-
-                     rfound = TRUE;
-                     break;
                   }
                }
             }
@@ -7281,7 +7228,7 @@ void do_land( CHAR_DATA *ch, char *argument )
       else
       {
          send_to_char( "&RI don't see that here.\r\n&W", ch );
-         cmdf( ch, "%s", "land" );
+			do_land( ch , "" );
          return;
       }
    }
@@ -7298,25 +7245,28 @@ void do_land( CHAR_DATA *ch, char *argument )
       ship->shipstate = SHIP_LAND;
       ship->currspeed = 0;
 
-      if( ship->class >= SHIP_FIGHTER && ship->class <= SHIP_SHUTTLE )
-         learn_from_success( ch, gsn_smallspace );
-      if( ship->class >= SHIP_FREIGHTER && ship->class <= SHIP_CORVETTE )
-         learn_from_success( ch, gsn_mediumspace );
+		if ( ship->class >= SHIP_FIGHTER && ship->class <= SHIP_BOMBER )
+			learn_from_success( ch, gsn_smallspace );
+		if ( ship->class >= SHIP_SHUTTLE && ship->class <= SHIP_CORVETTE )
+			learn_from_success( ch, gsn_mediumspace );
 
 
-      if( get_room_index( ship->lastdoc ) && starsystem_from_room( get_room_index( ship->lastdoc ) ) != ship->starsystem )
-      {
-         gain_exp( ch, gsn_navigation );
-      }
+		if ( get_room_index(ship->lastdoc)&& starsystem_from_room(get_room_index(ship->lastdoc)) != ship->starsystem )
+		{
+			int xp =  (exp_level( ch->skill_level[PILOTING_ABILITY]+1) - exp_level( ch->skill_level[PILOTING_ABILITY])) ;
+			xp = UMIN( get_ship_value( ship ) , xp );
+			gain_exp( ch , xp , PILOTING_ABILITY );
+			ch_printf( ch, "&WYou gain %ld points of flight experience!\n\r", UMIN( get_ship_value( ship ) , xp ) );
+		}
 
-      return;
-   }
-   send_to_char( "You fail to work the controls properly.\r\n", ch );
-   if( ship->class >= SHIP_FIGHTER && ship->class <= SHIP_SHUTTLE )
-      learn_from_failure( ch, gsn_smallspace );
-   if( ship->class >= SHIP_FREIGHTER && ship->class <= SHIP_CORVETTE )
-      learn_from_failure( ch, gsn_mediumspace );;
-   return;
+		return;
+	}
+	send_to_char("You fail to work the controls properly.\n\r",ch);
+	if ( ship->class >= SHIP_FIGHTER && ship->class <= SHIP_BOMBER )
+		learn_from_failure( ch, gsn_smallspace );
+	if ( ship->class >= SHIP_SHUTTLE && ship->class <= SHIP_CORVETTE )
+		learn_from_failure( ch, gsn_mediumspace );;
+	return;
 }
 
 void landship( SHIP_DATA * ship, char *argument )
@@ -7341,7 +7291,7 @@ void landship( SHIP_DATA * ship, char *argument )
       {
          for( pArea = planet->first_area; pArea; pArea = pArea->next_on_planet )
          {
-            for( vnum = pArea->low_vnum; vnum <= pArea->hi_vnum; vnum++ )
+            for( vnum = pArea->low_r_vnum; vnum <= pArea->hi_r_vnum; vnum++ )
             {
                if( ( room = get_room_index( vnum ) ) == NULL )
                   continue;
