@@ -134,6 +134,73 @@ void shiplist(CHAR_DATA *ch);
 char *primary_beam_name_proto(int shiptype);
 char *secondary_beam_name_proto(int shiptype);
 char *tertiary_beam_name_proto(int shiptype);
+int get_ship_size(SHIP_DATA *ship);
+int get_proto_size( int protonum )
+
+{
+
+    int shipclass;
+
+
+
+    shipclass = ship_prototypes[protonum].sclass;
+
+
+
+    switch( shipclass )
+
+    {
+
+        case SHIP_FIGHTER:
+
+            return 1;
+
+        case SHIP_BOMBER:
+
+            return 1;
+
+        case SHIP_SHUTTLE:
+
+            return 2;
+
+        case SHIP_TT:
+
+            return 4;
+
+        case SHIP_FREIGHTER:
+
+            return 4;
+
+        case SHIP_CORVETTE:
+
+            return 8;
+
+        case SHIP_FRIGATE:
+
+            return 6;
+
+        case SHIP_LFRIGATE:
+
+            return 25;
+
+        case SHIP_CRUISER:
+
+            return 35;
+
+        case SHIP_DREADNAUGHT:
+
+            return 40;
+
+        default:
+
+            return 2;
+
+    }
+
+    return 2;
+
+}
+
 
 void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allow naming ships and buying anything smaller than a capital
 {
