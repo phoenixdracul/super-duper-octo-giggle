@@ -291,8 +291,8 @@ void do_buymobship(CHAR_DATA *ch, char *argument )
 		// NR
 		case 0: sprintf(shipname, "X-Wing Snubfighter MXW"); break;
 		case 1: sprintf(shipname, "A-Wing Scout MAW"); break;
-		case 2: sprintf(shipname, "B-Wing Heavy Fighter MBW"); break;
-		case 3: sprintf(shipname, "Y-Wing Bomber MYB"); break;
+		case 2: sprintf(shipname, "Y-Wing Bomber MYB"); break;
+		case 3: sprintf(shipname, "B-Wing Heavy Fighter MBW"); break;
 		case 4: sprintf(shipname, "K-Wing Heavy Bomber MKW"); break;
 		// Imp
 		case 6: sprintf(shipname, "TIE Fighter MTF"); break;
@@ -1596,7 +1596,7 @@ void save_prototype( int prototype )
     fprintf( fpout, "Hull           %d\n",  ship_prototypes[prototype].hull );
     fprintf( fpout, "Shields        %d\n",  ship_prototypes[prototype].shields );
     fprintf( fpout, "Energy         %d\n",  ship_prototypes[prototype].energy );
-    fprintf( fpout, "Chaff          %d\n",  ship_prototypes[prototype].chaff );
+    fprintf( fpout, "Countermeasures          %d\n",  ship_prototypes[prototype].chaff );
     fprintf( fpout, "MaxCargo       %d\n",  ship_prototypes[prototype].maxcargo );
 	fprintf( fpout, "Hanger1Space   %d\n",  ship_prototypes[prototype].hangar1space );
 	fprintf( fpout, "Hanger2Space   %d\n",  ship_prototypes[prototype].hangar2space );
@@ -1689,7 +1689,7 @@ bool load_prototype_header(FILE *fp,int prototype)
            case 'C':
                KEY( "Cost",           ship_prototypes[prototype].cost,             fread_number(fp));
                KEY( "Class",          ship_prototypes[prototype].class,            fread_number(fp));
-               KEY( "Chaff",          ship_prototypes[prototype].chaff,            fread_number(fp));
+               KEY( "Countermeasures",          ship_prototypes[prototype].chaff,            fread_number(fp));
                KEY( "Clan",	      ship_prototypes[prototype].clan,		   fread_string(fp));
            case 'E':
                KEY( "Energy",         ship_prototypes[prototype].energy,           fread_number(fp));
@@ -2554,7 +2554,7 @@ void do_shipstat( CHAR_DATA *ch, char *argument )
     ch_printf( ch, "&z+&W---------------------------------------------------------------&z+\r\n" );
     ch_printf( ch, "&z|&W  &cOrdinance&B:&W                                                   &z|\r\n" );
     ch_printf( ch, "&z|&W    &gMissiles:&w %-5s&W   &gTorpedos:&w %-5s&W   &gRockets:&w %-5s         &z|\r\n", buf3, buf5, buf7 );
-    ch_printf( ch, "&z|&W       &gPlanetary bombs:&w %-5s&W       &gChaff:&w %-5s               &z|\r\n", buf8, buf10 );
+    ch_printf( ch, "&z|&W       &gPlanetary bombs:&w %-5s&W       &gCountermeasures:&w %-5s               &z|\r\n", buf8, buf10 );
     ch_printf( ch, "&z+&W---------------------------------------------------------------&z+\r\n" );
     ch_printf( ch, "&z|&W  &cMisc&B:&W                                                        &z|\r\n" );
     if( ship_prototypes[shiptype].turrets > 0 )    ch_printf( ch, "&z|&W    &gTurrets:&w %-5s                                             &z|\r\n", buf9  );
@@ -2993,7 +2993,7 @@ void do_installmodule( CHAR_DATA *ch, char *argument )
   int energy=0;
   int manuever=0;
   int alarm=0;
-  int chaff=0;
+  int countermeasures=0;
   int slave=0;
   int tractor=0;
   int tertiary=0;

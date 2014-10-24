@@ -63,8 +63,8 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
     { 
     	default:
     	        
-     		if(str_cmp(arg, "hull") && str_cmp( arg, "slave") && str_cmp( arg, "tractor") && str_cmp(arg, "torpedo") && str_cmp(arg, "rocket") && str_cmp(arg, "missile") && str_cmp(arg, "primary") && str_cmp(arg, "secondary") && str_cmp(arg, "tertiary") && str_cmp(arg, "shield") && str_cmp(arg, "speed") && str_cmp(arg, "hyperspeed") && str_cmp(arg, "energy") && str_cmp(arg, "maneuver") && str_cmp(arg, "chaff") && str_cmp(arg, "bomb") && str_cmp(arg, "cargo") && str_cmp(arg, "alarm")){
-    		  send_to_char("Modules may affect the following aspects of the ship:\n\rPrimary, Secondary, Tertiary, Missile, Rocket, Torpedo, Hull, Shield, Speed, Hyperspeed, Energy, Maneuver, Slave, Tractor, Chaff, Bomb, Cargo, and Alarm.\n\r", ch);
+     		if(str_cmp(arg, "hull") && str_cmp( arg, "slave") && str_cmp( arg, "tractor") && str_cmp(arg, "torpedo") && str_cmp(arg, "rocket") && str_cmp(arg, "missile") && str_cmp(arg, "primary") && str_cmp(arg, "secondary") && str_cmp(arg, "tertiary") && str_cmp(arg, "shield") && str_cmp(arg, "speed") && str_cmp(arg, "hyperspeed") && str_cmp(arg, "energy") && str_cmp(arg, "maneuver") && str_cmp(arg, "countermeasures") && str_cmp(arg, "bomb") && str_cmp(arg, "cargo") && str_cmp(arg, "alarm")){
+    		  send_to_char("Modules may affect the following aspects of the ship:\n\rPrimary, Secondary, Tertiary, Missile, Rocket, Torpedo, Hull, Shield, Speed, Hyperspeed, Energy, Maneuver, Slave, Tractor, Countermeasures, Bomb, Cargo, and Alarm.\n\r", ch);
     		  return;
     		}
                 checklens = FALSE;
@@ -297,11 +297,11 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
       affectammount = 1;
       strcpy(name, "An Alarm Module");
     }
-    if(!str_cmp(arg, "chaff"))
+    if(!str_cmp(arg, "countermeasures"))
     {
       affecttype = AFFECT_CHAFF;
       affectammount = URANGE(1,(level / 33), 3);
-      strcpy(name, "A Chaff Module");
+      strcpy(name, "A Countermeasure Module");
     }
 
     if(!str_cmp(arg, "tertiary"))
@@ -413,7 +413,7 @@ void do_showmodules( CHAR_DATA *ch, char *argument ){
       if(mod->affect == AFFECT_ALARM)
         strcpy(str, "Alarm");
       if(mod->affect == AFFECT_CHAFF)
-        strcpy(str, "Chaff");
+        strcpy(str, "countermeasures");
       if(mod->affect == AFFECT_SLAVE)
         strcpy(str, "Slave");
       if(mod->affect == AFFECT_TRACTOR)
@@ -734,7 +734,7 @@ void do_shipmaintenance(CHAR_DATA *ch, char *argument )
 	 }//if check
  	}// for loop	
 
-        ch_printf( ch, "&GRepairs complete.. Hull raised %d points, ship weaponry and chaff restocked.\n\r", change );
+        ch_printf( ch, "&GRepairs complete.. Hull raised %d points, ship weaponry and countermeasures restocked.\n\r", change );
 	if(ship->bombs > oldbombs)
 	   ch_printf( ch, "&G%d bombs loaded into ship from inventory.\n\r", ship->bombs - oldbombs);
 

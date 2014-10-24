@@ -1018,7 +1018,7 @@ void update_space( )
 
 	for ( ship = first_ship; ship; ship = ship->next )
 	{
-		if (ship->starsystem)
+		/*if (ship->starsystem) commented out because running out of power should not make your ship explode!
 		{
 			if ( ship->energy > 0 && ship->shipstate == SHIP_DISABLED && ship->class != SHIP_SPACE_STATION )
 				ship->energy -= 100;
@@ -1028,7 +1028,7 @@ void update_space( )
 				ship->energy = ship->maxenergy;
 			else
 				destroy_ship(ship , NULL, "destroyed by lack of energy");
-		}
+		}*/
 
 		if ( ship->chaff_released > 0 )
 			ship->chaff_released--;
@@ -2930,7 +2930,7 @@ void save_ship( SHIP_DATA *ship )
 		fprintf( fp, "Hyperspeed   %d\n",	ship->hyperspeed	);
 		fprintf( fp, "Comm         %d\n",	ship->comm		);
 		fprintf( fp, "Cost	   %d\n",       ship->cost		);
-		fprintf( fp, "Chaff        %d\n",	ship->chaff		);
+		fprintf( fp, "Countermeasures        %d\n",	ship->chaff		);
 		fprintf( fp, "Maxchaff     %d\n",	ship->maxchaff		);
 		fprintf( fp, "Sensor       %d\n",	ship->sensor		);
 		fprintf( fp, "Astro_array  %d\n",	ship->astro_array	);
@@ -3027,7 +3027,7 @@ void fread_ship( SHIP_DATA *ship, FILE *fp )
 			KEY( "Copilot",     ship->copilot,          fread_string( fp ) );
 			KEY( "Comm",        ship->comm,      fread_number( fp ) );
 			KEY( "Cost",	 ship->cost,	  fread_number(fp));
-			KEY( "Chaff",       ship->chaff,      fread_number( fp ) );
+			KEY( "Countermeasures",       ship->chaff,      fread_number( fp ) );
 #ifdef USECARGO
 			KEY( "Cargo",       ship->cargo,      fread_number( fp ) );
 			KEY( "CargoType",   ship->cargotype,  fread_number( fp ) );
@@ -3159,7 +3159,7 @@ void fread_ship( SHIP_DATA *ship, FILE *fp )
 			KEY( "Maxenergy",      ship->maxenergy,        fread_number( fp ) );
 			KEY( "Missilestate",   ship->missilestate,        fread_number( fp ) );
 			KEY( "Maxhull",      ship->maxhull,        fread_number( fp ) );
-			KEY( "Maxchaff",       ship->maxchaff,      fread_number( fp ) );
+			KEY( "Maxcountermeasures",       ship->maxchaff,      fread_number( fp ) );
 			if ( !str_cmp( word, "Module"  ) ){
 				MODULE_DATA *mod;
 				line = fread_line( fp );
@@ -4149,7 +4149,7 @@ void do_setship( CHAR_DATA *ch, char *argument )
 		send_to_char( "hangar1 hangar2 hangar3 hangar4\n\r", ch);
 		send_to_char( "hangar1space hangar2space hangar3space hangar4space\n\r", ch);
 		send_to_char( "maneuver speed hyperspeed tractorbeam gwell window1-6\n\r", ch );
-		send_to_char( "pcount primary scount secondary tcount tertiary missiles shield hull energy chaff\n\r", ch );
+		send_to_char( "pcount primary scount secondary tcount tertiary missiles shield hull energy countermeasures\n\r", ch );
 		send_to_char( "comm sensor astroarray class torpedos bombs\n\r", ch );
 #ifdef USECARGO
 		send_to_char( "pilotseat coseat gunseat navseat rockets simvnum maxcargo\n\r", ch );
@@ -4928,7 +4928,7 @@ void do_setship( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( !str_cmp( arg2, "chaff" ) )
+	if ( !str_cmp( arg2, "countermeasures" ) )
 	{
 		ship->chaff = URANGE( 0, atoi(argument) , 25 );
 		ship->maxchaff = URANGE( 0, atoi(argument) , 25 );
@@ -5131,7 +5131,7 @@ void do_showship( CHAR_DATA *ch, char *argument )
 			ship->maxhull,
 			ship->shipstate == SHIP_DISABLED ? "Disabled" : "Running");
 
-	ch_printf( ch, "Shields: %d/%d   Energy(fuel): %d/%d\n\rBombs: %d/%d  Chaff: %d/%d\n\r",
+	ch_printf( ch, "Shields: %d/%d   Energy(fuel): %d/%d\n\rBombs: %d/%d  Countermeasures: %d/%d\n\r",
 			ship->shield,
 			ship->maxshield,
 			ship->energy,
@@ -6499,12 +6499,6 @@ void do_leaveship( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if  ( ship->class == SHIP_SPACE_STATION )
-	{
-		send_to_char( "You can't do that here.\n\r" , ch );
-		return;
-	}
-
 	if ( ship->lastdoc != ship->location )
 	{
 		send_to_char("&rMaybe you should wait until the ship lands.\n\r",ch);
@@ -6604,11 +6598,6 @@ void do_launch( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if  ( ship->class == SHIP_SPACE_STATION )
-	{
-		send_to_char( "You can't do that here.\n\r" , ch );
-		return;
-	}
 	if( argument[0] != '\0' && password != ship->password )
 	{
 		send_to_char( "&RYou enter in the wrong code and the computer gives you a small &Yelectric shock&W.\r\n",ch);
@@ -7330,12 +7319,6 @@ void do_accelerate( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( ship->class > SHIP_SPACE_STATION )
-	{
-		send_to_char("&RThis isn't a spacecraft!\n\r",ch);
-		return;
-	}
-
 	if (  (ship = ship_from_pilotseat(ch->in_room->vnum))  == NULL )
 	{
 		send_to_char("&RThe controls must be at the pilots chair...\n\r",ch);
@@ -7345,12 +7328,6 @@ void do_accelerate( CHAR_DATA *ch, char *argument )
 	if ( autofly(ship) )
 	{
 		send_to_char("&RYou'll have to turn off the ships autopilot first.\n\r",ch);
-		return;
-	}
-
-	if  ( ship->class == SHIP_SPACE_STATION )
-	{
-		send_to_char( "&RSpace stations can't move.\n\r" , ch );
 		return;
 	}
 
@@ -7457,12 +7434,6 @@ void do_trajectory( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( ship->class > SHIP_SPACE_STATION )
-	{
-		send_to_char("&RThis isn't a spacecraft!\n\r",ch);
-		return;
-	}
-
 	if (  (ship = ship_from_pilotseat(ch->in_room->vnum))  == NULL )
 	{
 		send_to_char("&RYour not in the pilots seat.\n\r",ch);
@@ -7478,11 +7449,6 @@ void do_trajectory( CHAR_DATA *ch, char *argument )
 	if (ship->shipstate == SHIP_DISABLED)
 	{
 		send_to_char("&RThe ships drive is disabled. Unable to maneuver.\n\r",ch);
-		return;
-	}
-	if  ( ship->class == SHIP_SPACE_STATION )
-	{
-		send_to_char( "&RSpace stations can't turn.\n\r" , ch );
 		return;
 	}
 
@@ -8149,11 +8115,6 @@ void do_closehatch(CHAR_DATA *ch, char *argument )
 		else
 		{
 
-			if  ( ship->class == SHIP_SPACE_STATION )
-			{
-				send_to_char( "&RTry one of the docking bays!\n\r" , ch );
-				return;
-			}
 			if ( ship->hatchopen)
 			{
 				ship->hatchopen = FALSE;
@@ -8680,12 +8641,6 @@ void do_target(CHAR_DATA *ch, char *argument )
 			return;
 		}
 
-		if ( ship->class > SHIP_SPACE_STATION )
-		{
-			send_to_char("&RThis isn't a spacecraft!\n\r",ch);
-			return;
-		}
-
 		if (ship->shipstate == SHIP_HYPERSPACE)
 		{
 			send_to_char("&RYou can only do that in realspace!\n\r",ch);
@@ -8882,12 +8837,6 @@ void do_fire(CHAR_DATA *ch, char *argument )
 	if (  (ship = ship_from_turret(ch->in_room->vnum))  == NULL )
 	{
 		send_to_char("&RYou must be in the gunners chair or turret of a ship to do that!\n\r",ch);
-		return;
-	}
-
-	if ( ship->class > SHIP_SPACE_STATION )
-	{
-		send_to_char("&RThis isn't a spacecraft!\n\r",ch);
 		return;
 	}
 
@@ -13543,12 +13492,6 @@ void do_addpilot(CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if  ( ship->class == SHIP_SPACE_STATION )
-	{
-		send_to_char( "&RYou can't do that here.\n\r" , ch );
-		return;
-	}
-
 	if ( str_cmp( ship->owner , ch->name ) )
 	{
 
@@ -13610,12 +13553,6 @@ void do_rempilot(CHAR_DATA *ch, char *argument )
 	if (  (ship = ship_from_cockpit(ch->in_room->vnum))  == NULL )
 	{
 		send_to_char("&RYou must be in the cockpit of a ship to do that!\n\r",ch);
-		return;
-	}
-
-	if  ( ship->class == SHIP_SPACE_STATION )
-	{
-		send_to_char( "&RYou can't do that here.\n\r" , ch );
 		return;
 	}
 
@@ -14988,13 +14925,6 @@ void do_chaff( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ( ship->class > SHIP_SPACE_STATION )
-	{
-		send_to_char("&RThis isn't a spacecraft!\n\r",ch);
-		return;
-	}
-
-
 	if (  (ship = ship_from_coseat(ch->in_room->vnum))  == NULL )
 	{
 		send_to_char("&RThe controls are at the copilots seat!\n\r",ch);
@@ -15019,7 +14949,7 @@ void do_chaff( CHAR_DATA *ch, char *argument )
 	}
 	if (ship->chaff <= 0 )
 	{
-		send_to_char("&RYou don't have any chaff to release!\n\r",ch);
+		send_to_char("&RYou don't have any countermeasures to deploy!\n\r",ch);
 		return;
 	}
 	chance = IS_NPC(ch) ? ch->top_level
@@ -15035,10 +14965,10 @@ void do_chaff( CHAR_DATA *ch, char *argument )
 
 	ship->chaff_released++;
 
-	send_to_char( "You flip the chaff release switch.\n\r", ch);
+	send_to_char( "You flip the countermeasure release switch.\n\r", ch);
 	act( AT_PLAIN, "$n flips a switch on the control pannel", ch,
 			NULL, argument , TO_ROOM );
-	echo_to_cockpit( AT_YELLOW , ship , "A burst of chaff is released from the ship.");
+	echo_to_cockpit( AT_YELLOW , ship , "A burst of countermeasures released from the ship.");
 
 	learn_from_success( ch, gsn_weaponsystems );
 
