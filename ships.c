@@ -85,7 +85,7 @@ struct ship_prototypes_struct
     int		hull;
     int		shields;
     int		energy;
-    int		chaff;
+    int		countermeasures;
     int		maxbombs;
     int		speed;
     int		hyperspeed;
@@ -1308,8 +1308,8 @@ SHIP_DATA *make_prototype_ship(int ship_type,int vnum,CHAR_DATA *ch,char *ship_n
     //ship->maxplasmashield = ship_prototypes[ship_type].plasma;
     ship->energy = ship_prototypes[ship_type].energy;
     ship->maxenergy = ship_prototypes[ship_type].energy;
-    ship->chaff = ship_prototypes[ship_type].chaff;
-    ship->maxchaff = ship_prototypes[ship_type].chaff;
+    ship->countermeasures = ship_prototypes[ship_type].countermeasures;
+    ship->maxcountermeasures = ship_prototypes[ship_type].countermeasures;
     ship->bombs = ship_prototypes[ship_type].maxbombs;
     ship->maxbombs = ship_prototypes[ship_type].maxbombs;
     ship->realspeed = ship_prototypes[ship_type].speed;
@@ -1596,7 +1596,7 @@ void save_prototype( int prototype )
     fprintf( fpout, "Hull           %d\n",  ship_prototypes[prototype].hull );
     fprintf( fpout, "Shields        %d\n",  ship_prototypes[prototype].shields );
     fprintf( fpout, "Energy         %d\n",  ship_prototypes[prototype].energy );
-    fprintf( fpout, "Countermeasures          %d\n",  ship_prototypes[prototype].chaff );
+    fprintf( fpout, "Countermeasures          %d\n",  ship_prototypes[prototype].countermeasures );
     fprintf( fpout, "MaxCargo       %d\n",  ship_prototypes[prototype].maxcargo );
 	fprintf( fpout, "Hanger1Space   %d\n",  ship_prototypes[prototype].hangar1space );
 	fprintf( fpout, "Hanger2Space   %d\n",  ship_prototypes[prototype].hangar2space );
@@ -1689,7 +1689,7 @@ bool load_prototype_header(FILE *fp,int prototype)
            case 'C':
                KEY( "Cost",           ship_prototypes[prototype].cost,             fread_number(fp));
                KEY( "Class",          ship_prototypes[prototype].class,            fread_number(fp));
-               KEY( "Countermeasures",          ship_prototypes[prototype].chaff,            fread_number(fp));
+               KEY( "Countermeasures",          ship_prototypes[prototype].countermeasures,            fread_number(fp));
                KEY( "Clan",	      ship_prototypes[prototype].clan,		   fread_string(fp));
            case 'E':
                KEY( "Energy",         ship_prototypes[prototype].energy,           fread_number(fp));
@@ -2057,7 +2057,7 @@ void do_makeprototypeship(CHAR_DATA *ch, char *argument)
     ship_prototypes[prototype].shields = ship->maxshield;
     //ship_prototypes[prototype].plasma = ship->maxplasmashield;
     ship_prototypes[prototype].energy = ship->maxenergy;
-    ship_prototypes[prototype].chaff = ship->maxchaff;
+    ship_prototypes[prototype].countermeasures = ship->maxcountermeasures;
 #ifdef USECARGO
     ship_prototypes[prototype].maxcargo = ship->maxcargo;
 #endif
@@ -2533,7 +2533,7 @@ void do_shipstat( CHAR_DATA *ch, char *argument )
   else sprintf(buf8, "&RNone.");
  if(ship_prototypes[shiptype].turrets > 0) sprintf(buf9, "%d", ship_prototypes[shiptype].turrets);
   else sprintf(buf9, "&RNone.");
- if(ship_prototypes[shiptype].chaff > 0) sprintf(buf10, "%d", ship_prototypes[shiptype].chaff);
+ if(ship_prototypes[shiptype].countermeasures > 0) sprintf(buf10, "%d", ship_prototypes[shiptype].countermeasures);
   else sprintf(buf10, "&RNone.");
  if(ship_prototypes[shiptype].windows > 0) sprintf(buf9, "%d", ship_prototypes[shiptype].windows);
   else sprintf(buf11, "&RNone.");
@@ -3067,8 +3067,8 @@ void do_installmodule( CHAR_DATA *ch, char *argument )
         ++manuever;
       if(mod->affect == AFFECT_ALARM)
         ++alarm;
-      if(mod->affect == AFFECT_CHAFF)
-        ++chaff;
+      if(mod->affect == AFFECT_COUNTERMEASURES)
+        ++countermeasures;
       if(mod->affect == AFFECT_SLAVE)
 	++slave;
       if(mod->affect == AFFECT_TRACTOR)
@@ -3116,7 +3116,7 @@ void do_installmodule( CHAR_DATA *ch, char *argument )
       (modobj->value[0] == AFFECT_ALARM && alarm >= maxslot) ||
       (modobj->value[0] == AFFECT_SLAVE && slave >= maxslot) ||
       (modobj->value[0] == AFFECT_TRACTOR && tractor >= maxslot) ||
-      (modobj->value[0] == AFFECT_CHAFF && chaff >= maxslot) ||
+      (modobj->value[0] == AFFECT_COUNTERMEASURES && countermeasures >= maxslot) ||
       (modobj->value[0] == AFFECT_TERTIARY && tertiary >= maxslot) ||
       (modobj->value[0] == AFFECT_BOMB && bombs >= maxslot) ||
       (modobj->value[0] == AFFECT_CARGO && maxcargo >= maxslot))
@@ -3241,8 +3241,8 @@ void do_installmodule( CHAR_DATA *ch, char *argument )
         ship->manuever+=mod->ammount;
       if(mod->affect == AFFECT_ALARM)
         ship->alarm+=mod->ammount;
-      if(mod->affect == AFFECT_CHAFF)
-        ship->maxchaff+=mod->ammount;
+      if(mod->affect == AFFECT_COUNTERMEASURES)
+        ship->maxcountermeasures+=mod->ammount;
       if(mod->affect == AFFECT_SLAVE)
         ship->slave+=mod->ammount;
       if(mod->affect == AFFECT_TRACTOR)

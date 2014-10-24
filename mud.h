@@ -1261,7 +1261,7 @@ struct ship_prototype_data
     int         maxenergy;
     int         maxshield;
     int         maxhull;
-    sh_int      maxchaff;
+    sh_int      maxcountermeasures;
     sh_int      maxmods;
 };
 
@@ -1424,9 +1424,9 @@ struct ship_data
     SHIP_DATA  *target9;
     SHIP_DATA  *target10;
     SPACE_DATA *currjump;
-    sh_int      chaff;
-    sh_int      maxchaff;
-    sh_int      chaff_released;
+    sh_int      countermeasures;
+    sh_int      maxcountermeasures;
+    sh_int      countermeasures_released;
     bool        autopilot;
     int		channel;
     int		password;
@@ -1599,7 +1599,7 @@ struct	smaug_affect
 #define SHIP_NOHIJACK           BV00
 #define SHIP_SHIELD_BOOST	BV01
 #define SHIP_TORP_BOOST		BV02
-#define SHIP_CHAFF_BOOST	BV03
+#define SHIP_COUNTERMEASURES_BOOST	BV03
 #define SHIP_HULL_BOOST		BV04
 #define SHIP_LASER_BOOST	BV05
 #define SHIP_MISSILE_BOOST	BV06
@@ -2022,7 +2022,7 @@ typedef enum {
 #define AFFECT_HYPER		9
 #define AFFECT_ENERGY		10
 #define AFFECT_MANUEVER		11
-#define AFFECT_CHAFF		12
+#define AFFECT_COUNTERMEASURES		12
 #define AFFECT_ALARM		13
 #define	AFFECT_SLAVE		14
 #define AFFECT_TRACTOR		15

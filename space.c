@@ -102,7 +102,7 @@ char *  const   bus_stop [MAX_BUS_STOP+1] =
 
 const char *  const   ship_flags [] =
 {
-		"nohijack", "shield_boost", "torp_boost", "chaff_boost", "hull_boost",
+		"nohijack", "shield_boost", "torp_boost", "countermeasures_boost", "hull_boost",
 		"laser_boost", "missile_boost", "rocket_boost", "simulator", "nodestroy", "noslicer", "ion_lasers",
 		"ion_drive", "ion_ion", "ion_turret1", "ion_turret2", "ion_turret3",
 		"ion_turret4", "ion_turret5", "ion_turret6", "ion_turret7", "ion_turret8",
@@ -535,7 +535,7 @@ void move_ships( )
 					&& abs(missile->my) - abs(target->vy) <= 20 && abs(missile->my) - abs(target->vy) >= -20
 					&& abs(missile->mz) - abs(target->vz) <= 20 && abs(missile->mz) - abs(target->vz) >= -20 )
 			{
-				if ( target->chaff_released <= 0)
+				if ( target->countermeasures_released <= 0)
 				{
 					if ( target->manuever/2 < number_range(1, 100) )
 					{
@@ -574,8 +574,8 @@ void move_ships( )
 				}
 				else
 				{
-					echo_to_room( AT_YELLOW , get_room_index(ship->gunseat), "Your missile explodes harmlessly in a cloud of chaff!" );
-					echo_to_cockpit( AT_YELLOW, target, "A missile explodes in your chaff.");
+					echo_to_room( AT_YELLOW , get_room_index(ship->gunseat), "Your missile explodes harmlessly in a cloud of countermeasures!" );
+					echo_to_cockpit( AT_YELLOW, target, "A missile impacts your countermeasure.");
 					extract_missile( missile );
 				}
 				continue;
@@ -1030,8 +1030,8 @@ void update_space( )
 				destroy_ship(ship , NULL, "destroyed by lack of energy");
 		}*/
 
-		if ( ship->chaff_released > 0 )
-			ship->chaff_released--;
+		if ( ship->countermeasures_released > 0 )
+			ship->countermeasures_released--;
 
 		if (ship->shipstate == SHIP_HYPERSPACE)
 		{
@@ -2930,8 +2930,8 @@ void save_ship( SHIP_DATA *ship )
 		fprintf( fp, "Hyperspeed   %d\n",	ship->hyperspeed	);
 		fprintf( fp, "Comm         %d\n",	ship->comm		);
 		fprintf( fp, "Cost	   %d\n",       ship->cost		);
-		fprintf( fp, "Countermeasures        %d\n",	ship->chaff		);
-		fprintf( fp, "Maxchaff     %d\n",	ship->maxchaff		);
+		fprintf( fp, "Countermeasures        %d\n",	ship->countermeasures		);
+		fprintf( fp, "Maxcountermeasures     %d\n",	ship->maxcountermeasures		);
 		fprintf( fp, "Sensor       %d\n",	ship->sensor		);
 		fprintf( fp, "Astro_array  %d\n",	ship->astro_array	);
 		fprintf( fp, "Realspeed    %d\n",	ship->realspeed		);
@@ -3027,7 +3027,7 @@ void fread_ship( SHIP_DATA *ship, FILE *fp )
 			KEY( "Copilot",     ship->copilot,          fread_string( fp ) );
 			KEY( "Comm",        ship->comm,      fread_number( fp ) );
 			KEY( "Cost",	 ship->cost,	  fread_number(fp));
-			KEY( "Countermeasures",       ship->chaff,      fread_number( fp ) );
+			KEY( "Countermeasures",       ship->countermeasures,      fread_number( fp ) );
 #ifdef USECARGO
 			KEY( "Cargo",       ship->cargo,      fread_number( fp ) );
 			KEY( "CargoType",   ship->cargotype,  fread_number( fp ) );
@@ -3159,7 +3159,7 @@ void fread_ship( SHIP_DATA *ship, FILE *fp )
 			KEY( "Maxenergy",      ship->maxenergy,        fread_number( fp ) );
 			KEY( "Missilestate",   ship->missilestate,        fread_number( fp ) );
 			KEY( "Maxhull",      ship->maxhull,        fread_number( fp ) );
-			KEY( "Maxcountermeasures",       ship->maxchaff,      fread_number( fp ) );
+			KEY( "Maxcountermeasures",       ship->maxcountermeasures,      fread_number( fp ) );
 			if ( !str_cmp( word, "Module"  ) ){
 				MODULE_DATA *mod;
 				line = fread_line( fp );
@@ -3442,7 +3442,7 @@ bool load_ship_file( char *shipfile )
 
 			ship->currspeed=0;
 			ship->energy=ship->maxenergy;
-			ship->chaff=ship->maxchaff;
+			ship->countermeasures=ship->maxcountermeasures;
 			ship->hull=ship->maxhull;
 			ship->shield=0;
 
@@ -3941,7 +3941,7 @@ void resetship( SHIP_DATA *ship )
 
 	ship->currspeed=0;
 	ship->energy=ship->maxenergy;
-	ship->chaff=ship->maxchaff;
+	ship->countermeasures=ship->maxcountermeasures;
 	ship->hull=ship->maxhull;
 	ship->shield=0;
 
@@ -4930,8 +4930,8 @@ void do_setship( CHAR_DATA *ch, char *argument )
 
 	if ( !str_cmp( arg2, "countermeasures" ) )
 	{
-		ship->chaff = URANGE( 0, atoi(argument) , 25 );
-		ship->maxchaff = URANGE( 0, atoi(argument) , 25 );
+		ship->countermeasures = URANGE( 0, atoi(argument) , 25 );
+		ship->maxcountermeasures = URANGE( 0, atoi(argument) , 25 );
 		send_to_char( "Done.\n\r", ch );
 		save_ship( ship );
 		return;
@@ -5138,8 +5138,8 @@ void do_showship( CHAR_DATA *ch, char *argument )
 			ship->maxenergy,
 			ship->bombs,
 			ship->maxbombs,
-			ship->chaff,
-			ship->maxchaff);
+			ship->countermeasures,
+			ship->maxcountermeasures);
 	ch_printf( ch, "Current Coordinates: %.0f %.0f %.0f\n\r",
 			ship->vx, ship->vy, ship->vz );
 	ch_printf( ch, "Current Heading: %.0f %.0f %.0f\n\r",
@@ -5253,7 +5253,7 @@ void do_copyship( CHAR_DATA *ch, char *argument )
 	ship->maxhull        = old->maxhull  ;
 	ship->maxenergy        = old->maxenergy  ;
 	ship->hyperspeed        = old->hyperspeed  ;
-	ship->maxchaff        = old->maxchaff  ;
+	ship->maxcountermeasures        = old->maxcountermeasures  ;
 	ship->maxbombs        = old->maxbombs  ;
 	ship->realspeed        = old->realspeed  ;
 	ship->manuever        = old->manuever  ;
@@ -6218,7 +6218,7 @@ void destroy_ship( SHIP_DATA *ship , CHAR_DATA *ch, char *reason )
 			ship->shipstate = SHIP_READY;
 			ship->currspeed=0;
 			ship->energy=ship->maxenergy;
-			ship->chaff=ship->maxchaff;
+			ship->countermeasures=ship->maxcountermeasures;
 			ship->hull=ship->maxhull;
 			ship->shield=ship->maxshield;
 
@@ -6716,7 +6716,7 @@ void do_launch( CHAR_DATA *ch, char *argument )
 		}
 
 		ship->energy = ship->maxenergy;
-		ship->chaff = ship->maxchaff;
+		ship->countermeasures = ship->maxcountermeasures;
 		ship->missiles = ship->maxmissiles;
 		ship->torpedos = ship->maxtorpedos;
 		ship->rockets = ship->maxrockets;
@@ -14947,7 +14947,7 @@ void do_chaff( CHAR_DATA *ch, char *argument )
 		send_to_char("&RYou can't do that until after you've launched!\n\r",ch);
 		return;
 	}
-	if (ship->chaff <= 0 )
+	if (ship->countermeasures <= 0 )
 	{
 		send_to_char("&RYou don't have any countermeasures to deploy!\n\r",ch);
 		return;
@@ -14961,9 +14961,9 @@ void do_chaff( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	ship->chaff--;
+	ship->countermeasures--;
 
-	ship->chaff_released++;
+	ship->countermeasures_released++;
 
 	send_to_char( "You flip the countermeasure release switch.\n\r", ch);
 	act( AT_PLAIN, "$n flips a switch on the control pannel", ch,
@@ -16167,7 +16167,7 @@ char *ship_bit_name( int vector )
 	if ( vector & SHIP_NOHIJACK     ) strcat( buf, " nohijack"      );
 	if ( vector & SHIP_SHIELD_BOOST ) strcat( buf, " shield_boost"  );
 	if ( vector & SHIP_TORP_BOOST   ) strcat( buf, " torp_boost"    );
-	if ( vector & SHIP_CHAFF_BOOST  ) strcat( buf, " chaff_boost"   );
+	if ( vector & SHIP_COUNTERMEASURES_BOOST  ) strcat( buf, " countermeasures_boost"   );
 	if ( vector & SHIP_HULL_BOOST   ) strcat( buf, " hull_boost"    );
 	if ( vector & SHIP_LASER_BOOST  ) strcat( buf, " laser_boost"   );
 	if ( vector & SHIP_MISSILE_BOOST) strcat( buf, " missile_boost" );

@@ -299,7 +299,7 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
     }
     if(!str_cmp(arg, "countermeasures"))
     {
-      affecttype = AFFECT_CHAFF;
+      affecttype = AFFECT_COUNTERMEASURES;
       affectammount = URANGE(1,(level / 33), 3);
       strcpy(name, "A Countermeasure Module");
     }
@@ -412,7 +412,7 @@ void do_showmodules( CHAR_DATA *ch, char *argument ){
         strcpy(str, "Maneuver");
       if(mod->affect == AFFECT_ALARM)
         strcpy(str, "Alarm");
-      if(mod->affect == AFFECT_CHAFF)
+      if(mod->affect == AFFECT_COUNTERMEASURES)
         strcpy(str, "countermeasures");
       if(mod->affect == AFFECT_SLAVE)
         strcpy(str, "Slave");
@@ -587,8 +587,8 @@ void do_removemodule( CHAR_DATA *ch, char *argument )
           ship->manuever-=mod->ammount;
          if(mod->affect == AFFECT_ALARM)
           ship->alarm-=mod->ammount;
-      	 if(mod->affect == AFFECT_CHAFF)
-          ship->maxchaff-=mod->ammount;
+      	 if(mod->affect == AFFECT_COUNTERMEASURES)
+          ship->maxcountermeasures-=mod->ammount;
          if(mod->affect == AFFECT_SLAVE)
           ship->slave-=mod->ammount;     
          if(mod->affect == AFFECT_TRACTOR)
@@ -687,7 +687,7 @@ void do_shipmaintenance(CHAR_DATA *ch, char *argument )
                          number_range( (int) ( ch->pcdata->learned[gsn_shipmaintenance] / 2 ) , (int) (ch->pcdata->learned[gsn_shipmaintenance]) ),
                          ( ship->maxhull - ship->hull ) );
         ship->hull += change;
-	ship->chaff = ship->maxchaff;
+	ship->countermeasures = ship->maxcountermeasures;
 	ship->missiles = ship->maxmissiles;
 	ship->torpedos = ship->maxtorpedos;
 	ship->rockets = ship->maxrockets;
