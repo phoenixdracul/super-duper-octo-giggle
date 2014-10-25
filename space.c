@@ -5277,7 +5277,7 @@ void do_ships( CHAR_DATA *ch, char *argument )
     
     if ( !IS_NPC(ch) )
     {
-/*      count = 0;
+      count = 0;
       send_to_char( "&YThe following ships are owned by you or by your organization:\n\r", ch );
       send_to_char( "\n\r&WShip                               Owner\n\r",ch);
       for ( ship = first_ship; ship; ship = ship->next )
@@ -5310,7 +5310,7 @@ void do_ships( CHAR_DATA *ch, char *argument )
         send_to_char( "There are no ships owned by you.\n\r", ch );
       }
     
-    }*/
+    }
 
     
     count =0;
@@ -5353,7 +5353,6 @@ void do_ships( CHAR_DATA *ch, char *argument )
     {
         send_to_char( "There are no ships docked here.\n\r", ch );
     } 
-}
 }
 
 void do_speeders( CHAR_DATA *ch, char *argument )
