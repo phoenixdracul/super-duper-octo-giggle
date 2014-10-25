@@ -5277,7 +5277,7 @@ void do_ships( CHAR_DATA *ch, char *argument )
 
 	if ( !IS_NPC(ch) )
 	{
-		/*count = 0;
+		count = 0;
 		send_to_char( "&YThe following ships are owned by you or by your organization:\n\r", ch );
 		send_to_char( "\n\r&WShip                               Owner\n\r",ch);
 		for ( ship = first_ship; ship; ship = ship->next )
@@ -5298,7 +5298,12 @@ void do_ships( CHAR_DATA *ch, char *argument )
 				set_char_color( AT_BLOOD, ch );
 			else
 				set_char_color( AT_BLUE, ch );
-
+        ch_printf( ch, "%-35s %-15s", ship->name, ship->owner );
+        if (ship->type == MOB_SHIP || ship->class == SHIP_SPACE_STATION )
+        {
+          ch_printf( ch, "\n\r");
+          continue;
+        }
 			if  ( ship->in_room )
 				ch_printf( ch, "%s (%s) - %s\n\r", ship->name, ship->in_room->name, ship->owner );
 			else
@@ -5312,10 +5317,10 @@ void do_ships( CHAR_DATA *ch, char *argument )
 			send_to_char( "There are no ships owned by you.\n\r", ch );
 		}
 
-	}*/
+	}
 
 
-	    count =0;
+	 /*   count =0;
     send_to_char( "&Y\n\rThe following ships are docked here:\n\r", ch );
 
     send_to_char( "\n\r&WShip                               Owner          Cost/Rent\n\r", ch );
@@ -5357,7 +5362,7 @@ void do_ships( CHAR_DATA *ch, char *argument )
     {
         send_to_char( "There are no ships docked here.\n\r", ch );
     } 
-}
+}*/
 
 
 void do_speeders( CHAR_DATA *ch, char *argument )
