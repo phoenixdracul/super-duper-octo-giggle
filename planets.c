@@ -838,7 +838,7 @@ void do_showplanet( CHAR_DATA *ch, char *argument )
     ch_printf( ch, "&WPlanet Size: &G%d\n\r", 
                    planet->size );
 	ch_printf( ch, "&WAtmosphere: &G%s\n\r", atmo_name[planet->atmosphere_type] );
-	ch_printf( ch, "&wDefense Ship Capacity:   &G%d\r\n", planet->shipcap );
+	ch_printf( ch, "&WDefense Ship Capacity:   &G%d\r\n", planet->shipcap );
     ch_printf( ch, "&WPercent Civilized: &G%d\n\r", pc ) ;
     ch_printf( ch, "&WPercent Wilderness: &G%d\n\r", pw ) ;
     ch_printf( ch, "&WPercent Farmland: &G%d\n\r", pf ) ;

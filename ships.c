@@ -135,7 +135,8 @@ char *primary_beam_name_proto(int shiptype);
 char *secondary_beam_name_proto(int shiptype);
 char *tertiary_beam_name_proto(int shiptype);
 int get_ship_size(SHIP_DATA *ship);
-int get_proto_size( int protonum )
+
+int get_proto_size( int protonum ) //checks number value of ship sizes for hangars/defense
 
 {
 
