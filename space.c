@@ -5354,7 +5354,7 @@ void do_ships( CHAR_DATA *ch, char *argument )
         send_to_char( "There are no ships docked here.\n\r", ch );
     } 
 }
-
+}
 
 void do_speeders( CHAR_DATA *ch, char *argument )
 {
