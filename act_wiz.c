@@ -2714,9 +2714,9 @@ void do_oinvoke( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-/*	if ( arg2[0] == '\0' )
+	if ( arg2[0] == '\0' )
 	{
-		level = get_trust( ch );
+		level = 1;
 	}
 	else
 	{
@@ -2731,7 +2731,7 @@ void do_oinvoke( CHAR_DATA *ch, char *argument )
 			send_to_char( "Limited to your trust level.\n\r", ch );
 			return;
 		}
-	}*/
+	}
 
 	if ( !is_number( arg1 ) )
 	{
