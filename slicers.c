@@ -872,7 +872,7 @@ void do_makecommsystem ( CHAR_DATA *ch, char *argument )
     obj->item_type = ITEM_COMMSYSTEM;
     SET_BIT( obj->wear_flags, ITEM_HOLD );
     SET_BIT( obj->wear_flags, ITEM_TAKE );
-    obj->level = level;
+    //obj->level = level;
     obj->weight = 2+level/10;
     STRFREE( obj->name );
     strcpy( buf , arg );
@@ -1096,7 +1096,7 @@ void do_makedatapad ( CHAR_DATA *ch, char *argument )
     obj->item_type = ITEM_DATAPAD;
     SET_BIT( obj->wear_flags, ITEM_HOLD );
     SET_BIT( obj->wear_flags, ITEM_TAKE );
-    obj->level = level;
+    //obj->level = level;
     obj->weight = 2+level/10;
     STRFREE( obj->name );
     strcpy( buf , arg );

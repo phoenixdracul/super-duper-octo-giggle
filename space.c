@@ -15870,7 +15870,7 @@ void do_makeshipbomb(CHAR_DATA *ch, char *argument)
 
 	obj->item_type = ITEM_SHIPBOMB;
 	SET_BIT( obj->wear_flags, ITEM_TAKE );
-	obj->level = level;
+	//obj->level = level;
 	obj->weight = weight;
 	STRFREE( obj->name );
 	strcpy( buf , arg );

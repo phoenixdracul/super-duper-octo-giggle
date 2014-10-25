@@ -227,7 +227,7 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 	obj->item_type = ITEM_WEAPON;
 	SET_BIT( obj->wear_flags, ITEM_WIELD );
 	SET_BIT( obj->wear_flags, ITEM_TAKE );
-	obj->level = level;
+	//obj->level = level; 
 	obj->weight = 3;
 	STRFREE( obj->name );
 	strcpy( buf, arg );
@@ -500,7 +500,7 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 	obj->item_type = ITEM_WEAPON;
 	SET_BIT( obj->wear_flags, ITEM_WIELD );
 	SET_BIT( obj->wear_flags, ITEM_TAKE );
-	obj->level = level;
+	//->level = level;
 	obj->weight = 2+level/10;
 	STRFREE( obj->name );
 	strcpy( buf , arg );
@@ -824,7 +824,7 @@ void do_makelightsaber( CHAR_DATA *ch, char *argument )
 	SET_BIT( obj->extra_flags, ITEM_ANTI_HUNTER );
 	SET_BIT( obj->extra_flags, ITEM_ANTI_PILOT );
 	SET_BIT( obj->extra_flags, ITEM_ANTI_CITIZEN );
-	obj->level = level;
+	//obj->level = level;
 	obj->weight = 5;
 	STRFREE( obj->name );
 	obj->name = STRALLOC( "lightsaber saber" );
@@ -1094,7 +1094,7 @@ void do_makemedpac( CHAR_DATA *ch, char *argument )
     obj->item_type = ITEM_MEDPAC;
     SET_BIT( obj->wear_flags, ITEM_HOLD );
     SET_BIT( obj->wear_flags, ITEM_TAKE );
-    obj->level = level;
+    //obj->level = level;
     obj->weight = 3;
     STRFREE( obj->name );
     strcpy( buf, arg );
@@ -1430,7 +1430,7 @@ void do_makegrenade( CHAR_DATA *ch, char *argument )
 	obj->item_type = ITEM_GRENADE;
 	SET_BIT( obj->wear_flags, ITEM_HOLD );
 	SET_BIT( obj->wear_flags, ITEM_TAKE );
-	obj->level = level;
+	//obj->level = level;
 	obj->weight = weight;
 	STRFREE( obj->name );
 	strcpy( buf , arg );
@@ -1645,7 +1645,7 @@ void do_makelandmine( CHAR_DATA *ch, char *argument )
 	obj->item_type = ITEM_LANDMINE;
 	SET_BIT( obj->wear_flags, ITEM_HOLD );
 	SET_BIT( obj->wear_flags, ITEM_TAKE );
-	obj->level = level;
+	//obj->level = level;
 	obj->weight = weight;
 	STRFREE( obj->name );
 	strcpy( buf , arg );
@@ -1856,7 +1856,7 @@ void do_makelight( CHAR_DATA *ch, char *argument )
 
 	obj->item_type = ITEM_LIGHT;
 	SET_BIT( obj->wear_flags, ITEM_TAKE );
-	obj->level = level;
+	//obj->level = level;
 	obj->weight = 3;
 	STRFREE( obj->name );
 	strcpy( buf , arg );
@@ -2083,7 +2083,7 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
 		SET_BIT( obj->wear_flags, ITEM_WEAR_NECK );
 	else
 		SET_BIT( obj->wear_flags, 1 << value );
-	obj->level = level;
+	//obj->level = level;
 	STRFREE( obj->name );
 	sprintf( buf, "%s ", arg2);
 	strcat( buf, remand(buf));
@@ -2803,7 +2803,7 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 	obj->item_type = ITEM_ARMOR;
 	SET_BIT( obj->wear_flags, ITEM_WIELD );
 	SET_BIT( obj->wear_flags, ITEM_WEAR_SHIELD );
-	obj->level = level;
+	//obj->level = level;
 	obj->weight = 2;
 	STRFREE( obj->name );
 	obj->name = STRALLOC( "energy shield" );
@@ -3008,7 +3008,7 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 		SET_BIT( obj->wear_flags, ITEM_HOLD );
 	else
 		SET_BIT( obj->wear_flags, 1 << value );
-	obj->level = level;
+	//obj->level = level;
 	STRFREE( obj->name );
 	strcpy( buf, arg2 );
 	strcat( buf, " ");
@@ -3197,7 +3197,7 @@ void do_makeholster( CHAR_DATA *ch, char *argument )
 	SET_BIT( obj->wear_flags, ITEM_TAKE );
 	SET_BIT( obj->wear_flags, ITEM_WEAR_HOLSTER1 );
         SET_BIT( obj->wear_flags, ITEM_WEAR_HOLSTER2 );
-	obj->level = level;
+	//obj->level = level;
 	STRFREE( obj->name );
 	strcpy( buf, arg );
 	strcat( buf, " ");
@@ -6229,7 +6229,7 @@ void do_makeduallightsaber( CHAR_DATA *ch, char *argument )
 	SET_BIT( obj->extra_flags, ITEM_ANTI_HUNTER );
 	SET_BIT( obj->extra_flags, ITEM_ANTI_PILOT );
 	SET_BIT( obj->extra_flags, ITEM_ANTI_CITIZEN );
-	obj->level = level;
+	//obj->level = level;
 	obj->weight = 5;
 	STRFREE( obj->name );
 	obj->name = STRALLOC( "lightsaber saber" );
@@ -6441,7 +6441,7 @@ void do_makepike( CHAR_DATA *ch, char *argument )
 	obj->item_type = ITEM_WEAPON;
 	SET_BIT( obj->wear_flags, ITEM_WIELD );
 	SET_BIT( obj->wear_flags, ITEM_TAKE );
-	obj->level = level;
+	//obj->level = level;
 	obj->weight = 3;
 	STRFREE( obj->name );
 	strcpy( buf, arg );
@@ -6619,7 +6619,7 @@ void do_makebug( CHAR_DATA *ch, char *argument )
 	obj->item_type = ITEM_BUG;
 	SET_BIT( obj->wear_flags, ITEM_HOLD );
 	SET_BIT( obj->wear_flags, ITEM_TAKE );
-	obj->level = level;
+	//obj->level = level;
 	obj->weight = 1;
 	STRFREE( obj->name );
 	obj->name = STRALLOC("device bug");
@@ -6775,7 +6775,7 @@ void do_makebeacon( CHAR_DATA *ch, char *argument )
 	obj->item_type = ITEM_BEACON;
 	SET_BIT( obj->wear_flags, ITEM_HOLD );
 	SET_BIT( obj->wear_flags, ITEM_TAKE );
-	obj->level = level;
+	//obj->level = level;
 	obj->weight = 1;
 	STRFREE( obj->name );
 	obj->name = STRALLOC("device beacon");
@@ -7228,7 +7228,7 @@ void do_makebinders( CHAR_DATA *ch, char *argument )
 	obj->item_type = ITEM_BINDERS;
 	SET_BIT( obj->wear_flags, ITEM_HOLD );
 	SET_BIT( obj->wear_flags, ITEM_TAKE );
-	obj->level = level;
+	//obj->level = level;
 	obj->weight = 1;
 	STRFREE( obj->name );
 	obj->name = STRALLOC("binders");
