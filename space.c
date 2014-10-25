@@ -5272,74 +5272,65 @@ void do_copyship( CHAR_DATA *ch, char *argument )
 
 void do_ships( CHAR_DATA *ch, char *argument )
 {
-	SHIP_DATA *ship;
-	int count;
-
-	if ( !IS_NPC(ch) )
-	{
-		count = 0;
-		send_to_char( "&YThe following ships are owned by you or by your organization:\n\r", ch );
-		send_to_char( "\n\r&WShip                               Owner\n\r",ch);
-		for ( ship = first_ship; ship; ship = ship->next )
-		{
-			if ( str_cmp(ship->owner, ch->name) )
-			{
-				if ( !ch->pcdata || !ch->pcdata->clan || str_cmp(ship->owner,ch->pcdata->clan->name) || ship->class > SHIP_SPACE_STATION )
-					continue;
-			}
-
-			if (ship->type == MOB_SHIP)
-				continue;
-			else if (ship->type == SHIP_NEUTRAL)
-				set_char_color( AT_LBLUE, ch );
-			else if (ship->type == SHIP_REPUBLIC)
-				set_char_color( AT_GREEN, ch );
-			else if (ship->type == SHIP_IMPERIAL)
-				set_char_color( AT_BLOOD, ch );
-			else
-				set_char_color( AT_BLUE, ch );
-        ch_printf( ch, "%-35s %-15s", ship->name, ship->owner );
-        if (ship->type == MOB_SHIP || ship->class == SHIP_SPACE_STATION )
+    SHIP_DATA *ship;
+    int count;
+    
+    if ( !IS_NPC(ch) )
+    {
+/*      count = 0;
+      send_to_char( "&YThe following ships are owned by you or by your organization:\n\r", ch );
+      send_to_char( "\n\r&WShip                               Owner\n\r",ch);
+      for ( ship = first_ship; ship; ship = ship->next )
+      {   
+        if ( str_cmp(ship->owner, ch->name) )
         {
-          ch_printf( ch, "\n\r");
-          continue;
+           if ( !ch->pcdata || !ch->pcdata->clan || str_cmp(ship->owner,ch->pcdata->clan->name) || ship->class > SHIP_SPACE_STATION )
+               continue;
         }
-			if  ( ship->in_room )
-				ch_printf( ch, "%s (%s) - %s\n\r", ship->name, ship->in_room->name, ship->owner );
-			else
-				ch_printf( ch, "%s - %s\n\r", ship->name, ship->owner );
+         
+        if (ship->type == MOB_SHIP)
+           continue;
+        else if (ship->type == SHIP_REPUBLIC)
+           set_char_color( AT_BLOOD, ch );
+        else if (ship->type == SHIP_IMPERIAL)
+           set_char_color( AT_DGREEN, ch );
+        else
+          set_char_color( AT_BLUE, ch );
+        
+        if  ( ship->in_room )       
+          ch_printf( ch, "%s (%s) - %s\n\r", ship->name, ship->in_room->name, ship->owner );
+        else 
+          ch_printf( ch, "%s - %s\n\r", ship->name, ship->owner );
+        
+        count++;
+      }
 
-			count++;
-		}
+      if ( !count )
+      {
+        send_to_char( "There are no ships owned by you.\n\r", ch );
+      }
+    
+    }*/
 
-		if ( !count )
-		{
-			send_to_char( "There are no ships owned by you.\n\r", ch );
-		}
-
-	}
-
-
-	 /*   count =0;
+    
+    count =0;
     send_to_char( "&Y\n\rThe following ships are docked here:\n\r", ch );
-
+    
     send_to_char( "\n\r&WShip                               Owner          Cost/Rent\n\r", ch );
     for ( ship = first_ship; ship; ship = ship->next )
-    {
+    {   
         if ( ship->location != ch->in_room->vnum || ship->class > SHIP_SPACE_STATION)
                continue;
 
         if (ship->type == MOB_SHIP)
            continue;
-        else if (ship->type == SHIP_NEUTRAL)
-           set_char_color( AT_LBLUE, ch );
-	else if (ship->type == SHIP_REPUBLIC)
-           set_char_color( AT_GREEN, ch );
-        else if (ship->type == SHIP_IMPERIAL)
+        else if (ship->type == SHIP_REPUBLIC)
            set_char_color( AT_BLOOD, ch );
+        else if (ship->type == SHIP_IMPERIAL)
+           set_char_color( AT_DGREEN, ch );
         else
           set_char_color( AT_BLUE, ch );
-
+        
         ch_printf( ch, "%-35s %-15s", ship->name, ship->owner );
         if (ship->type == MOB_SHIP || ship->class == SHIP_SPACE_STATION )
         {
@@ -5347,14 +5338,14 @@ void do_ships( CHAR_DATA *ch, char *argument )
           continue;
         }
         if ( !str_cmp(ship->owner, "Public") )
-        {
-          ch_printf( ch, "%ld to rent.\n\r", get_ship_value(ship)/100 );
+        { 
+          ch_printf( ch, "%ld to rent.\n\r", get_ship_value(ship)/100 ); 
         }
         else if ( str_cmp(ship->owner, "") )
           ch_printf( ch, "%s", "\n\r" );
         else
-           ch_printf( ch, "%ld to buy.\n\r", get_ship_value(ship) );
-
+           ch_printf( ch, "%ld to buy.\n\r", get_ship_value(ship) ); 
+        
         count++;
     }
 
@@ -5362,7 +5353,7 @@ void do_ships( CHAR_DATA *ch, char *argument )
     {
         send_to_char( "There are no ships docked here.\n\r", ch );
     } 
-}*/
+}
 
 
 void do_speeders( CHAR_DATA *ch, char *argument )
