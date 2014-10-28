@@ -33,8 +33,10 @@
  * 																			*
  +--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--*/
 
-#include <sys/types.h>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <stdlib.h>
+#include <sys/types.h>
 #include <string.h>
 #include <ctype.h>
 #include "mud.h"
@@ -173,6 +175,103 @@ char * strstr(s1,s2) const char *s1; const char *s2;
 void MarkQuestComplete(char *quest, CHAR_DATA *player);
 bool CheckQuestComplete(char *quest, CHAR_DATA *player);
 
+
+static size_t deleteLine( char* buffer, size_t size, const char* playerName )
+{
+  // file format assumed to be as specified in the question i.e. name{space}somevalue{space}someothervalue\n
+  // find playerName
+  char* p = buffer; 
+  bool done = FALSE;
+  size_t len = strlen(playerName);
+  size_t newSize = 0;
+  do
+  {
+    char* q = strchr( p, *playerName ); // look for first letter in playerName
+    if ( q != NULL )
+    {
+      if ( strncmp( q, playerName, len ) == 0 ) // found name?
+      {
+        size_t lineSize = 1; // include \n already in line size
+	char * line;
+
+        // count number of characters the line has.
+        for ( line = q; *line != '\n'; ++line) 
+        {
+          ++lineSize;
+        }
+
+        // calculate length left after line by subtracting offsets
+        size_t restSize = (size_t)((buffer + size) - (q + lineSize));
+
+        // move block with next line forward
+        memmove( q, q + lineSize, restSize );
+
+        // calculate new size
+        newSize = size - lineSize;
+        done = TRUE;
+      }
+      else
+      {
+        p = q + 1; // continue search
+      }
+    }
+    else
+    {
+      puts( "no such name" );
+      done = TRUE;
+    }
+  }
+  while (!done);
+
+  return newSize;
+}
+
+void ClearQuest(char *quest, CHAR_DATA *player)
+{
+        char quest_file[100];
+
+        strcpy(quest_file, DT_QUEST_DIR);
+        strcat(quest_file, player->name);
+        strcat(quest_file, ".qdt");
+
+        if(CheckQuestComplete(quest, player))
+        {
+//                read = fopen(quest_file,"r");
+//
+		struct stat st;
+		if ( stat( quest_file, &st ) != -1 )
+		{
+			// open the file in binary format
+			FILE * fp = fopen( quest_file, "rb" );
+			if ( fp != NULL )
+			{
+				// allocate memory to hold file
+				char* buffer = malloc( st.st_size );
+
+				// read the file into a buffer
+				if ( fread(buffer, 1, st.st_size, fp) == st.st_size)
+				{
+					fclose(fp);
+
+					size_t newSize = deleteLine( buffer, st.st_size, quest );
+
+					fp = fopen( quest_file, "wb" );
+					if ( fp != NULL )
+					{
+						fwrite(buffer, 1, newSize, fp);
+						fclose(fp);
+					}
+        			}
+      			}
+    		}
+    		else
+    		{
+      			bug( "Did not find %s", quest_file );
+    		}
+
+//
+        }
+}
 
 /*
 	MarkQuestComplete
@@ -3606,4 +3705,49 @@ void do_mpquestcomplete( CHAR_DATA *ch, char *argument )
 
 	MarkQuestComplete(argument, victim);
 
+}
+
+void do_mpquestclear(CHAR_DATA * ch, char * argument)
+{
+    char       arg[ MAX_INPUT_LENGTH ];
+    CHAR_DATA *victim;
+
+    if ( !IS_NPC( ch ) || IS_AFFECTED( ch, AFF_CHARM ))
+    {
+          send_to_char( "Huh?\n\r", ch );
+          return;
+    }
+
+    argument = one_argument( argument, arg );
+
+    if ( arg[0] == '\0' )
+    {
+        progbug( "Mpquestclear - No argument", ch );
+        return;
+    }
+
+    if ( !( victim = get_char_room( ch, arg ) ) )
+    {
+        progbug( "Mpquestclear - victim does not exist", ch );
+        return;
+    }
+
+        if( IS_NPC(victim) )
+        {
+                send_to_char("Mobs can't have quests!\n\r",ch);
+                return;
+        }
+
+    if ( argument[0] == '\0' )
+        {
+                progbug( "Mpquestclear - no quest to clear",ch);
+                return;
+        }
+
+        if(argument[strlen(argument)-1] == '\0')
+        {
+                argument[strlen(argument)-1] = '\0';
+        }
+
+        ClearQuest(argument, victim);
 }
