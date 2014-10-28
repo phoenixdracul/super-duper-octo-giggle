@@ -576,7 +576,7 @@ void do_makegoggles( CHAR_DATA *ch, char *argument )
 	SET_BIT( obj->wear_flags, ITEM_TAKE );
 	SET_BIT( obj->wear_flags, ITEM_WEAR_EYES );
 
-	obj->level = ch->top_level;
+	//obj->level = ch->top_level;
 	STRFREE( obj->name );
 	strcpy( buf, arg2 );
 	strcat( buf, " ");
@@ -839,7 +839,7 @@ void do_makemissile(CHAR_DATA *ch, char *argument)
 	obj->item_type = ITEM_MISSILE;
 	SET_BIT( obj->wear_flags, ITEM_HOLD );
 	SET_BIT( obj->wear_flags, ITEM_TAKE );
-	obj->level = level;
+	//obj->level = level;
 	obj->weight = 2;
 	STRFREE( obj->name );
 	strcpy( buf , arg );
@@ -1388,7 +1388,7 @@ void do_unload(CHAR_DATA *ch, char *argument)
 		obj->item_type = ITEM_MISSILE;
 		SET_BIT( obj->wear_flags, ITEM_HOLD );
 		SET_BIT( obj->wear_flags, ITEM_TAKE );
-		obj->level = ch->top_level;
+		//obj->level = ch->top_level;
 		obj->weight = 2;
 		STRFREE(obj->name);  STRFREE(obj->short_descr);  STRFREE(obj->description);
 		if(launcher->value[1] == 0)

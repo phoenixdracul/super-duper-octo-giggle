@@ -157,6 +157,9 @@ void save_planet( PLANET_DATA *planet )
 	fprintf( fp, "BaseValue    %d\n",       planet->base_value );	// TODO
 	fprintf( fp, "PopSupport   %d\n",	(int) (planet->pop_support)      );
 	fprintf( fp, "Atmosphere   %d\n",	planet->atmosphere_type );
+	fprintf( fp, "ShipCapacity  %d\n", planet->shipcap );
+    fprintf( fp, "DefenseShips  %d\n", planet->defships );
+
 	if ( planet->starsystem && planet->starsystem->name )
         	fprintf( fp, "Starsystem   %s~\n",	planet->starsystem->name);
 	if ( planet->governed_by && planet->governed_by->name )
@@ -268,6 +271,12 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
 	case 'B':	// TODO
 	               KEY( "BaseValue", planet->base_value, fread_number( fp ) );
 	               break;
+				   
+	case 'D':
+
+        KEY("DefenseShips", planet->defships, fread_number( fp ) );
+        break;
+
 	case 'E':
 	    if ( !str_cmp( word, "End" ) )
 	    {
@@ -327,6 +336,19 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
                 fMatch = TRUE;
 	    }
 	    break;
+		KEY( "ShipCapacity", planet->shipcap, fread_number( fp ) ) ;
+            if( !str_cmp( word, "Starsystem" ) )
+            {
+               planet->starsystem = starsystem_from_name( fread_flagstring( fp ) );
+               if( planet->starsystem )
+               {
+                  SPACE_DATA *starsystem = planet->starsystem;
+                  LINK( planet, starsystem->first_planet, starsystem->last_planet, next_in_system, prev_in_system );
+               }
+               fMatch = TRUE;
+            }
+            break;
+
 	case 'T':
 	    KEY("Type", planet->controls,	fread_number(fp) );
 		break;
@@ -496,7 +518,7 @@ void do_setplanet( CHAR_DATA *ch, char *argument )
             send_to_char( "Usage: setplanet <planet> <field> [value]\n\r", ch );
             send_to_char( "\n\rField being one of:\n\r", ch );
             send_to_char( " name filename area base_value starsystem\n\r", ch );
-			send_to_char( " governed_by x y z atmosphere\n\r", ch );
+			send_to_char( " governed_by x y z atmosphere shipcapacity\n\r", ch );
     #ifdef USECARGO
             send_to_char( " import  export   resource   produces  consumes\n\r", ch );
     #endif
@@ -510,6 +532,13 @@ void do_setplanet( CHAR_DATA *ch, char *argument )
 	return;
     }
 
+   if( !strcmp( arg2, "shipcapacity" ) )
+   {
+      planet->shipcap = atoi( argument );
+      send_to_char( "Done.\r\n", ch );
+      save_planet( planet );
+      return;
+   }
 
     if ( !strcmp( arg2, "name" ) )
     {
@@ -809,6 +838,7 @@ void do_showplanet( CHAR_DATA *ch, char *argument )
     ch_printf( ch, "&WPlanet Size: &G%d\n\r", 
                    planet->size );
 	ch_printf( ch, "&WAtmosphere: &G%s\n\r", atmo_name[planet->atmosphere_type] );
+	ch_printf( ch, "&WDefense Ship Capacity:   &G%d\r\n", planet->shipcap );
     ch_printf( ch, "&WPercent Civilized: &G%d\n\r", pc ) ;
     ch_printf( ch, "&WPercent Wilderness: &G%d\n\r", pw ) ;
     ch_printf( ch, "&WPercent Farmland: &G%d\n\r", pf ) ;
@@ -864,6 +894,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
     planet->name		= STRALLOC( argument );
     planet->flags               = 0;
 	planet->atmosphere_type	= ATMO_NORMAL;
+	planet->shipcap = NULL;
 }
 
 void do_planets( CHAR_DATA *ch, char *argument )
@@ -884,6 +915,7 @@ void do_planets( CHAR_DATA *ch, char *argument )
         ch_printf( ch, "&c|&z Planet: &W%-15s&z              Starsystem: &W%-11s&z     &c|&z\n\r", planet->name , starsystem->name );
         ch_printf( ch, "&c|&z Popular Support: &W%-15.1f&z     Governed: &W%-18s&z&c|&z\n\r", planet->pop_support, planet->governed_by ? planet->governed_by->name : "" );
 	ch_printf( ch, "&c|&z Base Value: &W%-15d&z          Monthly Revenue: &W%-11ld&z&c|&z\n\r", planet->base_value, get_taxes ( planet) );
+	ch_printf( ch, "&zDefense Ship Capacity:   &G%d\r\n", planet->shipcap );
      send_to_char( "&c+------------------------------------------------------------------+&z\n\r", ch );
      send_to_char( "", ch);
         if ( IS_IMMORTAL(ch) && !planet->area )

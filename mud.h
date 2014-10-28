@@ -1034,6 +1034,8 @@ struct  planet_data
     int              size;
     bool 	     flags;    
     int             base_value;
+	int          shipcap;
+    int          defships;
     int		     citysize;
     int              wilderness;
     int		     wildlife;
@@ -1261,7 +1263,7 @@ struct ship_prototype_data
     int         maxenergy;
     int         maxshield;
     int         maxhull;
-    sh_int      maxchaff;
+    sh_int      maxcountermeasures;
     sh_int      maxmods;
 };
 
@@ -1424,9 +1426,9 @@ struct ship_data
     SHIP_DATA  *target9;
     SHIP_DATA  *target10;
     SPACE_DATA *currjump;
-    sh_int      chaff;
-    sh_int      maxchaff;
-    sh_int      chaff_released;
+    sh_int      countermeasures;
+    sh_int      maxcountermeasures;
+    sh_int      countermeasures_released;
     bool        autopilot;
     int		channel;
     int		password;
@@ -1599,7 +1601,7 @@ struct	smaug_affect
 #define SHIP_NOHIJACK           BV00
 #define SHIP_SHIELD_BOOST	BV01
 #define SHIP_TORP_BOOST		BV02
-#define SHIP_CHAFF_BOOST	BV03
+#define SHIP_COUNTERMEASURES_BOOST	BV03
 #define SHIP_HULL_BOOST		BV04
 #define SHIP_LASER_BOOST	BV05
 #define SHIP_MISSILE_BOOST	BV06
@@ -1678,6 +1680,7 @@ typedef enum
 #define VIP_CORELLIA            BV08
 #define VIP_BAKURA	        	BV09
 #define VIP_HOTH				BV10
+#define VIP_BYSS                BV11
 
 /* player wanted bits */
 
@@ -1691,6 +1694,9 @@ typedef enum
 #define WANTED_NAL_HUTTA   	VIP_NAL_HUTTA
 #define WANTED_CORELLIA   	VIP_CORELLIA
 #define WANTED_BAKURA   	VIP_BAKURA
+#define WANTED_HOTH         VIP_HOTH
+#define WANTED_BYSS         VIP_BYSS
+
 
 /*
  * Bits for 'affected_by'.
@@ -2022,7 +2028,7 @@ typedef enum {
 #define AFFECT_HYPER		9
 #define AFFECT_ENERGY		10
 #define AFFECT_MANUEVER		11
-#define AFFECT_CHAFF		12
+#define AFFECT_COUNTERMEASURES		12
 #define AFFECT_ALARM		13
 #define	AFFECT_SLAVE		14
 #define AFFECT_TRACTOR		15
@@ -2338,7 +2344,7 @@ typedef enum
 #define ROOM_BANK		BV08
 #define ROOM_PRIVATE		BV09
 #define ROOM_SAFE		BV10
-#define ROOM_SOLITARY		BV11
+#define ROOM_LOGOUT		BV11
 #define ROOM_PET_SHOP		BV12
 #define ROOM_NO_RECALL		BV13
 #define ROOM_DONATION		BV14

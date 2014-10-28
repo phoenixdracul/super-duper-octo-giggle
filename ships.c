@@ -85,7 +85,7 @@ struct ship_prototypes_struct
     int		hull;
     int		shields;
     int		energy;
-    int		chaff;
+    int		countermeasures;
     int		maxbombs;
     int		speed;
     int		hyperspeed;
@@ -134,234 +134,342 @@ void shiplist(CHAR_DATA *ch);
 char *primary_beam_name_proto(int shiptype);
 char *secondary_beam_name_proto(int shiptype);
 char *tertiary_beam_name_proto(int shiptype);
+int get_ship_size(SHIP_DATA *ship);
 
-void do_buymobship(CHAR_DATA *ch, char *argument )
+int get_proto_size( int protonum ) //checks number value of ship sizes for hangars/defense
+
 {
-  int x,size,ship_type,vnum,count,caps;
-  SHIP_DATA *ship;
-  SHIP_DATA *sship;
-  char arg[MAX_STRING_LENGTH];
-  char shipname[MAX_STRING_LENGTH];
-  char buf[MAX_STRING_LENGTH];
-  bool found_proto = FALSE;
-  AREA_DATA *tarea;
-  CLAN_DATA   *clan;
-  CLAN_DATA   *mainclan;
-  SPACE_DATA *system;
-  PLANET_DATA *planet;
-  bool fsys, fplan, fcap;
 
-   argument = one_argument(argument,arg);
+    int shipclass;
+
+
+
+    shipclass = ship_prototypes[protonum].class;
+
+
+
+    switch( shipclass )
+
+    {
+
+        case SHIP_FIGHTER:
+
+            return 1;
+
+        case SHIP_BOMBER:
+
+            return 1;
+
+        case SHIP_SHUTTLE:
+
+            return 2;
+
+        case SHIP_TT:
+
+            return 4;
+
+        case SHIP_FREIGHTER:
+
+            return 4;
+
+        case SHIP_CORVETTE:
+
+            return 8;
+
+        case SHIP_FRIGATE:
+
+            return 6;
+
+        case SHIP_LFRIGATE:
+
+            return 25;
+
+        case SHIP_CRUISER:
+
+            return 35;
+
+        case SHIP_DREADNAUGHT:
+
+            return 40;
+
+        default:
+
+            return 2;
+
+    }
+
+    return 2;
+
+}
+
+
+void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allow naming ships and buying anything smaller than a capital
+{
+   int x, size, ship_type, vnum, caps, count;
+   SHIP_DATA *ship;
+   SHIP_DATA *sship;
+   char arg[MAX_STRING_LENGTH];
+   char shipname[MAX_STRING_LENGTH];
+   char buf[MAX_STRING_LENGTH];
+   bool found_proto = FALSE;
+   AREA_DATA *tarea;
+   CLAN_DATA *clan;
+   CLAN_DATA *mainclan;
+   SPACE_DATA *system;
+   PLANET_DATA *planet;
+   bool fsys, fplan, fcap;
+
+   argument = one_argument( argument, arg );
 
    if( (arg[0] != '\0') && (argument[0] == '\0') )
-	{
-	   send_to_char("Usage: buymobship <ship type> <starsystem to be sent to>\n\r", ch);
-	   return;
-	}
-   if ( IS_NPC(ch) || !ch->pcdata )
    {
-   	send_to_char( "&ROnly players can do that!\r\n" ,ch );
-   	return;
+      send_to_char( "Usage: buymobship <ship type> <ship name>  <starsystem to be sent to>\r\n", ch );
+      return;
    }
-   if ( !ch->pcdata->clan )
+   if( IS_NPC( ch ) || !ch->pcdata )
    {
-   	send_to_char( "You do not belong to any organization.\r\n" ,ch );
-   	return;
+      send_to_char( "&ROnly players can do that!\r\n", ch );
+      return;
+   }
+   if( !ch->pcdata->clan )
+   {
+      send_to_char( "You do not belong to any organization.\r\n", ch );
+      return;
    }
    clan = ch->pcdata->clan;
    mainclan = ch->pcdata->clan->mainclan ? ch->pcdata->clan->mainclan : clan;
 
-   if ( ( ch->pcdata->bestowments
-    &&    is_name("clanbuyship", ch->pcdata->bestowments))
-    ||   !str_cmp( ch->name, clan->leader  ))
-	;
+   if( ( ch->pcdata->bestowments && is_name( "clanbuyship", ch->pcdata->bestowments ) )
+       || !str_cmp( ch->name, clan->leader ) )
+      ;
    else
    {
-   	send_to_char( "Your organization hasn't seen fit to bestow you with that ability.\r\n" ,ch );
-   	return;
+      send_to_char( "Your organization hasn't seen fit to bestow you with that ability.\r\n", ch );
+      return;
    }
 
-    if( arg[0] == '\0' )
-    {
-        send_to_char("\n\r&z+&W-----------------------------------------------------------------------&z+\r\n",ch);
-        send_to_char("&W|&w                              :Available ships:                               &W|\r\n",ch);
-        send_to_char("&z+&W-----------------------------------------------------------------------&z+\r\n",ch);
-        send_to_char("&W|&w           :Ships Name:                       :Type:            :Cost:        &W|\r\n",ch);
-        send_to_char("&z+&W-----------------------------------------------------------------------&z+\r\n",ch);
+   if( arg[0] == '\0' )
+   {
+      send_to_char( "\r\n&z+&W-----------------------------------------------------------------------------&z+\r\n", ch );
+      send_to_char( "&W|&w                               Available ships                               &W|\r\n", ch );
+      send_to_char( "&z+&W-----------------------------------------------------------------------------&z+\r\n", ch );
 
-        for(x=0;x<NUM_PROTOTYPES;x++)
-		{
-                  		  if(!ch->pcdata->clan && (!str_cmp(ship_prototypes[x].clan, "Neutral") || !str_cmp(ship_prototypes[x].clan, "The Empire")
-								|| !str_cmp(ship_prototypes[x].clan, "The New Republic"))) continue;
-		  if( ch->pcdata->clan && str_cmp( ship_prototypes[x].clan, ch->pcdata->clan->name )&& str_cmp( ship_prototypes[x].clan, "" ) )
-		  continue;
+      for( x = 0; x < NUM_PROTOTYPES; x++ )
+      {
+         if( !ch->pcdata->clan && str_cmp( ship_prototypes[x].clan, "" ) )
+            continue;
+         if( ch->pcdata->clan && str_cmp( ship_prototypes[x].clan, ch->pcdata->clan->name ) )
+            continue;
+         if( ship_prototypes[x].class != 0 && ship_prototypes[x].class != 1 && ship_prototypes[x].class != 2 )
+            continue;
 
-                 ch_printf(ch,"&W|&w %s%-40.40s&w%-18.18s &w%8d      &W|\r\n",
-                 !str_cmp(ship_prototypes[x].clan, "Neutral") ? "&C" :
-		 !str_cmp( ship_prototypes[x].clan, "The Empire" ) ? "&R" :
-		 !str_cmp( ship_prototypes[x].clan, "" ) ? "&B" :
-                 !str_cmp(ship_prototypes[x].clan, "The New Republic") ? "&G" : "&w",
-            ship_prototypes[x].name,
-            ship_prototypes[x].class == 1 ? "Fighter" :
-            ship_prototypes[x].class == 2 ? "Bomber" :
-            ship_prototypes[x].class == 3 ? "Shuttle" :
-            ship_prototypes[x].class == 4 ? "Freighter" :
-            ship_prototypes[x].class == 5 ? "Frigate" :
-            ship_prototypes[x].class == 6 ? "Troop Transport" :
-            ship_prototypes[x].class == 7 ? "Corvette" : "Spacecraft",
-            ship_prototypes[x].cost);
-        }
+         ch_printf( ch, "&W|&w %s%-39.39s&W Type:  &w%-13.13s &WCost:&w %8d &W|\r\n",
+                    !str_cmp( ship_prototypes[x].clan, "The Republic" ) ? "&G" : "&w",
+                    ship_prototypes[x].name,
+		 ship_prototypes[x].class == 1 ? "Starfighter" :
+		 ship_prototypes[x].class == 2 ? "Bomber" : 
+		 ship_prototypes[x].class == 3 ? "Shuttle" : 
+		 ship_prototypes[x].class == 4 ? "Freighter" : 
+		 ship_prototypes[x].class == 5 ? "Frigate" :
+		 ship_prototypes[x].class == 7 ? "Corvette" : "Spacecraft", ship_prototypes[x].cost );
+      }
 
-        send_to_char("&z+&W-----------------------------------------------------------------------&z+\r\n",ch);
-        send_to_char("&W|&w               Refer to 'shiplist' for a complete ship listing                &W|\r\n",ch);
-        send_to_char("&z+&W-----------------------------------------------------------------------&z+\n\r",ch); 
-        return;
-    }
+      send_to_char( "&z+&W-----------------------------------------------------------------------------&z+\r\n", ch );
+      send_to_char( "&W|&w               Refer to 'shiplist' for a complete ship listing               &W|\r\n", ch );
+      send_to_char( "&z+&W-----------------------------------------------------------------------------&z+\r\n", ch );
+      return;
+   }
 
-    size = NUM_PROTOTYPES;
-    for(x=0;x<size;x++) 
-    {
-    	if(nifty_is_name_prefix(arg,ship_prototypes[x].name)) {
-            found_proto = TRUE;
-    	  break;
-    	}
-    }
-    if(!found_proto)
-    {
-        send_to_char("\n\r&z+&W-----------------------------------------------------------------------&z+\r\n",ch);
-        send_to_char("&W|&w                              :Available ships:                               &W|\r\n",ch);
-        send_to_char("&z+&W-----------------------------------------------------------------------&z+\r\n",ch);
-        send_to_char("&W|&w           :Ships Name:                       :Type:            :Cost:        &W|\r\n",ch);
-        send_to_char("&z+&W-----------------------------------------------------------------------&z+\r\n",ch);
+   size = NUM_PROTOTYPES;
+   for( x = 0; x < size; x++ )
+   {
+      if( nifty_is_name_prefix( arg, ship_prototypes[x].name ) )
+      {
+         found_proto = TRUE;
+         break;
+      }
+   }
+   if( !found_proto )
+   {
+      send_to_char( "\r\n&z+&W-----------------------------------------------------------------------------&z+\r\n", ch );
+      send_to_char( "&W|&w                               Available ships                               &W|\r\n", ch );
+      send_to_char( "&z+&W-----------------------------------------------------------------------------&z+\r\n", ch );
 
-        for(x=0;x<NUM_PROTOTYPES;x++)
-		{
-                  		  if(!ch->pcdata->clan && (!str_cmp(ship_prototypes[x].clan, "Neutral") || !str_cmp(ship_prototypes[x].clan, "The Empire")
-								|| !str_cmp(ship_prototypes[x].clan, "The New Republic"))) continue;
-		  if( ch->pcdata->clan && str_cmp( ship_prototypes[x].clan, ch->pcdata->clan->name )&& str_cmp( ship_prototypes[x].clan, "" ) )
-		  continue;
+      for( x = 0; x < NUM_PROTOTYPES; x++ )
+      {
+         if( !ch->pcdata->clan && str_cmp( ship_prototypes[x].clan, "" ) )
+            continue;
+         if( ch->pcdata->clan && str_cmp( ship_prototypes[x].clan, ch->pcdata->clan->name ) )
+            continue;
+         if( ship_prototypes[x].class != 0 && ship_prototypes[x].class != 1 && ship_prototypes[x].class != 2 )
+            continue;
 
-                 ch_printf(ch,"&W|&w %s%-40.40s&w%-18.18s &w%8d      &W|\r\n",
-                 !str_cmp(ship_prototypes[x].clan, "Neutral") ? "&C" :
-		 !str_cmp( ship_prototypes[x].clan, "The Empire" ) ? "&R" :
-		 !str_cmp( ship_prototypes[x].clan, "" ) ? "&B" :
-                 !str_cmp(ship_prototypes[x].clan, "The New Republic") ? "&G" : "&w",
-            ship_prototypes[x].name,
-            ship_prototypes[x].class == 1 ? "Fighter" :
-            ship_prototypes[x].class == 2 ? "Bomber" :
-            ship_prototypes[x].class == 3 ? "Shuttle" :
-            ship_prototypes[x].class == 4 ? "Freighter" :
-            ship_prototypes[x].class == 5 ? "Frigate" :
-            ship_prototypes[x].class == 6 ? "Troop Transport" :
-            ship_prototypes[x].class == 7 ? "Corvette" : "Spacecraft",
-            ship_prototypes[x].cost);
-        }
+         ch_printf( ch, "&W|&w %s%-39.39s&W Type:  &w%-13.13s &WCost:&w %8d &W|\r\n",
+                    !str_cmp( ship_prototypes[x].clan, "The Republic" ) ? "&G" : "&w",
+                    ship_prototypes[x].name,
+                 ship_prototypes[x].class == 1 ? "Starfighter" :
+                 ship_prototypes[x].class == 2 ? "Bomber" :
+                 ship_prototypes[x].class == 3 ? "Shuttle" :
+                 ship_prototypes[x].class == 4 ? "Freighter" :
+                 ship_prototypes[x].class == 5 ? "Frigate" :
+                 ship_prototypes[x].class == 7 ? "Corvette" : "Spacecraft", ship_prototypes[x].cost );
+      }
+      send_to_char( "&z+&W-----------------------------------------------------------------------------&z+\r\n", ch );
+      send_to_char( "&W|&w               Refer to 'shiplist' for a complete ship listing               &W|\r\n", ch );
+      send_to_char( "&z+&W-----------------------------------------------------------------------------&z+\r\n", ch );
+      return;
+   }
+   ship_type = x;
 
-        send_to_char("&z+&W-----------------------------------------------------------------------&z+\r\n",ch);
-        send_to_char("&W|&w               Refer to 'shiplist' for a complete ship listing                &W|\r\n",ch);
-        send_to_char("&z+&W-----------------------------------------------------------------------&z+\n\r",ch); 
-        return;
-    }
-    ship_type = x;
+   // Modify later. -||
 
-    // Modify later. -||
+   if( ( clan->clan_type == 0 ) && str_cmp( ship_prototypes[ship_type].clan, ch->pcdata->clan->name ) )
+   {
+      send_to_char( "Your organization may only purchase its own ship models.\r\n", ch );
+      return;
+   }
+   if( ship_prototypes[x].class != 1 && ship_prototypes[x].class != 2 && ship_prototypes[x].class != 3 && ship_prototypes[x].class != 4 && ship_prototypes[x].class != 5  && ship_prototypes[x].class != 7 )
+   {
+      send_to_char( "You may only purchase fighters, bombers, or midtargets for mobile ships.\r\n", ch );
+      return;
+   }
+   if(argument[0] == '\0' || argument == NULL || !argument)
+   {
+      send_to_char("What do you want to name the ship?\r\n",ch);
+      return;
+   }
 
-    if( (clan->clan_type == 0) && 
-	 str_cmp(ship_prototypes[ship_type].clan, ch->pcdata->clan->name))
-    {
-    	send_to_char("Your organization may only purchase its own ship models.\n\r", ch);
-    	return;
-    }
-	if(ship_prototypes[x].class!= 0 && ship_prototypes[x].class!= 1 && ship_prototypes[x].class!= 2)
-	{
-		send_to_char("You may only purchase fighters, bombers, or midtargets for mobile ships.\n\r", ch);
-		return;
-	}
     vnum = find_vnum_block(ship_prototypes[ship_type].num_rooms);
     if(vnum == -1)
     {
-    	send_to_char("There was a problem with your ship: free vnums. Notify an administrator.\r\n",ch);
-    	bug("Ship area is low on vnums.",0);
+      send_to_char( "There was a problem with your ship: free vnums. Notify an administrator.\r\n", ch );
+      bug( "Ship area is low on vnums." );
       return;
-    }
+   }
 
-    switch(ship_type)
-	{
-		default: sprintf(shipname, "Mobile Ship MS"); break;
-		// NR
-		case 0: sprintf(shipname, "X-Wing Snubfighter MXW"); break;
-		case 1: sprintf(shipname, "A-Wing Scout MAW"); break;
-		case 2: sprintf(shipname, "B-Wing Heavy Fighter MBW"); break;
-		case 3: sprintf(shipname, "Y-Wing Bomber MYB"); break;
-		case 4: sprintf(shipname, "K-Wing Heavy Bomber MKW"); break;
-		// Imp
-		case 6: sprintf(shipname, "TIE Fighter MTF"); break;
-		case 7: sprintf(shipname, "TIE Bomber MTB"); break;
-		case 8: sprintf(shipname, "TIE Defender MTD"); break;
-		case 9: sprintf(shipname, "XM-1 Missileboat MXM"); break;
-		case 10: sprintf(shipname, "XG-1 Assault Gunboat MXG"); break;
-    }
+        char arg2[MAX_STRING_LENGTH];
+        argument = one_argument(argument, arg2);
+        arg2[0] = UPPER(arg2[0]);
+        sprintf(arg2,"%s (%s)",arg2, ship_prototypes[ship_type].sname);
 
-    sprintf(shipname,"%s%d (%s)",shipname,number_range(1111, 9999),ship_prototypes[ship_type].sname);
+        for ( ship = first_ship; ship; ship = ship->next )
+        {
+                if(!str_cmp(ship->name,arg2))
+                {
+                        send_to_char("&CThat ship name is already in use. Choose another.\r\n",ch);
+                        return;
+                }
+        }
 
-    if(ch->pcdata->clan->funds < ship_prototypes[ship_type].cost)
-    {
-        send_to_char("Your organization cannot pay for that ship.\r\n",ch);
+        if(!str_cmp(arg2, "&"))
+        {
+                send_to_char("No color codes in ship names.\n\r", ch);
+                return;
+        }
+
+/*   switch ( ship_type )
+   {
+      default:
+         sprintf( shipname, "Mobile Ship MS" );
+         break;
+         // NR
+      case 0:
+         sprintf( shipname, "X-Wing Snubfighter MXW" );
+         break;
+      case 1:
+         sprintf( shipname, "A-Wing Scout MAW" );
+         break;
+      case 2:
+         sprintf( shipname, "B-Wing Heavy Fighter MBW" );
+         break;
+      case 3:
+         sprintf( shipname, "Y-Wing Bomber MYB" );
+         break;
+      case 4:
+         sprintf( shipname, "K-Wing Heavy Bomber MKW" );
+         break;
+         // Imp
+      case 6:
+         sprintf( shipname, "TIE Fighter MTF" );
+         break;
+      case 7:
+         sprintf( shipname, "TIE Bomber MTB" );
+         break;
+      case 8:
+         sprintf( shipname, "TIE Defender MTD" );
+         break;
+      case 9:
+         sprintf( shipname, "XM-1 Missileboat MXM" );
+         break;
+      case 10:
+         sprintf( shipname, "XG-1 Assault Gunboat MXG" );
+         break;
+   }
+
+   sprintf( shipname, "%s%d (%s)", shipname, number_range( 1111, 9999 ), ship_prototypes[ship_type].sname );*/
+
+   if( ch->pcdata->clan->funds < ship_prototypes[ship_type].cost )
+   {
+      send_to_char( "Your organization cannot pay for that ship.\r\n", ch );
       return;
-    }
+   }
    clan = ch->pcdata->clan;
    mainclan = ch->pcdata->clan->mainclan ? ch->pcdata->clan->mainclan : clan;
 
-   if ( ( ch->pcdata->bestowments
-    &&    is_name("clanbuyship", ch->pcdata->bestowments))
-    ||   !str_cmp( ch->name, clan->leader  ))
-	;
+   if( ( ch->pcdata->bestowments && is_name( "clanbuyship", ch->pcdata->bestowments ) )
+       || !str_cmp( ch->name, clan->leader ) )
+      ;
    else
    {
-   	send_to_char( "Your organization hasn't seen fit to bestow you with that ability.\r\n" ,ch );
-   	return;
+      send_to_char( "Your organization hasn't seen fit to bestow you with that ability.\r\n", ch );
+      return;
    }
 
-   fsys = fplan = fcap = FALSE;
-   for(system = first_starsystem; system; system = system->next)
-	{
-	   if(nifty_is_name(argument, system->name))
-		{
-		   fsys = TRUE;
-		   break;
-		}
+   fsys = fplan = FALSE;
+
+   for( system = first_starsystem; system; system = system->next )
+   {
+      if( nifty_is_name( argument, system->name ) )
+      {
+         fsys = TRUE;
+         break;
+      }
 	}
    if(!fsys)
 	{
 	   send_to_char("No such starsystem.\n\r", ch);
 	   return;
 	}
-   for(planet = system->first_planet; planet; planet = planet->next_in_system)
-	{
+   int shipcap = 0;
+
+   for( planet = system->first_planet; planet; planet = planet->next_in_system )
+   {
 	   if(ch->pcdata->clan == planet->governed_by)
-		   fplan = TRUE;
-	}
+         fplan = TRUE;
+
+      shipcap += planet->shipcap;
+   }
+
    if(!fplan)
 	{
 	   send_to_char("Your organization does not control any planets in that starsystem.\n\r", ch);
 	   return;
 	}
-   count = 0;
-   for(sship = system->first_ship; sship; sship = sship->next_in_starsystem)
-	{
-	   if(sship->type == MOB_SHIP) count++;
-	   if(sship->class >= SHIP_LFRIGATE) { fcap = TRUE; caps++; }
-	}
-   if(!fcap)
-	{
-	   send_to_char("There isn't a capital class ship in that starsystem.\n\r", ch);
-	   return;
-	}
-	   if(count > 3*caps)
-		{
-		   send_to_char("You can only have 3 mobile ships per capital-class ship in a system.\n\r", ch);
-		   return;
-		}
+	
+   int currships = 0;
+
+   for( sship = system->first_ship; sship; sship = sship->next_in_starsystem )
+   {
+      if( sship->type == MOB_SHIP )
+         currships += get_ship_size( sship );
+   }
+
+   if( (shipcap - currships) < get_proto_size( ship_type )  )
+   {
+      send_to_char( "That system will not support a defense ship of that size.\r\n", ch );
+      return;
+   }
+
     for ( tarea = first_area; tarea; tarea = tarea->next )
       if ( !str_cmp( SHIP_AREA, tarea->filename ) )
         break;
@@ -372,32 +480,33 @@ void do_buymobship(CHAR_DATA *ch, char *argument )
       return;
     }
 
-    ch->pcdata->clan->funds -= ship_prototypes[ship_type].cost*1.3;
+   ch->pcdata->clan->funds -= ( int )( ship_prototypes[ship_type].cost * 1.3 );
 
-	ch_printf(ch, "It costs %d to build the ship and %d to train a pilot.\n\r",
-		ship_prototypes[ship_type].cost, ship_prototypes[ship_type].cost/3);
-	ch_printf(ch, "%s is quickly dispatched to the %s system.\n\r", shipname, system->name);
+   ch_printf( ch, "It costs %d to build the ship and %d to train a pilot.\r\n",
+              ship_prototypes[ship_type].cost, ship_prototypes[ship_type].cost / 3 );
+   ch_printf( ch, "%s is quickly dispatched to the %s system.\r\n", shipname, system->name );
 
 
-    ship = make_prototype_ship(ship_type,vnum,ch,shipname);
-    ship->owner = STRALLOC(ch->pcdata->clan->name);
-    save_ship( ship );
-    write_ship_list( );
-	extract_ship(ship);
-	ship_to_starsystem(ship, system);
-	ship->location = 0;
-	ship->inship = NULL;
-	ship->type = MOB_SHIP;
-	if(ship->home) STRFREE(ship->home);
-	ship->home = STRALLOC(system->name);
-	ship->hx = ship->hy = ship->hz = 1;
-	ship->vx = number_range(-3000, 3000);
-	ship->vy = number_range(-3000, 3000);
-	ship->vz = number_range(-3000, 3000);
-	ship->autopilot = TRUE;
-	sprintf(buf, "%s enters the starsystem at %.0f %.0f %.0f", ship->name, ship->vx, ship->vy, ship->vz);
-    echo_to_system(AT_YELLOW, ship, buf, NULL);
-  return;
+   ship = make_prototype_ship( ship_type, vnum, ch, arg2 );
+   ship->owner = STRALLOC( mainclan->name );
+   extract_ship( ship );
+   ship_to_starsystem( ship, system );
+   ship->location = 0;
+   ship->inship = NULL;
+   ship->type = MOB_SHIP;
+   if( ship->home )
+      STRFREE( ship->home );
+   ship->home = STRALLOC( system->name );
+   ship->hx = ship->hy = ship->hz = 1;
+   ship->vx = number_range( -3000, 3000 );
+   ship->vy = number_range( -3000, 3000 );
+   ship->vz = number_range( -3000, 3000 );
+   ship->autopilot = TRUE;
+   save_ship( ship );
+   write_ship_list(  );
+   sprintf( buf, "%s enters the starsystem at %.0f %.0f %.0f", ship->name, ship->vx, ship->vy, ship->vz );
+   echo_to_system( AT_YELLOW, ship, buf, NULL );
+   return;
 }
 
 void do_orderclanship(CHAR_DATA *ch, char *argument )
@@ -1308,8 +1417,8 @@ SHIP_DATA *make_prototype_ship(int ship_type,int vnum,CHAR_DATA *ch,char *ship_n
     //ship->maxplasmashield = ship_prototypes[ship_type].plasma;
     ship->energy = ship_prototypes[ship_type].energy;
     ship->maxenergy = ship_prototypes[ship_type].energy;
-    ship->chaff = ship_prototypes[ship_type].chaff;
-    ship->maxchaff = ship_prototypes[ship_type].chaff;
+    ship->countermeasures = ship_prototypes[ship_type].countermeasures;
+    ship->maxcountermeasures = ship_prototypes[ship_type].countermeasures;
     ship->bombs = ship_prototypes[ship_type].maxbombs;
     ship->maxbombs = ship_prototypes[ship_type].maxbombs;
     ship->realspeed = ship_prototypes[ship_type].speed;
@@ -1596,7 +1705,7 @@ void save_prototype( int prototype )
     fprintf( fpout, "Hull           %d\n",  ship_prototypes[prototype].hull );
     fprintf( fpout, "Shields        %d\n",  ship_prototypes[prototype].shields );
     fprintf( fpout, "Energy         %d\n",  ship_prototypes[prototype].energy );
-    fprintf( fpout, "Chaff          %d\n",  ship_prototypes[prototype].chaff );
+    fprintf( fpout, "Countermeasures          %d\n",  ship_prototypes[prototype].countermeasures );
     fprintf( fpout, "MaxCargo       %d\n",  ship_prototypes[prototype].maxcargo );
 	fprintf( fpout, "Hanger1Space   %d\n",  ship_prototypes[prototype].hangar1space );
 	fprintf( fpout, "Hanger2Space   %d\n",  ship_prototypes[prototype].hangar2space );
@@ -1689,7 +1798,7 @@ bool load_prototype_header(FILE *fp,int prototype)
            case 'C':
                KEY( "Cost",           ship_prototypes[prototype].cost,             fread_number(fp));
                KEY( "Class",          ship_prototypes[prototype].class,            fread_number(fp));
-               KEY( "Chaff",          ship_prototypes[prototype].chaff,            fread_number(fp));
+               KEY( "Countermeasures",          ship_prototypes[prototype].countermeasures,            fread_number(fp));
                KEY( "Clan",	      ship_prototypes[prototype].clan,		   fread_string(fp));
            case 'E':
                KEY( "Energy",         ship_prototypes[prototype].energy,           fread_number(fp));
@@ -2057,7 +2166,7 @@ void do_makeprototypeship(CHAR_DATA *ch, char *argument)
     ship_prototypes[prototype].shields = ship->maxshield;
     //ship_prototypes[prototype].plasma = ship->maxplasmashield;
     ship_prototypes[prototype].energy = ship->maxenergy;
-    ship_prototypes[prototype].chaff = ship->maxchaff;
+    ship_prototypes[prototype].countermeasures = ship->maxcountermeasures;
 #ifdef USECARGO
     ship_prototypes[prototype].maxcargo = ship->maxcargo;
 #endif
@@ -2533,7 +2642,7 @@ void do_shipstat( CHAR_DATA *ch, char *argument )
   else sprintf(buf8, "&RNone.");
  if(ship_prototypes[shiptype].turrets > 0) sprintf(buf9, "%d", ship_prototypes[shiptype].turrets);
   else sprintf(buf9, "&RNone.");
- if(ship_prototypes[shiptype].chaff > 0) sprintf(buf10, "%d", ship_prototypes[shiptype].chaff);
+ if(ship_prototypes[shiptype].countermeasures > 0) sprintf(buf10, "%d", ship_prototypes[shiptype].countermeasures);
   else sprintf(buf10, "&RNone.");
  if(ship_prototypes[shiptype].windows > 0) sprintf(buf9, "%d", ship_prototypes[shiptype].windows);
   else sprintf(buf11, "&RNone.");
@@ -2554,7 +2663,7 @@ void do_shipstat( CHAR_DATA *ch, char *argument )
     ch_printf( ch, "&z+&W---------------------------------------------------------------&z+\r\n" );
     ch_printf( ch, "&z|&W  &cOrdinance&B:&W                                                   &z|\r\n" );
     ch_printf( ch, "&z|&W    &gMissiles:&w %-5s&W   &gTorpedos:&w %-5s&W   &gRockets:&w %-5s         &z|\r\n", buf3, buf5, buf7 );
-    ch_printf( ch, "&z|&W       &gPlanetary bombs:&w %-5s&W       &gChaff:&w %-5s               &z|\r\n", buf8, buf10 );
+    ch_printf( ch, "&z|&W       &gPlanetary bombs:&w %-5s&W       &gCountermeasures:&w %-5s     &z|\r\n", buf8, buf10 );
     ch_printf( ch, "&z+&W---------------------------------------------------------------&z+\r\n" );
     ch_printf( ch, "&z|&W  &cMisc&B:&W                                                        &z|\r\n" );
     if( ship_prototypes[shiptype].turrets > 0 )    ch_printf( ch, "&z|&W    &gTurrets:&w %-5s                                             &z|\r\n", buf9  );
@@ -2993,7 +3102,7 @@ void do_installmodule( CHAR_DATA *ch, char *argument )
   int energy=0;
   int manuever=0;
   int alarm=0;
-  int chaff=0;
+  int countermeasures=0;
   int slave=0;
   int tractor=0;
   int tertiary=0;
@@ -3067,8 +3176,8 @@ void do_installmodule( CHAR_DATA *ch, char *argument )
         ++manuever;
       if(mod->affect == AFFECT_ALARM)
         ++alarm;
-      if(mod->affect == AFFECT_CHAFF)
-        ++chaff;
+      if(mod->affect == AFFECT_COUNTERMEASURES)
+        ++countermeasures;
       if(mod->affect == AFFECT_SLAVE)
 	++slave;
       if(mod->affect == AFFECT_TRACTOR)
@@ -3116,7 +3225,7 @@ void do_installmodule( CHAR_DATA *ch, char *argument )
       (modobj->value[0] == AFFECT_ALARM && alarm >= maxslot) ||
       (modobj->value[0] == AFFECT_SLAVE && slave >= maxslot) ||
       (modobj->value[0] == AFFECT_TRACTOR && tractor >= maxslot) ||
-      (modobj->value[0] == AFFECT_CHAFF && chaff >= maxslot) ||
+      (modobj->value[0] == AFFECT_COUNTERMEASURES && countermeasures >= maxslot) ||
       (modobj->value[0] == AFFECT_TERTIARY && tertiary >= maxslot) ||
       (modobj->value[0] == AFFECT_BOMB && bombs >= maxslot) ||
       (modobj->value[0] == AFFECT_CARGO && maxcargo >= maxslot))
@@ -3241,8 +3350,8 @@ void do_installmodule( CHAR_DATA *ch, char *argument )
         ship->manuever+=mod->ammount;
       if(mod->affect == AFFECT_ALARM)
         ship->alarm+=mod->ammount;
-      if(mod->affect == AFFECT_CHAFF)
-        ship->maxchaff+=mod->ammount;
+      if(mod->affect == AFFECT_COUNTERMEASURES)
+        ship->maxcountermeasures+=mod->ammount;
       if(mod->affect == AFFECT_SLAVE)
         ship->slave+=mod->ammount;
       if(mod->affect == AFFECT_TRACTOR)

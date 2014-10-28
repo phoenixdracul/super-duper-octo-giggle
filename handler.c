@@ -2419,9 +2419,6 @@ bool room_is_private( CHAR_DATA *ch , ROOM_INDEX_DATA *pRoomIndex )
 	if ( IS_SET(pRoomIndex->room_flags, ROOM_PRIVATE)  && count >= 2 )
 		return TRUE;
 
-	if ( IS_SET(pRoomIndex->room_flags, ROOM_SOLITARY) && count >= 1 )
-		return TRUE;
-
 	return FALSE;
 }
 

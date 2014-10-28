@@ -65,7 +65,7 @@ REL_DATA *last_relation = NULL;
 const char *  const   planet_flags [] =
 {
 		"coruscant", "yavin iv", "tatooine", "kashyyyk", "mon calamari",
-		"endor", "ord mantell", "nal hutta", "corellia", "bakura", "hoth", "empty1",
+		"endor", "ord mantell", "nal hutta", "corellia", "bakura", "hoth", "byss",
 		"p12", "p13", "p14", "p15", "p16", "p17", "p18", "p19", "p20", "p21",
 		"p22", "p23", "p24", "p25", "p26", "p27", "p28", "p29", "p30", "p31"
 };
@@ -104,7 +104,7 @@ const char *  const   ex_flags [] =
 const char *	const	r_flags	[] =
 {
 		"dark", "reserved", "nomob", "indoors", "can_land", "can_fly", "no_drive",
-		"nomagic", "bank", "private", "safe", "remove_this_flag", "petshop", "norecall",
+		"nomagic", "bank", "private", "safe", "logout", "petshop", "norecall",
 		"donation", "nodropall", "silence", "sconsole", "nodrop", "clanstoreroom",
 		"plr_home", "empty_home", "teleport", "hotel", "nofloor", "refinery", "factory",
 		"republic_recruit", "empire_recruit", "spacecraft", "prototype", "auction"
@@ -4434,7 +4434,7 @@ void stop_editing( CHAR_DATA *ch )
 			 send_to_char( "private, safe, petshop, norecall, donation, nodropall, silence,\r\n", ch );
 			 send_to_char( "sconsole, nodrop, clanstoreroom, plr_home, empty_home, teleport\r\n", ch );
 			 send_to_char( "nofloor, prototype, refinery, factory, republic_recruit, empire_recruit\r\n", ch );
-			 send_to_char( "spacecraft, auction, no_drive, can_land, can_fly, hotel\r\n", ch );
+			 send_to_char( "spacecraft, auction, no_drive, can_land, can_fly, hotel, logout\r\n", ch );
 			 return;
 		 }
 		 while( argument[0] != '\0' )
@@ -4459,7 +4459,7 @@ void stop_editing( CHAR_DATA *ch )
 			 send_to_char( "Toggle the room flags.\r\n", ch );
 			 send_to_char( "Usage: redit flags <flag> [flag]...\r\n", ch );
 			 send_to_char( "\r\nPossible Flags: \r\n", ch );
-			 send_to_char( "emptyshop logspeech pshop shipyard locker garage barraks control clanland clanjail arena\r\n", ch );
+			 send_to_char( "emptyshop logspeech pshop shipyard locker garage barraks control clanland clanjail arena, hiddenpad\r\n", ch );
 			 return;
 		 }
 		 while( argument[0] != '\0' )

@@ -2716,7 +2716,7 @@ void do_oinvoke( CHAR_DATA *ch, char *argument )
 
 	if ( arg2[0] == '\0' )
 	{
-		level = get_trust( ch );
+		level = 1; //default changed from character level to 1 to make building easier.
 	}
 	else
 	{
