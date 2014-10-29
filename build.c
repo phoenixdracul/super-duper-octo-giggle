@@ -2298,7 +2298,8 @@ void stop_editing( CHAR_DATA *ch )
 
 		 if( IS_NPC( victim ) && xIS_SET( victim->act, ACT_PROTOTYPE ) )
 			 protoflag = TRUE;
-
+if (protoflag == TRUE)
+bug("protoflag == true");
 		 while( argument[0] != '\0' )
 		 {
 			 argument = one_argument( argument, arg3 );
@@ -2338,6 +2339,8 @@ void stop_editing( CHAR_DATA *ch )
 			 send_to_char( "Flags set.\r\n", ch );
 		 if( IS_NPC( victim ) && ( xIS_SET( victim->act, ACT_PROTOTYPE ) || ( 1 << value == ACT_PROTOTYPE && protoflag ) ) )
 			 victim->pIndexData->act = victim->act;
+bug("victim->act: %s", ext_flag_string(&victim->act, act_flags));
+bug("pIndexData->act: %s", ext_flag_string(&victim->pIndexData->act, act_flags));
 		 return;
 	 }
 
