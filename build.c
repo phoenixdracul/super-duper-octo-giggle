@@ -2337,8 +2337,17 @@ bug("protoflag == true");
 		 }
 		 if( ftoggle )
 			 send_to_char( "Flags set.\r\n", ch );
-		 if( IS_NPC( victim ) && ( xIS_SET( victim->act, ACT_PROTOTYPE ) || ( 1 << value == ACT_PROTOTYPE && protoflag ) ) )
-			 victim->pIndexData->act = victim->act;
+if (IS_NPC(victim))
+bug("1) IS_NPC == true");
+if (xIS_SET(victim->act, ACT_PROTOTYPE))
+bug("2) xIS_SET == true");
+if (1 << value == ACT_PROTOTYPE)
+bug("3) 1 << value == ACT_PROTOTYPE");
+if (protoflag)
+bug("4) protoflag");
+		 if( IS_NPC( victim ) && ( xIS_SET( victim->act, ACT_PROTOTYPE ) || ( 1 << value == ACT_PROTOTYPE && protoflag ) ) ) {
+bug("made it here!");
+			 victim->pIndexData->act = victim->act; }
 bug("victim->act: %s", ext_flag_string(&victim->act, act_flags));
 bug("pIndexData->act: %s", ext_flag_string(&victim->pIndexData->act, act_flags));
 		 return;
