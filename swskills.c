@@ -66,13 +66,14 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
-	int level, chance, charge;
+	int level, chance, charge, value;
 	bool checktool, checkdura, checkbatt, checkoven;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum;
 	AFFECT_DATA *paf;
 	AFFECT_DATA *paf2;
+	float f;
 
 	strcpy( arg , argument );
 
@@ -222,6 +223,12 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+        // Blade quality -- Kasji
+        f = ch->pcdata->learned[gsn_makeblade] * ((50 * number_range(50, 150)) / 100);
+        f = (f < 0 ? 0 : f);
+        f = f / (f + 100);
+        value = f * 50;
+
 	obj = create_object( pObjIndex, level );
 
 	obj->item_type = ITEM_WEAPON;
@@ -244,7 +251,7 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 	paf->type               = -1;
 	paf->duration           = -1;
 	paf->location           = get_atype( "backstab" );
-	paf->modifier           = level / 4;
+	paf->modifier           = level / 4 + value / 10;
 	paf->bitvector          = 0;
 	paf->next               = NULL;
 	LINK( paf, obj->first_affect, obj->last_affect, next, prev );
@@ -253,14 +260,14 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 	paf2->type               = -1;
 	paf2->duration           = -1;
 	paf2->location           = get_atype( "hitroll" );
-	paf2->modifier           = level / 5;
+	paf2->modifier           = level / 10 + value / 10;
 	paf2->bitvector          = 0;
 	paf2->next               = NULL;
 	LINK( paf2, obj->first_affect, obj->last_affect, next, prev );
 	++top_affect;
 	obj->value[0] = INIT_WEAPON_CONDITION;
-	obj->value[1] = (int) (level+4);      /* min dmg  */
-	obj->value[2] = (int) (level*+9);      /* max dmg */
+	obj->value[1] = (int) (level/20+value/10);      /* min dmg  */
+	obj->value[2] = (int) (level/10+15+value/5);      /* max dmg */
 	obj->value[3] = WEAPON_VIBRO_BLADE;
 	obj->value[4] = charge;
 	obj->value[5] = charge;
@@ -270,6 +277,29 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 	obj = obj_to_char( obj, ch );
 
 	send_to_char( "&GYou finish your work and hold up your newly created blade.&w\n\r", ch);
+
+        char * word;
+        if (value >= 45)
+                word = "masterful";
+        else if (value >= 40)
+                word = "exceptional";
+        else if (value >= 35)
+                word = "great";
+        else if (value >= 30)
+                word = "decent";
+        else if (value >= 25)
+                word = "fair";
+        else if (value >= 20)
+                word = "mediocre";
+        else if (value >= 15)
+                word = "poor";
+        else if (value >= 10)
+                word = "shabby";
+        else
+                word = "horrible";
+
+        ch_printf(ch, "&WYour blade is of &R%s &wquality.\n\r", word);
+
 	act( AT_PLAIN, "$n finishes crafting a vibro-blade.", ch,
 			NULL, argument , TO_ROOM );
 
@@ -288,13 +318,14 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
-	int level, chance;
+	int level, chance, value;
 	bool checktool, checkdura, checkbatt, checkoven, checkcond, checkcirc, checkammo;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum, power, scope, ammo;
 	AFFECT_DATA *paf;
 	AFFECT_DATA *paf2;
+	float f;
 
 	strcpy( arg , argument );
 
@@ -495,12 +526,18 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+        // Blaster quality -- Kasji
+        f = ch->pcdata->learned[gsn_makeblaster] * ((50 * number_range(50, 150)) / 100);
+        f = (f < 0 ? 0 : f);
+        f = f / (f + 100);
+        value = f * 50;
+
 	obj = create_object( pObjIndex, level );
 
 	obj->item_type = ITEM_WEAPON;
 	SET_BIT( obj->wear_flags, ITEM_WIELD );
 	SET_BIT( obj->wear_flags, ITEM_TAKE );
-	obj->level = level;
+//	obj->level = level;
 	obj->weight = 2+level/10;
 	STRFREE( obj->name );
 	strcpy( buf , arg );
@@ -517,7 +554,7 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 	paf->type               = -1;
 	paf->duration           = -1;
 	paf->location           = get_atype( "hitroll" );
-	paf->modifier           = URANGE( 0, 1+scope, level/30 );
+	paf->modifier           = URANGE( 0, 1+scope+value/10, level/2 );
 	paf->bitvector          = 0;
 	paf->next               = NULL;
 	LINK( paf, obj->first_affect, obj->last_affect, next, prev );
@@ -526,14 +563,14 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 	paf2->type               = -1;
 	paf2->duration           = -1;
 	paf2->location           = get_atype( "damroll" );
-	paf2->modifier           = URANGE( 0, power, level/30);
+	paf2->modifier           = URANGE( 0, power+value/10, level/2);
 	paf2->bitvector          = 0;
 	paf2->next               = NULL;
 	LINK( paf2, obj->first_affect, obj->last_affect, next, prev );
 	++top_affect;
 	obj->value[0] = INIT_WEAPON_CONDITION;       /* condition  */
-	obj->value[1] = (int) (level/10+10);      /* min dmg  */
-	obj->value[2] = (int) (level/5+15);      /* max dmg  */
+	obj->value[1] = (int) (level/10+3+value/10);      /* min dmg  */
+	obj->value[2] = (int) (level/5+7+value/5);      /* max dmg  */
 	obj->value[3] = WEAPON_BLASTER;
 	obj->value[4] = ammo;
 	obj->value[5] = 2000;
@@ -543,6 +580,29 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 	obj = obj_to_char( obj, ch );
 
 	send_to_char( "&GYou finish your work and hold up your newly created blaster.&w\n\r", ch);
+
+        char * word;
+        if (value >= 45)
+                word = "masterful";
+        else if (value >= 40)
+                word = "exceptional";
+        else if (value >= 35)
+                word = "great";
+        else if (value >= 30)
+                word = "decent";
+        else if (value >= 25)
+                word = "fair";
+        else if (value >= 20)
+                word = "mediocre";
+        else if (value >= 15)
+                word = "poor";
+        else if (value >= 10)
+                word = "shabby";
+        else
+                word = "horrible";
+
+        ch_printf(ch, "&WYour blade is of &R%s &wquality.\n\r", word);
+
 	act( AT_PLAIN, "$n finishes making $s new blaster.", ch,
 			NULL, argument , TO_ROOM );
 
@@ -2354,15 +2414,9 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 
 	// Armor quality -- Kasji
 	f = ch->pcdata->learned[gsn_makearmor] * ((50 * number_range(50, 150)) / 100);
-//bug("pre: %f", f);
 	f = (f < 0 ? 0 : f);
 	f = f / (f + 100);
-//bug("f: %f", f);
 	value = f * 1000;
-//	value = (ch->pcdata->learned[gsn_makearmor] * 50 ) + number_range(-100, 100);
-//	value = UMAX(0, value);
-//	value = (value*100) / (value + 100);
-//bug("quality: %d", value);
 	obj->value[2] = value;
 
 	obj = obj_to_char( obj, ch );
