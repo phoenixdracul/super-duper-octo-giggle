@@ -7227,7 +7227,7 @@ void do_land( CHAR_DATA *ch, char *argument )
       }
    }
 
-   chance = IS_NPC( ch ) ? 100 : ( int )( ch->pcdata->learned[gsn_shipsystems] );
+   chance = IS_NPC( ch ) ? 100 : ( int )( ch->pcdata->learned[gsn_shipsystems]*10+40 );
    if( number_percent(  ) < chance )
    {
       set_char_color( AT_GREEN, ch );
