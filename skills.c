@@ -311,8 +311,8 @@ bool check_skill( CHAR_DATA *ch, char *command, char *argument )
 	/* waitstate */
 	WAIT_STATE( ch, skill_table[sn]->beats );
 	/* check for failure */
-	if ( (number_percent( ) + skill_table[sn]->difficulty * 5)
-	   > (IS_NPC(ch) ? 75 : ch->pcdata->learned[sn]) )
+	if ( (number_percent( ) + skill_table[sn]->difficulty)
+	   > (IS_NPC(ch) ? 75 : ch->pcdata->learned[sn]*10+40) )
 	{
 	    failed_casting( skill_table[sn], ch, victim, obj );
 	    learn_from_failure( ch, sn );
