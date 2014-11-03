@@ -6526,8 +6526,8 @@ void do_makepike( CHAR_DATA *ch, char *argument )
 	++top_affect;
 	obj->description = STRALLOC( buf );
 	obj->value[0] = INIT_WEAPON_CONDITION;
-	obj->value[1] = (int) (level/2+5+value/10);      /* min dmg  */
-	obj->value[2] = (int) (level+10+value/2);      /* max dmg */
+	obj->value[1] = (int) (level/2+value/10);      /* min dmg  */
+	obj->value[2] = (int) (level+value/3);      /* max dmg */
 	obj->value[3] = WEAPON_FORCE_PIKE;
 	obj->value[4] = charge;
 	obj->value[5] = charge;
