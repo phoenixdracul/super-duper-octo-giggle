@@ -251,7 +251,7 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 	paf->type               = -1;
 	paf->duration           = -1;
 	paf->location           = get_atype( "backstab" );
-	paf->modifier           = level / 4 + value / 10;
+	paf->modifier           = level / 3 + value / 10;
 	paf->bitvector          = 0;
 	paf->next               = NULL;
 	LINK( paf, obj->first_affect, obj->last_affect, next, prev );
@@ -266,8 +266,8 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 	LINK( paf2, obj->first_affect, obj->last_affect, next, prev );
 	++top_affect;
 	obj->value[0] = INIT_WEAPON_CONDITION;
-	obj->value[1] = (int) (level/20+value/10);      /* min dmg  */
-	obj->value[2] = (int) (level/10+15+value/5);      /* max dmg */
+	obj->value[1] = (int) (level/6+value/10);      /* min dmg  */
+	obj->value[2] = (int) (level/3+15+value/4);      /* max dmg */
 	obj->value[3] = WEAPON_VIBRO_BLADE;
 	obj->value[4] = charge;
 	obj->value[5] = charge;
@@ -569,8 +569,8 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 	LINK( paf2, obj->first_affect, obj->last_affect, next, prev );
 	++top_affect;
 	obj->value[0] = INIT_WEAPON_CONDITION;       /* condition  */
-	obj->value[1] = (int) (level/10+3+value/10);      /* min dmg  */
-	obj->value[2] = (int) (level/5+7+value/5);      /* max dmg  */
+	obj->value[1] = (int) (level/4+5+value/8);      /* min dmg  */
+	obj->value[2] = (int) (level/2+10+value/5);      /* max dmg  */
 	obj->value[3] = WEAPON_BLASTER;
 	obj->value[4] = ammo;
 	obj->value[5] = 2000;
@@ -903,7 +903,7 @@ void do_makelightsaber( CHAR_DATA *ch, char *argument )
 	paf->type               = -1;
 	paf->duration           = -1;
 	paf->location           = get_atype( "hitroll" );
-	paf->modifier           = URANGE( 0, gems, level/10 );
+	paf->modifier           = URANGE( 0, gems, level/2 );
 	paf->bitvector          = 0;
 	paf->next               = NULL;
 	LINK( paf, obj->first_affect, obj->last_affect, next, prev );
@@ -912,14 +912,14 @@ void do_makelightsaber( CHAR_DATA *ch, char *argument )
 	paf2->type               = -1;
 	paf2->duration           = -1;
 	paf2->location           = get_atype( "parry" );
-	paf2->modifier           = ( level/3 );
+	paf2->modifier           = ( level );
 	paf2->bitvector          = 0;
 	paf2->next               = NULL;
 	LINK( paf2, obj->first_affect, obj->last_affect, next, prev );
 	++top_affect;
 	obj->value[0] = INIT_WEAPON_CONDITION;       /* condition  */
-	obj->value[1] = (int) (level/10+gemtype*2);      /* min dmg  */
-	obj->value[2] = (int) (level/5+gemtype*6);      /* max dmg */
+	obj->value[1] = (int) (level/6+gemtype*2);      /* min dmg  */
+	obj->value[2] = (int) (level/2+gemtype*6);      /* max dmg */
 	obj->value[3] = WEAPON_LIGHTSABER;
 	obj->value[4] = charge;
 	obj->value[5] = charge;

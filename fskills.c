@@ -1898,7 +1898,7 @@ void fskill_makelightsaber( CHAR_DATA *ch, char *argument )
 	paf->type               = -1;
 	paf->duration           = -1;
 	paf->location           = get_atype( "hitroll" );
-	paf->modifier           = URANGE( 0, gems, level/30 );
+	paf->modifier           = URANGE( 0, gems, level/3 );
 	paf->bitvector          = 0;
 	paf->next               = NULL;
 	LINK( paf, obj->first_affect, obj->last_affect, next, prev );
@@ -1908,15 +1908,15 @@ void fskill_makelightsaber( CHAR_DATA *ch, char *argument )
 	paf2->type               = -1;
 	paf2->duration           = -1;
 	paf2->location           = get_atype( "parry" );
-	paf2->modifier           = ( level/3 );
+	paf2->modifier           = ( level );
 	paf2->bitvector          = 0;
 	paf2->next               = NULL;
 	LINK( paf2, obj->first_affect, obj->last_affect, next, prev );
 	++top_affect;
 
 	obj->value[0] = INIT_WEAPON_CONDITION;       /* condition  */
-	obj->value[1] = (int) (level/10+gemtype*2)*ch->force_level_status;      /* min dmg  */
-	obj->value[2] = (int) (level/5+gemtype*6)*ch->force_level_status;      /* max dmg */
+	obj->value[1] = (int) (level/6+gemtype*2)*ch->force_level_status;      /* min dmg  */
+	obj->value[2] = (int) (level/2+gemtype*6)*ch->force_level_status;      /* max dmg */
 	obj->value[3] = WEAPON_LIGHTSABER;
 	obj->value[4] = (1000+charge)*ch->force_level_status;
 	obj->value[5] = (1000+charge)*ch->force_level_status;
