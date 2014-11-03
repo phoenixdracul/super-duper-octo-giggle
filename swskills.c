@@ -6344,12 +6344,13 @@ void do_makepike( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
-	int level, chance, charge;
+	int level, chance, charge, value;
 	bool checktool, checkdura, checkbatt, checkoven;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum;
 	AFFECT_DATA *paf;
+	float f;
 
 	strcpy( arg , argument );
 
@@ -6491,6 +6492,12 @@ void do_makepike( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
+        // Blade quality -- Kasji
+        f = ch->pcdata->learned[gsn_makepike] * ((50 * number_range(50, 150)) / 100);
+        f = (f < 0 ? 0 : f);
+        f = f / (f + 100);
+        value = f * 50;
+
 	obj = create_object( pObjIndex, level );
 
 	obj->item_type = ITEM_WEAPON;
@@ -6519,16 +6526,40 @@ void do_makepike( CHAR_DATA *ch, char *argument )
 	++top_affect;
 	obj->description = STRALLOC( buf );
 	obj->value[0] = INIT_WEAPON_CONDITION;
-	obj->value[1] = (int) (level/5+5);      /* min dmg  */
-	obj->value[2] = (int) (level/4+10);      /* max dmg */
+	obj->value[1] = (int) (level/2+5+value/10);      /* min dmg  */
+	obj->value[2] = (int) (level+10+value/2);      /* max dmg */
 	obj->value[3] = WEAPON_FORCE_PIKE;
 	obj->value[4] = charge;
 	obj->value[5] = charge;
 	obj->cost = obj->value[2]*100;
+	obj->dam_type = RES_SLASH;
 
 	obj = obj_to_char( obj, ch );
 
 	send_to_char( "&GYou finish your work and hold up your newly created force pike.&w\n\r", ch);
+
+        char * word;
+        if (value >= 45)
+                word = "masterful";
+        else if (value >= 40)
+                word = "exceptional";
+        else if (value >= 35)
+                word = "great";
+        else if (value >= 30)
+                word = "decent";
+        else if (value >= 25)
+                word = "fair";
+        else if (value >= 20)
+                word = "mediocre";
+        else if (value >= 15)
+                word = "poor";
+        else if (value >= 10)
+                word = "shabby";
+        else
+                word = "horrible";
+
+        ch_printf(ch, "&WYour blade is of &R%s &wquality.\n\r", word);
+
 	act( AT_PLAIN, "$n finishes crafting a force pike.", ch,
 			NULL, argument , TO_ROOM );
 
