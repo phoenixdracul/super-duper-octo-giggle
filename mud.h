@@ -2523,6 +2523,7 @@ typedef enum
 #define PCFLAG_NOSHIPDIR		BV16
 #define PCFLAG_256COL			BV17
 #define PCFLAG_NOIR				BV18
+#define PCFLAG_IMOTD		BV19
 
 typedef enum
 {

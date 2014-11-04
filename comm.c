@@ -2600,13 +2600,11 @@ case CON_GET_MSP:
 						send_to_pager( "\n\r&WMessage of the Day&w\n\r", ch );
 						do_help( ch, "motd" );
 					}
-					/* Uh, do we use this?
-	if ( IS_IMMORTAL(ch) )
-	{
-	  send_to_pager( "&WImmortal Message of the Day&w\n\r", ch );
-	  do_help( ch, "imotd" );
-	}
-					 */
+					if ( IS_IMMORTAL(ch) && IS_SET(ch->pcdata->flags, PCFLAG_IMOTD))
+					{
+						send_to_pager( "\n\r&WImmortal Message of the Day&w\n\r", ch );
+						do_help( ch, "imotd" );
+					}
 
 					/* Count character's unread notes */
 					ch->pcdata->board = &boards[DEFAULT_BOARD];

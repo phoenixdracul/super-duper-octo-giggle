@@ -4286,6 +4286,12 @@ void do_config( CHAR_DATA *ch, char *argument )
 							: "[-roomflags] You will not see room flags.\n\r"
 							, ch );
 
+		if ( IS_IMMORTAL( ch) )
+			send_to_char( IS_SET(ch->pcdata->flags, PCFLAG_IMOTD)
+					? "[+IMOTD    ] You will see the IMOTD on login.\n\r"
+							: "[-imotd    ] You will not see the IMOTD on login.\n\r"
+							, ch );
+
 		send_to_char(  xIS_SET(ch->act, PLR_SILENCE)
 				? "[+SILENCE  ] You are silenced.\n\r"
 						: ""
@@ -4360,6 +4366,8 @@ void do_config( CHAR_DATA *ch, char *argument )
 			else if ( !str_prefix( arg+1, "pager"    ) ) bit = PCFLAG_PAGERON;
 			else if ( !str_prefix( arg+1, "roomflags")
 					&& (IS_IMMORTAL(ch))) bit = PCFLAG_ROOM;
+			else if ( IS_IMMORTAL( ch )
+					&&   !str_prefix( arg+1, "imotd"     ) ) bit = PCFLAG_IMOTD;
 			else
 			{
 				send_to_char( "Config which option?\n\r", ch );
