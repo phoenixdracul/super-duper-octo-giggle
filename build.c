@@ -66,7 +66,7 @@ const char *  const   planet_flags [] =
 {
 		"coruscant", "yavin iv", "tatooine", "kashyyyk", "mon calamari",
 		"endor", "ord mantell", "nal hutta", "corellia", "bakura", "hoth", "byss",
-		"p12", "p13", "p14", "p15", "p16", "p17", "p18", "p19", "p20", "p21",
+		"bespin", "p13", "p14", "p15", "p16", "p17", "p18", "p19", "p20", "p21",
 		"p22", "p23", "p24", "p25", "p26", "p27", "p28", "p29", "p30", "p31"
 };
 

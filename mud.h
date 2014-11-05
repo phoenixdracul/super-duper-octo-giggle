@@ -1670,17 +1670,18 @@ typedef enum
 /* bits for vip flags */
 
 #define VIP_CORUSCANT           BV00
-#define VIP_YAVIN_IV			BV01
+#define VIP_YAVIN_IV		BV01
 #define VIP_TATOOINE            BV02
 #define VIP_KASHYYYK          	BV03
 #define VIP_MON_CALAMARI       	BV04
-#define VIP_ENDOR				BV05
+#define VIP_ENDOR		BV05
 #define VIP_ORD_MANTELL         BV06
 #define VIP_NAL_HUTTA           BV07
 #define VIP_CORELLIA            BV08
-#define VIP_BAKURA	        	BV09
-#define VIP_HOTH				BV10
+#define VIP_BAKURA	        BV09
+#define VIP_HOTH		BV10
 #define VIP_BYSS                BV11
+#define VIP_BESPIN		BV12
 
 /* player wanted bits */
 
@@ -1694,9 +1695,9 @@ typedef enum
 #define WANTED_NAL_HUTTA   	VIP_NAL_HUTTA
 #define WANTED_CORELLIA   	VIP_CORELLIA
 #define WANTED_BAKURA   	VIP_BAKURA
-#define WANTED_HOTH         VIP_HOTH
-#define WANTED_BYSS         VIP_BYSS
-
+#define WANTED_HOTH         	VIP_HOTH
+#define WANTED_BYSS         	VIP_BYSS
+#define WANTE_BESPIN		VIP_BESPIN
 
 /*
  * Bits for 'affected_by'.
