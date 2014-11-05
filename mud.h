@@ -2133,10 +2133,13 @@ typedef enum
 #define WEAPON_WHIP		4
 #define WEAPON_CLAW		5
 #define WEAPON_BLASTER		6
+#define WEAPON_TAIL		7
 #define WEAPON_BLUDGEON		8
 #define WEAPON_BOWCASTER        9
+#define WEAPON_BITE		10
 #define WEAPON_FORCE_PIKE	11
 #define WEAPON_DUAL_LIGHTSABER	12
+#define WEAPON_STING		13
 
 /* Lever/dial/switch/button/pullchain flags */
 #define TRIG_UP			BV00
@@ -2872,7 +2875,9 @@ struct char_data
     char *		emotecolor;
     char *		afk_msg;		/* Afk message string - Added by Boran */
     float		base_res[RES_MAX];	// New damage resistances -- Kasji
-    short		sh_deflect;		// Shield deflection
+    short		sh_deflect;
+    int			shield_points;
+    int			max_shield;
     short		dam_type;		// for NPCs, damage type
 };
 

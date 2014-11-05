@@ -630,8 +630,8 @@ void affect_modify( CHAR_DATA *ch, AFFECT_DATA *paf, bool fAdd )
 		bug( "Affect_modify: unknown location %d.", paf->location );
 		return;
 
-	case APPLY_SHIELD_DEFLECT:	break;
-	case APPLY_ARMOR_PEN:	break;
+	case APPLY_SHIELD_DEFLECT:	ch->sh_deflect += mod;	break;
+	case APPLY_ARMOR_PEN:		break;
 	case APPLY_EXTRA_ATTACK:	ch->numattacks += mod;	break;
 
 	case APPLY_RES_1:

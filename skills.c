@@ -2456,21 +2456,117 @@ void do_punch( CHAR_DATA *ch, char *argument )
 
 void do_bite( CHAR_DATA *ch, char *argument )
 {
+    CHAR_DATA *victim;
+
+    if ( !IS_NPC(ch) )
+    {
+	send_to_char("Huh?\n\r", ch );
+	return;
+    }
+
+    if ( ( victim = who_fighting( ch ) ) == NULL )
+    {
+	return;
+    }
+
+//    WAIT_STATE( ch, skill_table[gsn_bite]->beats );
+    WAIT_STATE( ch, 2 );
+    if ( ch->top_level + 20 > number_percent() )
+    {
+	global_retcode = damage( ch, victim, get_res2(victim, number_range( ch->barenumdie, ch->barenumdie * ch->baresizedie ) + ch->damplus, RES_PIERCE), TYPE_HIT + WEAPON_BITE );
+    }
+    else
+    {
+	global_retcode = damage( ch, victim, 0, TYPE_HIT + WEAPON_BITE );
+    }
+    return;
 }
 
 
 void do_claw( CHAR_DATA *ch, char *argument )
 {
+    CHAR_DATA *victim;
+
+    if ( !IS_NPC(ch) )
+    {
+	send_to_char("Huh?\n\r", ch );
+	return;
+    }
+
+    if ( ( victim = who_fighting( ch ) ) == NULL )
+    {
+	return;
+    }
+
+//    WAIT_STATE( ch, skill_table[gsn_claw]->beats );
+    WAIT_STATE( ch, 2 );
+    if ( ch->top_level + 20 > number_percent() )
+    {
+	global_retcode = damage( ch, victim, get_res2(victim, number_range( ch->barenumdie, ch->barenumdie * ch->baresizedie ) + ch->damplus, RES_PIERCE), TYPE_HIT + WEAPON_CLAW );
+    }
+    else
+    {
+	global_retcode = damage( ch, victim, 0, TYPE_HIT + WEAPON_CLAW );
+    }
+    return;
 }
 
 
 void do_sting( CHAR_DATA *ch, char *argument )
 {
+    CHAR_DATA *victim;
+
+    if ( !IS_NPC(ch) )
+    {
+	send_to_char("Huh?\n\r", ch );
+	return;
+    }
+
+    if ( ( victim = who_fighting( ch ) ) == NULL )
+    {
+	return;
+    }
+
+//    WAIT_STATE( ch, skill_table[gsn_sting]->beats );
+    WAIT_STATE( ch, 2 );
+    if ( ch->top_level + 20 > number_percent() )
+    {
+	global_retcode = damage( ch, victim, get_res2(victim, number_range( ch->barenumdie, ch->barenumdie * ch->baresizedie ) + ch->damplus, RES_PIERCE), TYPE_HIT + WEAPON_STING );
+    }
+    else
+    {
+	global_retcode = damage( ch, victim, 0, TYPE_HIT + WEAPON_STING );
+    }
+    return;
 }
 
 
 void do_tail( CHAR_DATA *ch, char *argument )
 {
+    CHAR_DATA *victim;
+
+    if ( !IS_NPC(ch) )
+    {
+	send_to_char("Huh?\n\r", ch );
+	return;
+    }
+
+    if ( ( victim = who_fighting( ch ) ) == NULL )
+    {
+	return;
+    }
+
+//    WAIT_STATE( ch, skill_table[gsn_tail]->beats );
+    WAIT_STATE( ch, 2 );
+    if ( ch->top_level + 20 > number_percent() )
+    {
+	global_retcode = damage( ch, victim, get_res2(victim, number_range( ch->barenumdie, ch->barenumdie * ch->baresizedie ) + ch->damplus, RES_PIERCE), TYPE_HIT + WEAPON_TAIL );
+    }
+    else
+    {
+	global_retcode = damage( ch, victim, 0, TYPE_HIT + WEAPON_TAIL );
+    }
+    return;
 }
 
 
@@ -3408,7 +3504,7 @@ bool check_dodge( CHAR_DATA *ch, CHAR_DATA *victim )
       return FALSE;
 
     if ( IS_NPC(victim) )
-	chances  = UMIN( 10, victim->top_level );
+	chances  = UMIN( 10, victim->top_level/2 );
     else
         chances  = 10 + ((int)victim->pcdata->learned[gsn_dodge]);
 

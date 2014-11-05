@@ -3603,7 +3603,7 @@ ch_ret spell_farsight( int sn, int level, CHAR_DATA *ch, void *vo )
     ||   victim == ch
     ||   !victim->in_room
     ||   IS_SET(victim->in_room->room_flags, ROOM_PRIVATE)
-    ||   IS_SET(victim->in_room->room_flags, ROOM_SOLITARY)
+//    ||   IS_SET(victim->in_room->room_flags, ROOM_SOLITARY)
     ||   victim->top_level >= level + 15
     ||	(IS_NPC(victim) && xIS_SET(victim->act, ACT_PROTOTYPE))
     ||  (IS_NPC(victim) && saves_spell_staff( level, victim ))  )

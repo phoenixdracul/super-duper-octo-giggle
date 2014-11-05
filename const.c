@@ -514,8 +514,8 @@ const char *	const	attack_table	[MAX_ATTACKS] =
 {
 		"hit",
 		"slice",  "stab",  "slash", "whip", "claw",
-		"blast",  "pound", "crush", "shot", "bite",
-		"pierce", "suction", "force_special"
+		"blast",  "tail", "crush", "shot", "bite",
+		"pierce", "suction", "force_special", "sting"
 };
 
 

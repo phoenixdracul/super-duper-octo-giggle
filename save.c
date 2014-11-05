@@ -744,6 +744,8 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 		fprintf( fp, "\n" );
 	}
 
+	fprintf( fp, "MaxShield    %d\n",	ch->max_shield		);
+
 	fprintf( fp, "Armor        %d\n",	ch->armor		);
 	if ( ch->rppoints )
 		fprintf( fp, "Rppoints   %d\n",	ch->rppoints		);
@@ -1901,6 +1903,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload, bool hotboot )
 		case 'M':
 			KEY( "MainAbility",	ch->main_ability,	fread_number( fp ) );
 			KEY( "MaxColors",   max_colors,             fread_number( fp ) );
+			KEY( "MaxShield",	ch->max_shield,		fread_number( fp ) );
 			KEY( "MDeaths",	ch->pcdata->mdeaths,	fread_number( fp ) );
 			KEY( "Mentalstate", ch->mental_state,	fread_number( fp ) );
                         KEY( "Mentor",          ch->pcdata->mentor,      fread_string ( fp ) );

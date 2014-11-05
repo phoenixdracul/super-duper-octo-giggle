@@ -255,6 +255,7 @@ void violence_update( void )
 	TIMER	*timer, *timer_next;
 	ch_ret     retcode;
 	SKILLTYPE	*skill;
+	OBJ_DATA * obj;
 
 	lst_ch = NULL;
 	for ( ch = last_char; ch; lst_ch = ch, ch = gch_prev )
@@ -308,6 +309,14 @@ void violence_update( void )
 			log_string( buf );
 			gch_prev = NULL;
 			continue;
+		}
+
+		// Adding shield recharge here... -- Kasji
+		for (obj = ch->first_carrying; obj; obj = obj->next_content) {
+			if (obj->wear_loc == WEAR_SHIELD) {
+				ch->shield_points++;
+				ch->shield_points = URANGE(0, ch->shield_points, obj->value[1]);
+			}
 		}
 
 		/*
@@ -1527,7 +1536,7 @@ bool deflect_attack(CHAR_DATA * ch)
 	AFFECT_DATA * af;
 	int x = 0;
 
-	for (obj = ch->first_carrying; obj; obj = obj->next_content)
+/*	for (obj = ch->first_carrying; obj; obj = obj->next_content)
 	{
 	    if (obj->wear_loc == WEAR_SHIELD)
 		break;
@@ -1551,7 +1560,8 @@ bool deflect_attack(CHAR_DATA * ch)
                 x = af->modifier;
                 break;
             }
-        }
+        } */
+	x = ch->sh_deflect;
 
 	if (number_range(1, 100) > x)
 		return FALSE;
@@ -1900,6 +1910,13 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 	 * Hurt the victim.
 	 * Inform the victim of his new state.
 	 */
+	if (victim->shield_points > 0) {
+		victim->shield_points -= dam;
+		if (victim->shield_points <= 0) {
+			dam = 0 - victim->shield_points;
+			victim->shield_points = 0;
+		}
+	}
 	victim->hit -= dam;
 
 	/*

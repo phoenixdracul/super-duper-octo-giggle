@@ -3685,6 +3685,8 @@ char *default_prompt( CHAR_DATA *ch )
 		strcat(buf, "&pForce:&P%m/&p%M  &pAlign:&P%a\n\r");
 	//  strcat(buf, "&BHealth:&C%h&B/%H  &BMovement:&C%v&B/%V  &w%e");
 	//  strcat(buf, "&C >&w");
+	if (ch->max_shield > 0)
+		strcat(buf, "&G[&zSp:&C%s&W/&c%S&G]\n\r");
 
 	strcat(buf, "&G[&zHp:&w%h&G/&w%H&G] &G[&zMv:&w%v&G/&w%V&G] &G(&zAlign:&w%a&G) &w");
 	if (ch->position == POS_FIGHTING)
@@ -3816,6 +3818,12 @@ void display_prompt( DESCRIPTOR_DATA *d )
 				break;
 			case 'n':
 				sprintf(pbuf, "\n\r");
+				break;
+			case 's':
+				stat = ch->shield_points;
+				break;
+			case 'S':
+				stat = ch->max_shield;
 				break;
 			case 'u':
 				stat = num_descriptors;

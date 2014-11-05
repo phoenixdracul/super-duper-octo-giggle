@@ -2679,6 +2679,7 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum, level, charge, gemtype;
+	AFFECT_DATA * paf;
 
 	strcpy( arg, argument );
 
@@ -2869,10 +2870,19 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 	strcat( buf, " was carelessly misplaced here." );
 	obj->description = STRALLOC( buf );
 	obj->value[0] = (int) (level/10+gemtype*10);      /* condition */
-	obj->value[1] = (int) (level/2+gemtype*4);      /* armor */
+	obj->value[1] = (int) (level/2+gemtype*2);      /* armor -- no longer armor, but is max shield points -- Kasji */
 	obj->value[4] = charge;
 	obj->value[5] = charge;
 	obj->cost = 200 + level * 100 + gemtype * 200;
+        CREATE( paf, AFFECT_DATA, 1 );
+        paf->type               = -1;
+        paf->duration           = -1;
+        paf->location           = get_atype( "sh_deflect" );
+        paf->modifier           = level / 2 + gemtype * 2;
+        paf->bitvector          = 0;
+        paf->next               = NULL;
+        LINK( paf, obj->first_affect, obj->last_affect, next, prev );
+        ++top_affect;
 
 	obj = obj_to_char( obj, ch );
 

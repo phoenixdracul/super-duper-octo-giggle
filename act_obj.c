@@ -1556,6 +1556,8 @@ obj_ret damage_obj( OBJ_DATA *obj )
 			ch->armor += apply_ac( obj, obj->wear_loc );
 		if (--obj->value[0] <= 0)
 		{
+			if (obj->wear_loc == WEAR_SHIELD)
+				ch->max_shield -= obj->value[1];
 			make_scraps( obj );
 			objcode = rOBJ_SCRAPPED;
 		}
@@ -1608,6 +1610,10 @@ bool remove_obj( CHAR_DATA *ch, int iWear, bool fReplace )
 	if ( obj == get_eq_char( ch, WEAR_WIELD )
 			&& ( tmpobj = get_eq_char( ch, WEAR_DUAL_WIELD)) != NULL )
 		tmpobj->wear_loc = WEAR_WIELD;
+
+	if (obj->wear_loc == WEAR_SHIELD)
+		 ch->max_shield -= obj->value[1];
+
 
 	unequip_char( ch, obj );
 
@@ -2405,6 +2411,7 @@ void wear_obj( CHAR_DATA *ch, OBJ_DATA *obj, bool fReplace, sh_int wear_bit )
 			 {
 				 act( AT_ACTION, "$n uses $p as an energy shield.", ch, obj, NULL, TO_ROOM );
 				 act( AT_ACTION, "You use $p as an energy shield.", ch, obj, NULL, TO_CHAR );
+				 ch->max_shield += obj->value[1];
 			 }
 			 else
 				 actiondesc( ch, obj, NULL );

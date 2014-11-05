@@ -3396,6 +3396,9 @@ void clear_char( CHAR_DATA *ch )
 		ch->base_res[i] = 0.0;
 //		ch->curr_res[i] = 0.0;
 	}
+	ch->sh_deflect = 0;
+	ch->shield_points = 0;
+	ch->max_shield = 0;
 
 
 	return;
