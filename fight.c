@@ -1916,6 +1916,8 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 			dam = 0 - victim->shield_points;
 			victim->shield_points = 0;
 		}
+		else
+			dam = 0;
 	}
 	victim->hit -= dam;
 
