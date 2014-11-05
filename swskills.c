@@ -2877,7 +2877,7 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
         CREATE( paf, AFFECT_DATA, 1 );
         paf->type               = -1;
         paf->duration           = -1;
-        paf->location           = get_atype( "sh_deflect" );
+        paf->location           = get_atype( "shield_deflect" );
         paf->modifier           = level / 2 + gemtype * 2;
         paf->bitvector          = 0;
         paf->next               = NULL;
