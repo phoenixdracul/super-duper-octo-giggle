@@ -177,6 +177,7 @@ typedef struct account_character_data ACCOUNT_CHARACTER_DATA;
 typedef struct account_data ACCOUNT_DATA;
 typedef struct ooc_history OOC_HISTORY;
 typedef struct extended_bitvector EXT_BV;
+typedef	struct	variable_data		VARIABLE_DATA;
 
 /*
  * Function types.
@@ -453,6 +454,30 @@ struct rel_data
 #define WT_NEWBIE 3
 
 #include "gboard.h"
+
+typedef enum
+{
+    vtNONE, vtINT, vtXBIT, vtSTR
+} variable_types;
+
+/*
+ * Variable structure used for putting variable tags on players, mobs
+ * or anything else.  Will be persistant (save) for players.
+ */
+struct variable_data
+{
+    VARIABLE_DATA *	next;
+    char		type;		/* type of data */
+    int			flags;		/* flags for future use */
+    int			vnum;		/* vnum of mob that set this */
+    time_t		c_time;		/* time created */
+    time_t		m_time;		/* time last modified */
+    time_t		r_time;		/* time last read */
+    time_t		expires;	/* expiry date */
+    int         timer;      /* expiry timer */
+    char *		tag;		/* variable name */
+    void *		data;		/* data pointer */
+};
 
 /*
  * do_who output structure -- Narn
@@ -804,6 +829,7 @@ struct  frc_app_type
 #define TO_VICT		    2
 #define TO_CHAR		    3
 #define TO_MUD		    4
+#define TO_CANSEE	    5
 
 #define INIT_WEAPON_CONDITION    12
 #define MAX_ITEM_IMPACT		 30
@@ -883,7 +909,8 @@ struct	mob_prog_act_list
     char *	     buf;
     CHAR_DATA *      ch;
     OBJ_DATA *	     obj;
-    void *	     vo;
+    CHAR_DATA *	     victim;
+    OBJ_DATA *       target;
 };
 
 struct	mob_prog_data
@@ -896,33 +923,37 @@ struct	mob_prog_data
     char *	 comlist;
 };
 
-/* Used to store sleeping mud progs. -rkb */ 
-typedef enum {MP_MOB, MP_ROOM, MP_OBJ} mp_types; 
-struct mpsleep_data 
-{ 
- MPSLEEP_DATA * next; 
- MPSLEEP_DATA * prev; 
- 
- int timer; /* Pulses to sleep */ 
- mp_types type; /* Mob, Room or Obj prog */ 
- ROOM_INDEX_DATA*room; /* Room when type is MP_ROOM */ 
- 
- /* mprog_driver state variables */ 
- int ignorelevel; 
- int iflevel; 
- bool ifstate[MAX_IFS][DO_ELSE]; 
- 
- /* mprog_driver arguments */ 
- char * com_list; 
- CHAR_DATA * mob; 
- CHAR_DATA * actor; 
- OBJ_DATA * obj; 
- void * vo; 
- bool single_step; 
-}; 
- 
- 
+#define HAS_PROG(what, prog)	IS_SET((what)->progtypes, (prog))
+
+/* Used to store sleeping mud progs. -rkb */
+typedef enum {MP_MOB, MP_ROOM, MP_OBJ} mp_types;
+struct mpsleep_data
+{
+    MPSLEEP_DATA * next;
+    MPSLEEP_DATA * prev;
+
+    int timer; /* Pulses to sleep */
+    mp_types type; /* Mob, Room or Obj prog */
+    ROOM_INDEX_DATA*room; /* Room when type is MP_ROOM */
+
+    /* mprog_driver state variables */
+    int ignorelevel;
+    int iflevel;
+    bool ifstate[MAX_IFS][DO_ELSE];
+
+    /* mprog_driver arguments */
+    char * com_list;
+    CHAR_DATA * mob;
+    CHAR_DATA * actor;
+    OBJ_DATA * obj;
+    CHAR_DATA * victim;
+    OBJ_DATA * target;
+    bool single_step;
+};
+
+
 bool	MOBtrigger;
+bool	MPSilent;
 
 /* race dedicated stuff */
 struct	race_type
@@ -2879,6 +2910,7 @@ struct char_data
     int			shield_points;
     int			max_shield;
     short		dam_type;		// for NPCs, damage type
+    VARIABLE_DATA *	variables;
 };
 
 
@@ -3781,6 +3813,7 @@ do                                          \
 #ifdef HASHSTR
 #define STRALLOC(point)		str_alloc((point))
 #define QUICKLINK(point)	quick_link((point))
+#define QUICKMATCH(p1, p2)	(int) (p1) == (int) (p2)
 #define STRFREE(point)                          \
 do                                              \
 {                                               \
@@ -4489,6 +4522,8 @@ char *	crypt		args( ( const char *key, const char *salt ) );
 #define DE	DEITY_DATA
 #define SK	SKILLTYPE
 #define SH      SHIP_DATA
+#define VD	VARIABLE_DATA
+
 
 
 /* editor.c cronel new editor */
@@ -4504,6 +4539,10 @@ void	editor_desc_printf args( ( CHAR_DATA *ch, char *desc_fmt, ... ) );
 /* pfiles.c */
 void 	remove_member	args( (char *name, char *shortname) );
 void 	add_member	args( (char *name, char *shortname) );
+
+/* variables.c */
+void    delete_variable args( ( VARIABLE_DATA *vd ) );
+VD *    get_tag     args( ( CHAR_DATA *ch, char *tag, int vnum ) );
 
 /* act_comm.c */
 bool    check_parse_name        args( ( char *name ) );
@@ -4895,15 +4934,12 @@ char *	mprog_type_to_name	args( ( int type ) );
 char *  strstr                  args ( (const char *s1, const char *s2 ) );
 #endif
 
-void	mprog_wordlist_check    args ( ( char * arg, CHAR_DATA *mob,
-                			CHAR_DATA* actor, OBJ_DATA* object,
-					void* vo, int type ) );
-void	mprog_percent_check     args ( ( CHAR_DATA *mob, CHAR_DATA* actor,
-					OBJ_DATA* object, void* vo,
-					int type ) );
-void	mprog_act_trigger       args ( ( char* buf, CHAR_DATA* mob,
-		                        CHAR_DATA* ch, OBJ_DATA* obj,
-					void* vo ) );
+bool mprog_wordlist_check( char *arg, CHAR_DATA *mob, CHAR_DATA *actor,
+                          OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target, int type );
+void mprog_percent_check( CHAR_DATA *mob, CHAR_DATA *actor, OBJ_DATA *obj,
+                          CHAR_DATA *victim, OBJ_DATA *target, int type);
+void mprog_act_trigger( char *buf, CHAR_DATA *mob, CHAR_DATA *ch,
+                       OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target);
 void	mprog_bribe_trigger     args ( ( CHAR_DATA* mob, CHAR_DATA* ch,
 		                        int amount ) );
 void	mprog_entry_trigger     args ( ( CHAR_DATA* mob ) );
@@ -5525,12 +5561,12 @@ extern void do_trivia_chat(CHAR_DATA *ch, char *argument);
 #define OPROG_ACT_TRIGGER
 #ifdef OPROG_ACT_TRIGGER
 void oprog_act_trigger( char *buf, OBJ_DATA *mobj, CHAR_DATA *ch,
-			OBJ_DATA *obj, void *vo );
+                        OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target );
 #endif
 #define RPROG_ACT_TRIGGER
 #ifdef RPROG_ACT_TRIGGER
 void rprog_act_trigger( char *buf, ROOM_INDEX_DATA *room, CHAR_DATA *ch,
-			OBJ_DATA *obj, void *vo );
+                        OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target );
 #endif
 
 

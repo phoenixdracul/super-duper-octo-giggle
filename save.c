@@ -65,8 +65,10 @@ int file_ver;
 /*
  * Externals
  */
+void fwrite_variables(CHAR_DATA *ch, FILE *fp);
 void fwrite_comments( CHAR_DATA *ch, FILE *fp );
 char * fread_flagstring( FILE * fp );
+void fread_variable(CHAR_DATA *ch, FILE *fp);
 void fread_comment( CHAR_DATA *ch, FILE *fp );
 ACCOUNT_DATA *account_fread( char *name );
 void separate_obj(OBJ_DATA *obj);
@@ -74,6 +76,8 @@ char *ext_flag_string( EXT_BV * bitvector, const char *const flagarray[] );
 bool ext_is_empty( EXT_BV * bits );
 int get_plrflag( char *flag );
 ACCOUNT_CHARACTER_DATA *account_get_character( ACCOUNT_DATA *account, char *name );
+
+
 /*
  * Array of containers read for proper re-nesting of objects.
  */
@@ -550,6 +554,8 @@ void save_char_obj( CHAR_DATA *ch )
 		fwrite_char( ch, fp );
 		if ( ch->first_carrying )
 			fwrite_obj( ch, ch->last_carrying, fp, 0, OS_CARRY, ch->pcdata->hotboot );
+		if ( ch->variables )
+        		fwrite_variables( ch, fp );
 		if ( ch->comments )                 /* comments */
 			fwrite_comments( ch, fp );        /* comments */
 		fprintf( fp, "#END\n" );
@@ -1273,6 +1279,8 @@ bool load_char_obj( DESCRIPTOR_DATA * d, char *name, bool preload, bool hotboot 
 			}
 			else if( !str_cmp( word, "OBJECT" ) )  /* Objects  */
 				fread_obj( ch, fp, OS_CARRY );
+			else if ( !strcmp( word, "VARIABLE") )
+				fread_variable(ch, fp );    /* Variables (tags) */
 			else if( !str_cmp( word, "COMMENT" ) )
 				fread_comment( ch, fp );   /* Comments */
 			else if( !str_cmp( word, "END" ) )  /* Done     */

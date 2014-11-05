@@ -1217,6 +1217,27 @@ void char_update( void )
 		if ( ch->position == POS_STUNNED )
 			update_pos( ch );
 
+	/* Expire variables */
+	if ( ch->variables )
+	{
+	    VARIABLE_DATA *vd, *vd_next = NULL, *vd_prev = NULL;
+
+	    for ( vd = ch->variables; vd; vd = vd_next )
+	    {
+		vd_next = vd->next;
+		if ( vd->timer > 0 && --vd->timer == 0 )
+		{
+		    if ( vd == ch->variables )
+			ch->variables = vd_next;
+		    else if ( vd_prev )
+			vd_prev->next = vd_next;
+		    delete_variable(vd);
+		}
+		else
+		    vd_prev = vd;
+	    }
+	}
+
 		if ( ch->pcdata )
 			gain_addiction( ch );
 
@@ -1849,31 +1870,31 @@ void aggr_update( void )
 	}
 #endif
 
-/* check mobprog act queue */
-while ( (apdtmp = mob_act_list) != NULL )
-{
+    /* check mobprog act queue */
+    while ( (apdtmp = mob_act_list) != NULL )
+    {
 	wch = mob_act_list->vo;
 	if ( !char_died(wch) && wch->mpactnum > 0 )
 	{
-		MPROG_ACT_LIST * tmp_act;
+	    MPROG_ACT_LIST * tmp_act;
 
-		while ( (tmp_act = wch->mpact) != NULL )
-		{
-			if ( tmp_act->obj && obj_extracted(tmp_act->obj) )
-				tmp_act->obj = NULL;
-			if ( tmp_act->ch && !char_died(tmp_act->ch) )
-				mprog_wordlist_check( tmp_act->buf, wch, tmp_act->ch,
-						tmp_act->obj, tmp_act->vo, ACT_PROG );
-			wch->mpact = tmp_act->next;
-			DISPOSE(tmp_act->buf);
-			DISPOSE(tmp_act);
-		}
-		wch->mpactnum = 0;
-		wch->mpact    = NULL;
-	}
+	    while ( (tmp_act = wch->mpact) != NULL )
+	    {
+		if ( tmp_act->obj && obj_extracted(tmp_act->obj) )
+		  tmp_act->obj = NULL;
+		if ( tmp_act->ch && !char_died(tmp_act->ch) )
+		  mprog_wordlist_check( tmp_act->buf, wch, tmp_act->ch,
+					tmp_act->obj, tmp_act->victim, tmp_act->target, ACT_PROG );
+		wch->mpact = tmp_act->next;
+		DISPOSE(tmp_act->buf);
+		DISPOSE(tmp_act);
+	    }
+	    wch->mpactnum = 0;
+	    wch->mpact    = NULL;
+        }
 	mob_act_list = apdtmp->next;
 	DISPOSE( apdtmp );
-}
+    }
 
 
 	/*

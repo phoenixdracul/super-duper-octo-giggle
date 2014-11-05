@@ -1511,6 +1511,93 @@ void do_ostat( CHAR_DATA *ch, char *argument )
 	return;
 }
 
+void do_vstat( CHAR_DATA *ch, char *argument )
+{
+     VARIABLE_DATA *vd;
+     CHAR_DATA *victim;
+
+    if ( argument[0] == '\0' )
+    {
+    send_to_pager( "Vstat whom?\n\r", ch );
+    return;
+    }
+
+    if ( ( victim = get_char_world( ch, argument ) ) == NULL )
+    {
+    send_to_char( "They aren't here.\n\r", ch );
+    return;
+    }
+
+    if ( get_trust( ch ) < get_trust( victim ) )
+    {
+    send_to_char( "Their godly glow prevents you from getting a good look.\n\r", ch );
+    return;
+    }
+
+    if ( !victim->variables )
+    {
+    send_to_char( "They have no variables currently assigned to them.\n\r", ch );
+    return;
+    }
+
+    pager_printf( ch, "\n\r&cName: &C%-20s &cRoom : &w%-10d", victim->name
+    ,  victim->in_room == NULL    ?        0 : victim->in_room->vnum );
+    pager_printf( ch, "\n\r&cVariables:\n\r" );
+
+/*
+Variables:
+Vnum:           Tag:                 Type:     Timer:
+   Flags:
+   Data:
+*/
+    for ( vd = victim->variables; vd; vd = vd->next )
+    {
+	pager_printf( ch, "  &cVnum: &W%-10d &cTag: &W%-15s &cTimer: &W%d\n\r",
+			vd->vnum,
+			vd->tag,
+			vd->timer );
+	pager_printf( ch, "  &cType: " );
+	if ( vd->data )
+	switch(vd->type)
+        {
+        case vtSTR:
+	    if ( vd->data )
+            pager_printf( ch, "&CString     &cData: &W%s", vd->data );
+            break;
+        case vtINT:
+            if ( vd->data )
+            pager_printf( ch, "&CInteger    &cData: &W%d", (int)vd->data );
+            break;
+        case vtXBIT:
+            if ( vd->data )
+            {
+            char buf[MAX_STRING_LENGTH];
+            int started = 0;
+	    int x;
+
+            buf[0] = '\0';
+            for ( x = MAX_BITS; x > 0; --x )
+            {
+                if ( !started && xIS_SET(*(EXT_BV*)vd->data, x) )
+                started = x;
+            }
+	    for ( x = 1; x <= started; x++ )
+               strcat(buf, xIS_SET(*(EXT_BV*)vd->data, x) ? "1 " : "0 ");
+
+	    if ( buf[0] != '\0' )
+                buf[strlen(buf)-1] = '\0';
+            pager_printf( ch, "&CXBIT       &cData: &w[&W%s&w]", buf);
+            }
+	    break;
+        }
+        else
+	    pager_printf( ch, "&CNo Data" );
+
+    send_to_pager("\n\r\n\r", ch);
+    }
+    return;
+}
+
 /* New mstat by tawnos. Holy shit this took a while :P*/
 void do_mstat( CHAR_DATA *ch, char *argument )
 {
@@ -1518,6 +1605,7 @@ void do_mstat( CHAR_DATA *ch, char *argument )
 	char langbuf[MAX_STRING_LENGTH];
 	AFFECT_DATA *paf;
 	CHAR_DATA *victim;
+	VARIABLE_DATA *vd;
 	SKILLTYPE *skill;
 	int x, ability;
 
@@ -1705,6 +1793,50 @@ void do_mstat( CHAR_DATA *ch, char *argument )
 	if ( IS_NPC(victim) && ( victim->spec_fun || victim->spec_2 ) )
 		ch_printf( ch, "\n\r&GMobile has spec fun: %s %s&W\n\r",
 				victim->spec_funname, victim->spec_2 ? victim->spec_funname2 : "" );
+
+/* post variables update */
+    	if ( victim->variables )
+    	{
+    	    pager_printf( ch, "&cVariables  : &w" );
+    	    for ( vd = victim->variables; vd; vd = vd->next )
+    	    {
+    		    pager_printf( ch, "%s:%d", vd->tag, vd->vnum );
+    		    switch(vd->type)
+    		    {
+    		    case vtSTR:
+    		        if ( vd->data )
+    		        pager_printf( ch, "=%s", vd->data );
+    		        break;
+    		    case vtINT:
+    		        if ( vd->data )
+    		        pager_printf( ch, "=%d", (int)vd->data );
+    		        break;
+    		    case vtXBIT:
+    		        if ( vd->data )
+    		        {
+  	  		        char buf[MAX_STRING_LENGTH];
+  	  		        int started = 0;
+
+  	  		        buf[0] = '\0';
+  	  		        for ( x = MAX_BITS; x > 0; --x )
+  	  		        {
+  	  		            if ( !started && xIS_SET(*(EXT_BV*)vd->data, x) )
+  		  		            started = x;
+  	  		        }
+		    		for ( x = 1; x <= started; x++ )
+		                    strcat(buf, xIS_SET(*(EXT_BV*)vd->data, x) ? "1 " : "0 ");
+
+		                if ( buf[0] != '\0' )
+		                    buf[strlen(buf)-1] = '\0';
+	          		pager_printf( ch, "=[%s]", buf);
+	            	}
+	        }
+/* post variables update end */
+	        if ( vd->next )
+			send_to_pager("  ", ch);
+	    }
+	    send_to_pager("\n\r", ch);
+	}
 
 	return;
 }

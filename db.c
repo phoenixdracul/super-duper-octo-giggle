@@ -3399,6 +3399,7 @@ void clear_char( CHAR_DATA *ch )
 	ch->sh_deflect = 0;
 	ch->shield_points = 0;
 	ch->max_shield = 0;
+	ch->variables		= NULL;
 
 
 	return;
@@ -3419,6 +3420,8 @@ void free_char( CHAR_DATA *ch )
 	TIMER *timer;
 	MPROG_ACT_LIST *mpact, *mpact_next;
 	NOTE_DATA *comments, *comments_next;
+    	VARIABLE_DATA *vd, *vd_next;
+
 
 	if ( !ch )
 	{
@@ -3550,6 +3553,13 @@ void free_char( CHAR_DATA *ch )
 		STRFREE( comments->date    );
 		DISPOSE( comments          );
 	}
+
+    	for ( vd = ch->variables; vd; vd = vd_next )
+    	{
+    		vd_next = vd->next;
+    		delete_variable(vd);
+    	}
+
 	DISPOSE( ch );
 	return;
 }

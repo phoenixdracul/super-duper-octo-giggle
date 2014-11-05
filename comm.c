@@ -3486,104 +3486,177 @@ char *act_string(const char *format, CHAR_DATA *to, CHAR_DATA *ch,
 
 void act( sh_int AType, const char *format, CHAR_DATA *ch, const void *arg1, const void *arg2, int type )
 {
-	char *txt;
-	CHAR_DATA *to;
-	CHAR_DATA *vch = (CHAR_DATA *)arg2;
+    char *txt;
+    const char *str;
+    CHAR_DATA *to;
+    CHAR_DATA *vch = (CHAR_DATA *)arg2;
+#define ACTF_NONE 0
+#define ACTF_TXT  BV00
+#define ACTF_CH   BV01
+#define ACTF_OBJ  BV02
+    
+    OBJ_DATA *obj1 = (OBJ_DATA *)arg1;
+    OBJ_DATA *obj2 = (OBJ_DATA *)arg2;
+    int flags1 = ACTF_NONE, flags2 = ACTF_NONE;
 
-	/*
-	 * Discard null and zero-length messages.
-	 */
-	if ( !format || format[0] == '\0' )
-		return;
-
-	if ( !ch )
-	{
-		bug( "Act: null ch. (%s)", format );
-		return;
-	}
-
-	if ( !ch->in_room )
-		to = NULL;
-	else if ( type == TO_CHAR )
-		to = ch;
-	else if ( type == TO_MUD )
-		to = first_char;
-	else
-		to = ch->in_room->first_person;
-
-	/*
-	 * ACT_SECRETIVE handling
-	 */
-	if ( IS_NPC(ch) && xIS_SET(ch->act, ACT_SECRETIVE) && type != TO_CHAR )
-		return;
-
-	if ( type == TO_VICT )
-	{
-		if ( !vch )
-		{
-			bug( "Act: null vch with TO_VICT." );
-			bug( "%s (%s)", ch->name, format );
-			return;
-		}
-		if ( !vch->in_room )
-		{
-			bug( "Act: vch in NULL room!" );
-			bug( "%s -> %s (%s)", ch->name, vch->name, format );
-			return;
-		}
-		to = vch;
-		/*	to = vch->in_room->first_person;*/
-	}
-
-	if ( MOBtrigger && type != TO_CHAR && type != TO_VICT && to )
-	{
-		OBJ_DATA *to_obj;
-
-		txt = act_string(format, NULL, ch, arg1, arg2);
-
-		if ( to && IS_SET(to->in_room->progtypes, ACT_PROG) )
-			rprog_act_trigger(txt, to->in_room, ch, (OBJ_DATA *)arg1, (void *)arg2);
-		for ( to_obj = to->in_room->first_content; to_obj;
-				to_obj = to_obj->next_content )
-			if ( IS_SET(to_obj->pIndexData->progtypes, ACT_PROG) )
-				oprog_act_trigger(txt, to_obj, ch, (OBJ_DATA *)arg1, (void *)arg2);
-	}
-
-	/* Anyone feel like telling me the point of looping through the whole
-       room when we're only sending to one char anyways..? -- Alty */
-	for ( ; to; to = (type == TO_MUD) ? to->next : (type == TO_CHAR || type == TO_VICT )
-			? NULL : to->next_in_room )
-
-	{
-		if ((!to->desc
-				&& (  IS_NPC(to) && !IS_SET(to->pIndexData->progtypes, ACT_PROG) ))
-				||   !IS_AWAKE(to) )
-			continue;
-		if ( type == TO_MUD && (to == ch || to == vch) )
-			continue;
-		if ( type == TO_CHAR && to != ch )
-			continue;
-		if ( type == TO_VICT && ( to != vch || to == ch ) )
-			continue;
-		if ( type == TO_ROOM && to == ch )
-			continue;
-		if ( type == TO_NOTVICT && (to == ch || to == vch) )
-			continue;
-
-		txt = act_string(format, to, ch, arg1, arg2);
-		if (to->desc)
-		{
-			set_char_color(AType, to);
-			send_to_char_color( txt, to );
-		}
-		if (MOBtrigger)
-		{
-			/* Note: use original string, not string with ANSI. -- Alty */
-			mprog_act_trigger( txt, to, ch, (OBJ_DATA *)arg1, (void *)arg2 );
-		}
-	}
-	MOBtrigger = TRUE;
+    /*
+     * Discard null and zero-length messages.
+     */
+    if ( !format || format[0] == '\0' )
 	return;
+
+    if ( !ch )
+    {
+	bug( "Act: null ch. (%s)", format );
+	return;
+    }
+
+    // Do some proper type checking here..  Sort of.  We base it on the $* params.
+    // This is kinda lame really, but I suppose in some weird sense it beats having
+    // to pass like 8 different NULL parameters every time we need to call act()..
+    for (str = format; *str; ++str)
+    {
+      if (*str == '$')
+      {
+        if (!*++str)
+          break;
+        switch(*str)
+        {
+        default:
+          bug( "Act: bad code %c for format %s.", *str, format );
+          break;
+        
+        case 't':
+          flags1 |= ACTF_TXT;
+          obj1 = NULL;
+          break;
+        
+        case 'T':
+        case 'd':
+          flags2 |= ACTF_TXT;
+          vch = NULL;
+          obj2 = NULL;
+          break;
+        
+        case 'n': case 'e': case 'm': case 's': case 'q':
+          break;
+        
+        case 'N': case 'E': case 'M': case 'S': case 'Q':
+          flags2 |= ACTF_CH;
+          obj2 = NULL;
+          break;
+        
+        case 'p':
+          flags1 |= ACTF_OBJ;
+          break;
+        
+        case 'P':
+          flags2 |= ACTF_OBJ;
+          vch = NULL;
+          break;
+        }
+      }
+    }
+    
+    
+    if (flags1 != ACTF_NONE && flags1 != ACTF_TXT && flags1 != ACTF_CH && flags1 != ACTF_OBJ)
+    {
+      bug("Act: arg1 has more than one type in format %s.  Setting all NULL.", format);
+      obj1 = NULL;
+    }
+
+    if (flags2 != ACTF_NONE && flags2 != ACTF_TXT && flags2 != ACTF_CH && flags2 != ACTF_OBJ)
+    {
+      bug("Act: arg2 has more than one type in format %s.  Setting all NULL.", format);
+      vch = NULL;
+      obj2 = NULL;
+    }
+
+    if ( !ch->in_room )
+      to = NULL;
+    else if ( type == TO_CHAR )
+      to = ch;
+    else
+      to = ch->in_room->first_person;
+
+    /*
+     * ACT_SECRETIVE handling
+     */
+    if ( IS_NPC(ch) && xIS_SET(ch->act, ACT_SECRETIVE) && type != TO_CHAR )
+	return;
+
+    if ( type == TO_VICT )
+    {
+	if ( !vch )
+	{
+	    bug( "Act: null vch with TO_VICT." );
+	    bug( "%s (%s)", ch->name, format );
+	    return;
+	}
+	if ( !vch->in_room )
+	{
+	    bug( "Act: vch in NULL room!" );
+	    bug( "%s -> %s (%s)", ch->name, vch->name, format );
+	    return;
+	}
+	to = vch;
+/*	to = vch->in_room->first_person;*/
+    }
+
+    if ( MOBtrigger && type != TO_CHAR && type != TO_VICT && to )
+    {
+      OBJ_DATA *to_obj;
+      
+      txt = act_string(format, NULL, ch, arg1, arg2);
+      if ( HAS_PROG(to->in_room, ACT_PROG) )
+        rprog_act_trigger(txt, to->in_room, ch, obj1, vch, obj2);
+      for ( to_obj = to->in_room->first_content; to_obj;
+            to_obj = to_obj->next_content )
+        if ( HAS_PROG(to_obj->pIndexData, ACT_PROG) )
+          oprog_act_trigger(txt, to_obj, ch, obj1, vch, obj2);
+    }
+
+    /* Anyone feel like telling me the point of looping through the whole
+       room when we're only sending to one char anyways..? -- Alty */
+    for ( ; to; to = (type == TO_CHAR || type == TO_VICT)
+                     ? NULL : to->next_in_room )
+    {
+	if ((!to->desc 
+	&& (  IS_NPC(to) && !HAS_PROG(to->pIndexData, ACT_PROG) ))
+	||   !IS_AWAKE(to) )
+	    continue;
+
+	if ( type == TO_CHAR && to != ch )
+	    continue;
+	if ( type == TO_VICT && ( to != vch || to == ch ) )
+	    continue;
+	if ( type == TO_ROOM && to == ch )
+	    continue;
+	if ( type == TO_NOTVICT && (to == ch || to == vch) )
+	    continue;
+	if ( type == TO_CANSEE && ( to == ch || 
+	    (!IS_NPC(ch) && (xIS_SET(ch->act, PLR_WIZINVIS) 
+	    && (get_trust(to) < (ch->pcdata ? ch->pcdata->wizinvis : 0) ) ) ) ) )
+	    continue;
+
+//        if ( IS_IMMORTAL(to) )
+//            txt = act_string (format, to, ch, arg1, arg2, STRING_IMM);
+//        else
+       	    txt = act_string (format, to, ch, arg1, arg2);
+
+	if (to->desc)
+	{
+            set_char_color(AType, to);
+            send_to_char_color( txt, to );
+	}
+	if (MOBtrigger)
+        {
+          /* Note: use original string, not string with ANSI. -- Alty */
+	  mprog_act_trigger( txt, to, ch, obj1, vch, obj2 );
+        }
+    }
+    MOBtrigger = TRUE;
+    return;
 }
 
 void do_name( CHAR_DATA *ch, char *argument )

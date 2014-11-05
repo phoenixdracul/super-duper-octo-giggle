@@ -2854,7 +2854,7 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	obj = create_object( pObjIndex, level );
+	obj = create_object( pObjIndex, 1 );
 
 	obj->item_type = ITEM_ARMOR;
 	SET_BIT( obj->wear_flags, ITEM_WIELD );
@@ -2869,8 +2869,8 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 	STRFREE( obj->description );
 	strcat( buf, " was carelessly misplaced here." );
 	obj->description = STRALLOC( buf );
-	obj->value[0] = (int) (level/10+gemtype*10);      /* condition */
-	obj->value[1] = (int) (level/2+gemtype*2);      /* armor -- no longer armor, but is max shield points -- Kasji */
+	obj->value[0] = (int) (level*2+gemtype*5);      /* condition */
+	obj->value[1] = (int) (level+gemtype*5);      /* armor -- no longer armor, but is max shield points -- Kasji */
 	obj->value[4] = charge;
 	obj->value[5] = charge;
 	obj->cost = 200 + level * 100 + gemtype * 200;
