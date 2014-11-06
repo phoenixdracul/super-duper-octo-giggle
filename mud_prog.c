@@ -2982,11 +2982,11 @@ void mprog_driver ( char *com_list, CHAR_DATA *mob, CHAR_DATA *actor,
     return;
 
   /* Next couple of checks stop program looping. -- Altrag */
-  if ( mob == actor )
-  {
-    progbug( "triggering oneself.", mob );
-    return;
-  }
+//  if ( mob == actor )
+//  {
+//    progbug( "triggering oneself.", mob );
+//    return;
+//  }
 
   if ( ++prog_nest > MAX_PROG_NEST )
   {

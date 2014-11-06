@@ -131,6 +131,7 @@ char *copy_buffer( CHAR_DATA *ch );
 void stop_editing( CHAR_DATA *ch );
 /* main editing function */
 void edit_buffer( CHAR_DATA *ch, char *argument );
+void edit_buffer_code( CHAR_DATA *ch, char *argument );
 
 /* misc functions */
 char *finer_one_argument( char *argument, char *arg_first );
@@ -149,6 +150,8 @@ void editor_abort( CHAR_DATA *ch, EDITOR_DATA *edd, char *argument );
 void editor_escaped_cmd( CHAR_DATA *ch, EDITOR_DATA *edd, char *argument );
 void editor_save( CHAR_DATA *ch, EDITOR_DATA *edd, char *argument );
 void editor_format_lines( CHAR_DATA *ch, EDITOR_DATA *edd );
+
+void editor_list_code( CHAR_DATA *ch, EDITOR_DATA *edd, char *argument );
 
 
 /****************************************************************************
@@ -374,6 +377,31 @@ void editor_desc_printf( CHAR_DATA *ch, char *desc_fmt, ... )
 	set_editor_desc( ch, buf );
 }
 
+void start_editing_code_nolimit( CHAR_DATA *ch, char *old_text, sh_int max_total )
+{
+        if ( !ch->desc )
+        {
+           bug( "Fatal: start_editing: no desc", 0 );
+           return;
+        }
+        if ( ch->substate == SUB_RESTRICTED )
+           bug( "NOT GOOD: start_editing_code: ch->substate == SUB_RESTRICTED", 0 );
+
+        set_char_color( AT_GREEN, ch );
+        send_to_char( "&B+----------------------------------------------------------------------+&z\n\r", ch );
+        send_to_char( "&B|    &R/?&W = help         &R/s &W= save         &R/c &W= clear        &R/l&W = list   &B|&z\n\r", ch );
+        send_to_char( "&B+------------------------------&R[&WEdit Mode&R]&B-----------------------------+&z\n\r", ch );
+        if ( ch->editor )
+          stop_editing( ch );
+
+        ch->editor = str_to_editdata( old_text, max_total );
+        ch->editor->desc = STRALLOC( "Unknown buffer" );
+        ch->desc->connected = CON_EDITING;
+	ch->desc->editing_code = TRUE;
+
+        send_to_char( "> ", ch );
+}
+
 void start_editing_nolimit( CHAR_DATA *ch, char *old_text, sh_int max_total )
 {
 	if ( !ch->desc )
@@ -420,6 +448,7 @@ char *copy_buffer( CHAR_DATA *ch )
 
 void stop_editing( CHAR_DATA *ch )
 {
+    ch->desc->editing_code = FALSE;
     set_char_color( AT_PLAIN, ch );
     discard_editdata( ch->editor );
     ch->editor = NULL;
@@ -495,6 +524,133 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 		editor_goto_line( ch, edd, argument );
 	else if( !str_cmp( cmd+1, "l") )
 		editor_list( ch, edd, argument );
+	else if( !str_cmp( cmd+1, "a") )
+		editor_abort( ch, edd, argument );
+	else if( !str_cmp( cmd+1, "s") )
+		editor_save( ch, edd, argument );
+	else if( !str_cmp( cmd+1, "!") )
+		editor_escaped_cmd( ch, edd, argument );
+	else if( !str_cmp( cmd+1, "p") )
+		editor_print_info( ch, edd, argument );
+	else if( !str_cmp( cmd+1, "f") )
+		editor_format_lines( ch, edd );
+	else 
+		send_to_char( "Uh? Type '/?' to see the list of valid editor commands.\n\r", ch );
+
+	if( str_cmp(cmd+1, "a") && str_cmp(cmd+1, "s") )
+		send_to_char( "> ", ch );
+	return;
+    }
+
+    /* Kludgy fix. Read_from_buffer in comm.c adds a space on
+     * empty lines. Don't let this fill up usable buffer space.. */
+    if( !str_cmp( argument, " " ) )
+	strcpy( argument, "" );
+
+    linelen = strlen(argument);
+
+    p = argument + linelen - 1;
+    while( p > argument && isspace(*p) )
+	p--;
+    if( p > argument && *p == '\\' )
+    {
+	cont_line = TRUE;
+	*p = '\0';
+    }
+    else
+	cont_line = FALSE;
+	
+
+    if( TOTAL_BUFFER_SIZE(edd) + linelen+2 >= edd->max_size )
+    {
+	send_to_char( "Buffer full.\n\r", ch );
+	editor_save( ch, edd, "");
+    }
+    else
+    {
+	/* add it to the current line */
+	RESIZE_IF_NEEDED( edd->on_line->line, edd->on_line->line_size, 
+		edd->on_line->line_used, linelen+1 );
+	strcat( edd->on_line->line, argument );
+	edd->on_line->line_used += linelen;
+	edd->text_size += linelen;
+
+	/* create a line and advance to it */
+	if( !cont_line )
+	{
+		newline = make_new_line( "" );
+		newline->next = edd->on_line->next;
+		edd->on_line->next = newline;
+		edd->on_line = newline;
+		edd->line_count++;
+	}
+	else
+		send_to_char( "(Continued)\n\r", ch );
+
+ 	send_to_char( "> ", ch );
+    }
+}
+
+void edit_buffer_code( CHAR_DATA *ch, char *argument )
+{
+    DESCRIPTOR_DATA *d;
+    EDITOR_DATA *edd;
+    EDITOR_LINE *newline;
+    char cmd[MAX_INPUT_LENGTH];
+    sh_int linelen;
+    bool cont_line;
+    char *p;
+
+    d = ch->desc;
+    if ( d == NULL )
+    {
+	send_to_char( "You have no descriptor.\n\r", ch );
+	return;
+    }
+
+    if ( d->connected != CON_EDITING )
+    {
+	send_to_char( "You can't do that!\n\r", ch );
+	bug( "Edit_buffer: d->connected != CON_EDITING", 0 );
+	return;
+    }
+    
+    if ( ch->substate <= SUB_PAUSE )
+    {
+	send_to_char( "You can't do that!\n\r", ch );
+	bug( "Edit_buffer: illegal ch->substate (%d)", ch->substate );
+	d->connected = CON_PLAYING;
+	return;
+    }
+   
+    if ( !ch->editor )
+    {
+	send_to_char( "You can't do that!\n\r", ch );
+	bug( "Edit_buffer: null editor", 0 );
+	d->connected = CON_PLAYING;
+	return;
+    }
+   
+    edd = ch->editor;
+
+    if ( argument[0] == '/' || argument[0] == '\\' )
+    {
+	argument = one_argument( argument, cmd );
+
+	if ( !str_cmp( cmd+1, "?" ) )
+		editor_help( ch, edd, argument );
+        else if( !str_cmp( cmd+1, "c") )
+		editor_clear_buf( ch, edd, argument );
+	else if( !str_cmp( cmd+1, "r") )
+		editor_search_and_replace( ch, edd, argument );
+	else if( !str_cmp( cmd+1, "i") )
+		editor_insert_line( ch, edd, argument );
+	else if( !str_cmp( cmd+1, "d") )
+		editor_delete_line( ch, edd, argument );
+	else if( !str_cmp( cmd+1, "g") )
+		editor_goto_line( ch, edd, argument );
+	else if( !str_cmp( cmd+1, "l") )
+		editor_list_code( ch, edd, argument );
 	else if( !str_cmp( cmd+1, "a") )
 		editor_abort( ch, edd, argument );
 	else if( !str_cmp( cmd+1, "s") )
@@ -940,6 +1096,60 @@ void editor_list( CHAR_DATA *ch, EDITOR_DATA *edd, char *argument )
 		    line_num, 
 		    eline == edd->on_line ? '*' : ' ',
 		    eline->line );
+	    eline = eline->next;
+	    line_num++;
+	}
+	send_to_pager( "------------------\n\r", ch );
+}
+
+void editor_list_code( CHAR_DATA *ch, EDITOR_DATA *edd, char *argument )
+{
+	EDITOR_LINE *eline;
+	sh_int line_num;
+	sh_int from, to;
+	char arg1[ MAX_INPUT_LENGTH ];
+	int tablevel = 0, i;
+
+	argument = one_argument( argument, arg1 );
+	if( arg1[0] != '\0' && is_number(arg1) )
+		from = atoi(arg1);
+	else
+		from = 1;
+	argument = one_argument( argument, arg1 );
+	if( arg1[0] != '\0' && is_number(arg1) )
+		to = atoi(arg1);
+	else
+		to = edd->line_count;
+
+	send_to_pager( "------------------\n\r", ch );
+	line_num = 1;
+	eline = edd->first_line;
+	while( eline )
+	{
+	    if ((strlen(eline->line) >= 4 && eline->line[0] == 'e' && eline->line[1] == 'l' && eline->line[2] == 's' && eline->line[3] == 'e') ||
+		(strlen(eline->line) >= 5 && eline->line[0] == 'e' && eline->line[1] == 'n' && eline->line[2] == 'd' && eline->line[3] == 'i' && eline->line[4] == 'f')) {
+		tablevel--;
+		if (tablevel < 0)
+		    tablevel = 0;
+	    }
+
+	    if( line_num >= from && line_num <= to ) {
+		pager_printf( ch, "%2d>%c",
+		    line_num,
+		    eline == edd->on_line ? '*' : ' ' );
+
+		for (i = 0; i < tablevel; ++i)
+		    send_to_pager( "  ", ch );
+
+		pager_printf( ch, "%s\n\r", 
+		    eline->line );
+	    }
+
+	    if (strlen(eline->line) >= 3 && eline->line[0] == 'i' && eline->line[1] == 'f' && eline->line[2] == ' ')
+		tablevel++;
+	    else if (strlen(eline->line) >= 4 && eline->line[0] == 'e' && eline->line[1] == 'l' && eline->line[2] == 's' && eline->line[3] == 'e')
+		tablevel++;
+
 	    eline = eline->next;
 	    line_num++;
 	}

@@ -7352,7 +7352,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 	 ch->dest_buf = mprg;
 	 if ( !mprg->comlist )
 		 mprg->comlist = STRALLOC( "" );
-	 start_editing( ch, mprg->comlist );
+	 start_editing_code( ch, mprg->comlist );
 	 return;
  }
 

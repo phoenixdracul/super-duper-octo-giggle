@@ -665,6 +665,7 @@ struct	descriptor_data
     int			newstate;
     unsigned char	prevcolor;
     pid_t process; /* Samson 4-16-98 - For new command shell code */
+    bool		editing_code;
 };
 
 
@@ -4529,9 +4530,12 @@ char *	crypt		args( ( const char *key, const char *salt ) );
 /* editor.c cronel new editor */
 #define start_editing( ch, data ) \
 	start_editing_nolimit( ch, data, MAX_STRING_LENGTH )
+#define start_editing_code( ch, data ) \
+	start_editing_code_nolimit( ch, data, MAX_STRING_LENGTH )
 void	start_editing_nolimit	args( ( CHAR_DATA *ch, char *data, sh_int max_size ) );
 void	stop_editing	args( ( CHAR_DATA *ch ) );
 void	edit_buffer	args( ( CHAR_DATA *ch, char *argument ) );
+void	edit_buffer_code  args(( CHAR_DATA *ch, char *argument ));
 char *	copy_buffer	args( ( CHAR_DATA *ch ) );
 void	set_editor_desc	args( ( CHAR_DATA *ch, char *desc ) );
 void	editor_desc_printf args( ( CHAR_DATA *ch, char *desc_fmt, ... ) );

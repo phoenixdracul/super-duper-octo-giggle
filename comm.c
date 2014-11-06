@@ -313,6 +313,7 @@ void init_descriptor( DESCRIPTOR_DATA *dnew, int desc)
 	dnew->newstate	= 0;
 	dnew->prevcolor	= 0x07;
 	dnew->can_compress = FALSE;
+	dnew->editing_code = FALSE;
 	CREATE( dnew->mccp, MCCP, 1 );
 
 	CREATE( dnew->outbuf, char, dnew->outsize );
@@ -806,7 +807,10 @@ void game_loop( )
 							interpret( d->character, cmdline );
 							break;
 						case CON_EDITING:
-							edit_buffer( d->character, cmdline );
+							if (!d->editing_code)
+							    edit_buffer( d->character, cmdline );
+							else
+							    edit_buffer_code( d->character, cmdline );
 							break;
 						case CON_GET_OLD_ACCOUNT_PASSWORD:
 						case CON_COMFIRM_NEW_ACCOUNT:
