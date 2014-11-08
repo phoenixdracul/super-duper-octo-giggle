@@ -253,8 +253,8 @@ typedef ch_ret	SPELL_FUN	args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
 
 #define MAX_REXITS		   20	/* Maximum exits allowed in 1 room */
 #define MAX_SKILL		  283
-#define MAX_ABILITY		   10
-#define MAX_RL_ABILITY		    8
+#define MAX_ABILITY		   11
+//#define MAX_RL_ABILITY		    8
 #define MAX_RACE		   41
 #define MAX_PLANET_BASE_VALUE     100000
 #define MAX_NPC_RACE		   91
@@ -268,7 +268,7 @@ typedef ch_ret	SPELL_FUN	args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
 #define MAX_BOUNTY                255
 #define MAX_GOV                   255
 
-#define MAX_ATTACKS		   14
+#define MAX_ATTACKS		   15
 
 #define	MAX_HERB		   20
 
@@ -4017,7 +4017,7 @@ do								\
 #define IS_CLANNED(ch)		(!IS_NPC((ch))				    \
 				&& (ch)->pcdata->clan			    )
 
-#define WAIT_STATE(ch, npulse)	((ch)->wait = UMAX((ch)->wait, (IS_IMMORTAL(ch) ? 0 :(npulse))))
+#define WAIT_STATE(ch, npulse)	((ch)->wait = UMAX((ch)->wait, (IS_IMMORTAL(ch) ? (npulse) :(npulse))))
 
 
 #define EXIT(ch, door)		( get_exit( (ch)->in_room, door ) )

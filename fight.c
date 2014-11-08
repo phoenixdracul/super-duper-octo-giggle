@@ -865,10 +865,8 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 		vict_def -= 1;
 	if ( !can_see( ch, victim ) )
 		vict_def += 4;
-
 	if ( ch->race == RACE_DEFEL )
 		vict_def -= 2;
-
 	if ( !IS_AWAKE ( victim ) )
 		vict_def -= 5;
 
@@ -898,13 +896,14 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 //		Throwing in a dice simulation formula for testing
 		int dice;
 		dam = wield->damplus;
-		for (dice = 0; dice++; dice < wield->value[1])
-		{
+//		for (dice = 0; dice++; dice < wield->value[1])
+//		{
 			// Eventually we should transition to this using d6? -- Kasji
 //			dam += number_range(1, wield->value[2]);
-		}
+//		}
 		dam = number_range( wield->value[1], wield->value[2] );
 	}
+bug("dam: %d", dam);
 
 	/*
 	 * Bonuses.
@@ -950,16 +949,20 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 			break;
 		}
 	}
+bug("+damroll: %d", dam);
 
 	if ( prof_bonus )
-		dam += number_range(prof_bonus, prof_bonus*2);
+		dam += number_range(prof_bonus/2, prof_bonus);
 
+bug("+profbonus: %d", dam);
 
 	if ( !IS_NPC(ch) && ch->pcdata->learned[gsn_enhanced_damage] > 0 )
 	{
-		dam += (dam * ch->pcdata->learned[gsn_enhanced_damage] / 50);
+		dam += (dam * ch->pcdata->learned[gsn_enhanced_damage] / 100);
 		learn_from_success( ch, gsn_enhanced_damage );
 	}
+
+bug("+enhanced: %d", dam);
 
 	if ( !IS_AWAKE(victim) )
 		dam = dam * 3 / 2;
@@ -972,7 +975,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	if ( second == TRUE )
 	{
 		if (!IS_NPC(ch))
-			dam = dam/3 + (dam * ch->pcdata->learned[gsn_second_attack] / 30); // 1/3 damage at level 1, 2/3 damage at level 20
+			dam = dam/3 + (dam * ch->pcdata->learned[gsn_second_attack] / 60); // 1/3 damage at level 1, 2/3 damage at level 20
 		else
 			dam = dam/3 + (dam * ch->top_level / 120);
 	}
@@ -1001,6 +1004,8 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 		dam = UMAX(1, dam);
 		dam = ris_damage( victim, dam, RIS_NONMAGIC );
 	}
+
+bug("-getres: %d", dam);
 
 	/* check for RIS_PLUSx 					-Thoric */
 	if ( dam )
@@ -1079,13 +1084,13 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 		}
 		else if ( wield->blaster_setting == BLASTER_FULL && wield->value[4] >=5 )
 		{
-			dam *=  1.5;
-			wield->value[4] -= 5;
+			dam *=  1.2;
+			wield->value[4] -= 12;
 		}
 		else if ( wield->blaster_setting == BLASTER_HIGH && wield->value[4] >=4 )
 		{
-			dam *=  1.25;
-			wield->value[4] -= 4;
+			dam *= 1.1;
+			wield->value[4] -= 6;
 		}
 		else if ( wield->blaster_setting == BLASTER_NORMAL && wield->value[4] >=3 )
 		{

@@ -2665,20 +2665,22 @@ void do_stun( CHAR_DATA *ch, char *argument )
       fail = saves_para_petri( chance, victim );
 
     chance = (((get_curr_dex(victim) + get_curr_str(victim))
-	   -   (get_curr_dex(ch)     + get_curr_str(ch))) * 10) + 10;
+	   -   (get_curr_dex(ch)     + get_curr_str(ch))) * 2) + 10 + victim->skill_level[COMBAT_ABILITY] - ch->skill_level[COMBAT_ABILITY];
+bug("chance: %d", chance);
     /* harder for player to stun another player */
     if ( !IS_NPC(ch) && !IS_NPC(victim) )
       chance += sysdata.stun_plr_vs_plr;
     else
       chance += sysdata.stun_regular;
+
     if ( !fail
     && (  IS_NPC(ch)
-    || (number_percent( ) + chance) < ch->pcdata->learned[gsn_stun]*20 ) )
+    || (number_percent( ) + chance) < (ch->pcdata->learned[gsn_stun]*100/(ch->pcdata->learned[gsn_stun]+3)) ) )
     {
 	learn_from_success( ch, gsn_stun );
 	/*    DO *NOT* CHANGE!    -Thoric    */
-	ch->move -= 15;
-	WAIT_STATE( ch,     2 * PULSE_VIOLENCE );
+	ch->move -= 20;
+	WAIT_STATE( ch,     3 * PULSE_VIOLENCE );
 	WAIT_STATE( victim, PULSE_VIOLENCE );
 	act( AT_SKILL, "$N smashes into you, leaving you stunned!", victim, NULL, ch, TO_CHAR );
 	act( AT_SKILL, "You smash into $N, leaving $M stunned!", ch, NULL, victim, TO_CHAR );
@@ -2686,9 +2688,9 @@ void do_stun( CHAR_DATA *ch, char *argument )
 	if ( !IS_AFFECTED( victim, AFF_PARALYSIS ) )
 	{
 	  af.type      = gsn_stun;
-	  af.location  = APPLY_AC;
-	  af.modifier  = 20;
-	  af.duration  = 3;
+	  af.location  = APPLY_DEX;
+	  af.modifier  = 0 - ch->pcdata->learned[gsn_stun]/4;
+	  af.duration  = number_range(1, 1+ch->pcdata->learned[gsn_stun]/5);
 	  af.bitvector = AFF_PARALYSIS;
 	  affect_to_char( victim, &af );
 	  update_pos( victim );
@@ -2697,7 +2699,7 @@ void do_stun( CHAR_DATA *ch, char *argument )
     else
     {
 	WAIT_STATE( ch,     2 * PULSE_VIOLENCE );
-	ch->move -= 5;
+	ch->move -= 10;
 	learn_from_failure( ch, gsn_stun );
 	act( AT_SKILL, "$N charges at you screaming, but you dodge out of the way.", victim, NULL, ch, TO_CHAR );
 	act( AT_SKILL, "Your attempt to stun $N leaves you racing past $E as $e laughs.", ch, NULL, victim, TO_CHAR );

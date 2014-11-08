@@ -198,7 +198,8 @@ const char *	const	npc_race	[MAX_NPC_RACE] =
 
 const char *	const	ability_name	[MAX_ABILITY] =
 {
-		"Combat", "Piloting", "Engineering", "Bounty Hunting", "Smuggling", "Politician", "Force", "Slicer", "Assassin", "Technician"
+		"Soldier", "Piloting", "Engineering", "Bounty Hunting", "Smuggling", "Politician", "Force", "Slicer", "Assassin", "Technician",
+		"Brawler"
 };
 
 const char *const height_name[4] =
