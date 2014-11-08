@@ -282,7 +282,7 @@ void do_mptag( CHAR_DATA *ch, char *argument )
     else
     {
 	vd = make_variable(vtINT, vnum, arg2);
-	vd->data = atoi(argument);
+	vd->data = (void*)atol(argument);
     }
     vd->timer = exp;
     tag_char(victim, vd, 1);
@@ -556,7 +556,7 @@ void fwrite_variables(CHAR_DATA *ch, FILE *fp)
 		fprintf(fp, "Xbit    %s\n", print_bitvector((EXT_BV*)vd->data));
 		break;
 	    case vtINT:
-		fprintf(fp, "Int     %d\n", (int)vd->data);
+		fprintf(fp, "Int     %ld\n", (long)vd->data);
 		break;
 	}
 	fprintf(fp, "End\n\n");
@@ -628,7 +628,7 @@ void fread_variable(CHAR_DATA *ch, FILE *fp)
 			bug("Fread_variable: Type mismatch -- type(%d) != vtInt", pvd->type);
 		    else
 		    {
-			pvd->data = fread_number(fp);
+			pvd->data = (void*)((long)fread_number(fp));
 			fMatch = TRUE;
 		    }
 		    break;
