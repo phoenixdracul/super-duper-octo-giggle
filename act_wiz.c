@@ -1240,6 +1240,7 @@ void do_rat( CHAR_DATA *ch, char *argument )
 	return;
 }
 
+char *sprint_reset( RESET_DATA *pReset, short *num );
 
 void do_rstat( CHAR_DATA *ch, char *argument )
 {
@@ -1374,17 +1375,33 @@ void do_rstat( CHAR_DATA *ch, char *argument )
 	}
 	send_to_char( ".\n\r", ch );
 
-	if ( location->first_exit )
+	if ( location->first_exit ) {
 		send_to_char( "&G------------------- EXITS -------------------&W\n\r", ch );
-	for ( cnt = 0, pexit = location->first_exit; pexit; pexit = pexit->next )
-		ch_printf( ch,
+		for ( cnt = 0, pexit = location->first_exit; pexit; pexit = pexit->next )
+			ch_printf( ch,
 				"&G%2d) &W%-2s &Gto &W%-5d.  &GKey: &W%d  &GFlags: &W%d  &GKeywords: &W%s.\n\r",
-				++cnt,
-				dir_text[pexit->vdir],
-				pexit->to_room ? pexit->to_room->vnum : 0,
+					++cnt,
+					dir_text[pexit->vdir],
+					pexit->to_room ? pexit->to_room->vnum : 0,
 						pexit->key,
 						pexit->exit_info,
 						pexit->keyword[0] != '\0' ? pexit->keyword : "(none)" );
+	}
+
+	if ( location->first_reset ) {
+		char * buf2;
+		RESET_DATA * preset;
+		short cnt2 = 0;
+
+		send_to_char( "&G------------------- RESETS ------------------&W\n\r", ch );
+
+		for ( preset = location->first_reset; preset; preset = preset->next ) {
+			++cnt2;
+			buf2 = sprint_reset( preset, &cnt2 );
+			ch_printf( ch, "%s", buf2 );
+		}
+	}
+
 	return;
 }
 
@@ -1566,7 +1583,7 @@ Vnum:           Tag:                 Type:     Timer:
             break;
         case vtINT:
             if ( vd->data )
-            pager_printf( ch, "&CInteger    &cData: &W%d", (int)vd->data );
+            pager_printf( ch, "&CInteger    &cData: &W%d", (long)vd->data );
             break;
         case vtXBIT:
             if ( vd->data )
@@ -1809,7 +1826,7 @@ void do_mstat( CHAR_DATA *ch, char *argument )
     		        break;
     		    case vtINT:
     		        if ( vd->data )
-    		        pager_printf( ch, "=%d", (int)vd->data );
+    		        pager_printf( ch, "=%d", (long)vd->data );
     		        break;
     		    case vtXBIT:
     		        if ( vd->data )
