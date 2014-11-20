@@ -903,7 +903,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 //		}
 		dam = number_range( wield->value[1], wield->value[2] );
 	}
-bug("dam: %d", dam);
+//bug("dam: %d", dam);
 
 	/*
 	 * Bonuses.
@@ -949,12 +949,12 @@ bug("dam: %d", dam);
 			break;
 		}
 	}
-bug("+damroll: %d", dam);
+//bug("+damroll: %d", dam);
 
 	if ( prof_bonus )
 		dam += number_range(prof_bonus/2, prof_bonus);
 
-bug("+profbonus: %d", dam);
+//bug("+profbonus: %d", dam);
 
 	if ( !IS_NPC(ch) && ch->pcdata->learned[gsn_enhanced_damage] > 0 )
 	{
@@ -962,7 +962,7 @@ bug("+profbonus: %d", dam);
 		learn_from_success( ch, gsn_enhanced_damage );
 	}
 
-bug("+enhanced: %d", dam);
+//bug("+enhanced: %d", dam);
 
 	if ( !IS_AWAKE(victim) )
 		dam = dam * 3 / 2;
@@ -1005,7 +1005,7 @@ bug("+enhanced: %d", dam);
 		dam = ris_damage( victim, dam, RIS_NONMAGIC );
 	}
 
-bug("-getres: %d", dam);
+//bug("-getres: %d", dam);
 
 	/* check for RIS_PLUSx 					-Thoric */
 	if ( dam )
