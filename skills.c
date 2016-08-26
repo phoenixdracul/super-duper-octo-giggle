@@ -2400,7 +2400,7 @@ void do_kick( CHAR_DATA *ch, char *argument )
     	global_retcode = damage( ch, victim, number_range( 10,
                        ((10+ch->top_level*2)+str_app[get_curr_str(ch)].todam) ), gsn_punch );
     }
-    else if ( number_percent( ) < ch->pcdata->learned[gsn_kick] )
+    else if ( number_percent( ) < ch->pcdata->learned[gsn_kick] * 20 )
     {
 	learn_from_success( ch, gsn_kick );
 	global_retcode = damage( ch, victim, number_range( 10, 
