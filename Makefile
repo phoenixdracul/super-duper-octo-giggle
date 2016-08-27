@@ -12,6 +12,9 @@ NEED_DL = -ldl
 #Some systems need this for dynamic linking to work.
 EXPORT_SYMBOLS = -export-dynamic
 
+#IMC2 - Comment out to disable IMC2 support
+IMC = 1
+
 C_FLAGS = -g2 -Wall $(EXPORT_SYMBOLS) $(CYGWIN_FLAG) $(PROF) $(NOCRYPT) $(DBUGFLG) $(EXPORT_SYMBOLS)
 L_FLAGS = $(PROF) $(EXPORT_SYMBOLS) $(CYGWIN_FLAG) $(NEED_DL) -lz -g2 -rdynamic
 
@@ -35,9 +38,16 @@ C_FILES =  11.c       account.c     act_comm.c    act_info.c   act_move.c    act
     mod/misc/gauge.c
 
 
+H_FILES = $(wildcard *.h) 
+
+ifdef IMC
+   C_FILES := mod/imc/imc.c mod/imc/sha256.c $(C_FILES)
+#   O_FILES := imc.o sha256.o $(O_FILES)
+   C_FLAGS := $(C_FLAGS) -DIMC -DIMCSMAUG
+endif
+
 O_FILES := $(patsubst %.c,o/%.o,$(C_FILES))
 
-H_FILES = $(wildcard *.h) 
 
 SWR = swr
 SWR_OLD = ../bin/swr_old

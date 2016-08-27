@@ -2964,6 +2964,10 @@ struct  fellow_data
     FELLOW_DATA *	prev;
 };
 
+#ifdef IMC
+   #include "mod/imc/imc.h"
+#endif
+
 /*
  * Data which only PC's have.
  */
@@ -3054,6 +3058,10 @@ struct	pc_data
     // New stuff -- Kasji
     int skill_points;
     int feat_points;
+
+#ifdef IMC
+    IMC_CHARDATA *imcchardata;
+#endif
 };
 
 
@@ -5586,4 +5594,5 @@ if ( !str_cmp( word, (literal) ) )     \
    fMatch = TRUE;                      \
    break;                              \
 }
+
 

@@ -971,6 +971,7 @@ void boot_db( bool fCopyOver )
 		make_random_marketlist();
 
 		MOBtrigger = TRUE;
+		
 		if (fCopyOver)
 		{
 			log_string("Running copyover_recover.");

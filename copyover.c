@@ -85,7 +85,7 @@ void do_copyover (CHAR_DATA *ch, char * argument)
 	ACCOUNT_DATA *account;
 	FILE *fp;
 	DESCRIPTOR_DATA *d, *d_next;
-	char buf [100], buf2[100], buf3[100], buf4[100], buf5[100];
+	char buf [100], buf2[100], buf3[100], buf4[100], buf5[100], buf6[100];
 	char buffer[MAX_INPUT_LENGTH];
 
 	if(!str_cmp(argument, "abort") || !str_cmp(argument, "stop"))
@@ -180,6 +180,10 @@ void do_copyover (CHAR_DATA *ch, char * argument)
 	fclose (fpReserve);
 	fclose (fpLOG);
 
+#ifdef IMC
+	imc_hotboot();
+#endif
+
 	/* exec - descriptors are inherited */
 
 	sprintf (buf, "%d", port);
@@ -188,8 +192,17 @@ void do_copyover (CHAR_DATA *ch, char * argument)
 	sprintf (buf4, "%d", conclient);
 	sprintf (buf5, "%d", conjava);
 
+#ifdef IMC
+	if( this_imcmud )
+		snprintf( buf6, 100, "%d", this_imcmud->desc );
+	else
+		strncpy( buf6, "-1", 100 );
+#else
+	strncpy( buf6, "-1", 100 );
+#endif
+
 	execl (EXE_FILE, "swreality", buf, "copyover", buf2, buf3,
-			buf4, buf5, (char *) NULL);
+			buf4, buf5, buf6, (char *) NULL);
 
 	/* Failed - sucessful exec will not return */
 

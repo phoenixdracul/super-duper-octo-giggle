@@ -166,6 +166,10 @@ int main( int argc, char **argv )
 	struct timeval now_time;
 	bool fCopyOver = !TRUE;
 
+#ifdef IMC
+	int imcsocket = -1;
+#endif
+
 	/*
 	 * Memory debugging if needed.
 	 */
@@ -265,8 +269,11 @@ int main( int argc, char **argv )
 			fCopyOver = TRUE;
 			control = atoi(argv[3]);
 			control2 = atoi(argv[4]);
-			//	          conclient = atoi(argv[5]);
-			//	          conjava = atoi(argv[6]);
+//	          conclient = atoi(argv[5]);
+//	          conjava = atoi(argv[6]);
+#ifdef IMC
+			imcsocket = atoi( argv[7] );
+#endif
 		}
 		else
 			fCopyOver = FALSE;
@@ -275,6 +282,10 @@ int main( int argc, char **argv )
 	/*
 	 * Run the game.
 	 */
+#ifdef IMC
+	/* Initialize and connect to IMC2 */
+	imc_startup( FALSE, imcsocket, fCopyOver );
+#endif
 	log_string("Booting Database");
 	boot_db(fCopyOver);
 	log_string("Initializing socket");
@@ -289,6 +300,11 @@ int main( int argc, char **argv )
 	sprintf( log_buf, "%s ready to rock 'n roll on port %d.", sysdata.mud_acronym, port );
 	log_string( log_buf );
 	game_loop( );
+	close(control);
+	close(control2);
+#ifdef IMC
+	imc_shutdown( FALSE );
+#endif
 	/*
 	 * That's all, folks.
 	 */
@@ -828,6 +844,10 @@ void game_loop( )
 			if ( d == last_descriptor )
 				break;
 		}
+
+#ifdef IMC
+		imc_loop();
+#endif
 
 		/*
 		 * Autonomous game motion.

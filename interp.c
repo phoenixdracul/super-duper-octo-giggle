@@ -391,6 +391,9 @@ void interpret( CHAR_DATA *ch, char *argument )
 	if ( !found )
 	{
 		if ( !check_skill( ch, command, argument )
+#ifdef IMC
+				&&   !imc_command_hook( ch, command, argument )
+#endif
 				&&   !check_social( ch, command, argument ) )
 		{
 			EXIT_DATA *pexit;
