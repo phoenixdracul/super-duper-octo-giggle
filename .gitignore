@@ -1,0 +1,11 @@
+branches/
+hooks/
+o/
+objects/
+refs/
+sync_nightmare.bat
+sync_filesrv.bat
+DEADJOE
+nohup.out
+startup
+*.o
