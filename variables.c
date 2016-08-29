@@ -102,7 +102,7 @@ VARIABLE_DATA *get_tag(CHAR_DATA *ch, char *tag, int vnum)
 /*
  * Remove the specified tag from a character
  */
-bool remove_tag(CHAR_DATA *ch, char *tag, int vnum)
+BOOL remove_tag(CHAR_DATA *ch, char *tag, int vnum)
 {
     VARIABLE_DATA *vd_next, *vd = ch->variables;
 
@@ -136,7 +136,7 @@ bool remove_tag(CHAR_DATA *ch, char *tag, int vnum)
 int tag_char(CHAR_DATA *ch, VARIABLE_DATA *var, int replace)
 {
     VARIABLE_DATA *vd, *pvd;
-    bool found = FALSE;
+    BOOL found = FALSE;
 
     pvd = vd = ch->variables;
     for ( ; vd; vd = vd->next )
@@ -175,7 +175,7 @@ int tag_char(CHAR_DATA *ch, VARIABLE_DATA *var, int replace)
     return 0;
 }
 
-bool is_valid_tag(const char *tagname)
+BOOL is_valid_tag(const char *tagname)
 {
   if (!isalpha(*tagname))
     return FALSE;
@@ -213,7 +213,7 @@ void do_mptag( CHAR_DATA *ch, char *argument )
     char	   arg1[MAX_INPUT_LENGTH];
     char	   arg2[MAX_INPUT_LENGTH];
     int		   vnum = 0, exp = 0;
-    bool	   error = FALSE;
+    BOOL	   error = FALSE;
 
     if ( (!IS_NPC(ch) && get_trust(ch) < LEVEL_GREATER)
     ||     IS_AFFECTED(ch, AFF_CHARM) )
@@ -355,7 +355,7 @@ void do_mpflag( CHAR_DATA *ch, char *argument )
     char	   arg2[MAX_INPUT_LENGTH];
     char	   arg3[MAX_INPUT_LENGTH];
     int		   vnum = 0, exp = 0, def = 0, flag = 0;
-    bool	   error = FALSE;
+    BOOL	   error = FALSE;
 
     if ( (!IS_NPC(ch) && get_trust(ch) < LEVEL_GREATER)
     ||     IS_AFFECTED(ch, AFF_CHARM) )
@@ -458,7 +458,7 @@ void do_mprmflag( CHAR_DATA *ch, char *argument )
     char	   arg2[MAX_INPUT_LENGTH];
     char	   arg3[MAX_INPUT_LENGTH];
     int		   vnum = 0;
-    bool	   error = FALSE;
+    BOOL	   error = FALSE;
 
     if ( (!IS_NPC(ch) && get_trust(ch) < LEVEL_GREATER)
     ||     IS_AFFECTED(ch, AFF_CHARM) )
@@ -567,7 +567,7 @@ void fread_variable(CHAR_DATA *ch, FILE *fp)
 {
     VARIABLE_DATA *pvd;
     char *word;
-    bool fMatch;
+    BOOL fMatch;
 
     CREATE(pvd, VARIABLE_DATA, 1);
     for ( ; ; )

@@ -48,12 +48,12 @@
 void write_all_forceskills();
 void save_forceskill( FORCE_SKILL *fskill );
 void write_forceskill_list( );
-bool load_forceskill( char *forceskillfile );
+BOOL load_forceskill( char *forceskillfile );
 void fread_forceskill( FORCE_SKILL *fskill, FILE *fp );
 void write_all_forcehelps();
 void save_forcehelp( FORCE_HELP *fhelp );
 void write_forcehelp_list( );
-bool load_forcehelp( char *forcehelpfile );
+BOOL load_forcehelp( char *forcehelpfile );
 void fread_forcehelp( FORCE_HELP *fhelp, FILE *fp );
 int check_force_skill args( (CHAR_DATA *ch, char *command, char *argument) );
 void load_force_skills args( ( void ) );
@@ -82,7 +82,7 @@ void free_forcehelp( FORCE_HELP * fhelp );
 int check_force_skill (CHAR_DATA *ch, char *command, char *argument)
 {
 	FORCE_SKILL *fskill;
-	bool SKILL_FOUND = FALSE;
+	BOOL SKILL_FOUND = FALSE;
 	DO_FUN *fun;
 
 	for(fskill = first_force_skill;fskill;fskill = fskill->next)
@@ -329,7 +329,7 @@ void force_learn_from_success (CHAR_DATA *ch, FORCE_SKILL *fskill)
 FORCE_SKILL *force_test_skill_use(char *skill_name,CHAR_DATA *ch,int skill_type)
 {
 	FORCE_SKILL *fskill;
-	bool SKILL_FOUND = FALSE;
+	BOOL SKILL_FOUND = FALSE;
 	for(fskill = first_force_skill;fskill;fskill = fskill->next)
 	{
 		if(!str_cmp(skill_name,fskill->name))
@@ -1264,10 +1264,10 @@ void do_fhstat(CHAR_DATA *ch, char *argument)
 	FORCE_HELP *fhelp,*ghelp,*shelp,*jhelp;
 	char type[MAX_STRING_LENGTH];
 	char fname[MAX_STRING_LENGTH];
-	bool found_general = FALSE;
-	bool found_jedi = FALSE;
-	bool found_sith = FALSE;
-	bool match = FALSE;
+	BOOL found_general = FALSE;
+	BOOL found_jedi = FALSE;
+	BOOL found_sith = FALSE;
+	BOOL match = FALSE;
 	if(!argument || argument[0] == '\0')
 	{
 		send_to_char("USAGE: fhstat <help file> [jedi/sith/general]\r\n",ch);
@@ -1450,10 +1450,10 @@ void do_fhset(CHAR_DATA *ch, char *argument)
 FORCE_HELP *get_force_help(char *fname,char *type)
 {
 	FORCE_HELP *fhelp,*ghelp,*shelp,*jhelp;
-	bool found_general = FALSE;
-	bool found_jedi = FALSE;
-	bool found_sith = FALSE;
-	bool match = FALSE;
+	BOOL found_general = FALSE;
+	BOOL found_jedi = FALSE;
+	BOOL found_sith = FALSE;
+	BOOL match = FALSE;
 	if(!fname || fname == '\0')
 		return NULL;
 	if(!type || type == '\0')

@@ -77,7 +77,7 @@ void save_disintegrations()
 }
 
 
-bool is_disintegration( CHAR_DATA *victim )
+BOOL is_disintegration( CHAR_DATA *victim )
 {
 	BOUNTY_DATA *bounty;
 
@@ -176,7 +176,7 @@ void do_rembounty( CHAR_DATA *ch, char *argument ){
 void disintegration ( CHAR_DATA *ch , CHAR_DATA *victim , long amount )
 {
 	BOUNTY_DATA *bounty;
-	bool found;
+	BOOL found;
 	char buf[MAX_STRING_LENGTH];
 
 	found = FALSE;

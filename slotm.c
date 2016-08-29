@@ -287,8 +287,8 @@ void printwinnings(CHAR_DATA *ch, sh_int *amount, sh_int *winningsmult)
 
 void checkslots(CHAR_DATA *ch, sh_int *amount, sh_int *slot1, sh_int *slot2, sh_int *slot3)
 {
-	bool oneandtwo=FALSE, oneandthree=FALSE, twoandthree=FALSE;
-	bool allthree=FALSE;
+	BOOL oneandtwo=FALSE, oneandthree=FALSE, twoandthree=FALSE;
+	BOOL allthree=FALSE;
         sh_int winningsmult =0;
 
 	      /*1 = "cherries";

@@ -46,7 +46,7 @@
 #define TRUE 1
 #endif
 
-typedef unsigned char bool;
+typedef unsigned char BOOL;
 
 
 #define STR_HASH_SIZE	1024
@@ -71,7 +71,7 @@ struct hashstr_data *string_hash[STR_HASH_SIZE];
  * If found, increase link count, and return pointer,
  * otherwise add new string to hash table, and return pointer.
  */
-char *str_alloc( char *str )
+char * str_alloc( const char *str )
 {
    register int len, hash, psize;
    register struct hashstr_data *ptr;
@@ -80,23 +80,23 @@ char *str_alloc( char *str )
    psize = sizeof(struct hashstr_data);
    hash = len % STR_HASH_SIZE;
    for (ptr = string_hash[hash]; ptr; ptr = ptr->next )
-     if ( len == ptr->length && !strcmp(str,(char *)ptr+psize) )
+     if ( len == ptr->length && !strcmp(str,CAST(char *)ptr+psize) )
      {
 	if ( ptr->links < 65535 )
 	  ++ptr->links;
-	return (char *) ptr+psize;
+	return CAST(char *) ptr+psize;
      }
    ptr = (struct hashstr_data *) malloc(len+psize+1);
    ptr->links		= 1;
    ptr->length		= len;
    if (len)
-     strcpy( (char *) ptr+psize, str );
+     strcpy( CAST(char *) ptr+psize, str );
 /*     memcpy( (char *) ptr+psize, str, len+1 ); */
    else
-     strcpy( (char *) ptr+psize, "" );
+     strcpy( CAST(char *) ptr+psize, "" );
    ptr->next		= string_hash[hash];
    string_hash[hash]	= ptr;
-   return (char *) ptr+psize;
+   return CAST(char *) ptr+psize;
 }
 
 /*
@@ -263,7 +263,7 @@ void show_high_hash( int top )
 	  }
 }
 
-bool in_hash_table( char *str )
+BOOL in_hash_table( char *str )
 {
    register int len, hash, psize;
    register struct hashstr_data *ptr;

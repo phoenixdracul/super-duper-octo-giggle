@@ -99,7 +99,7 @@ const char *title_male( int chclass, int level );
 
 #if defined(IMCSTANDALONE)
 
-typedef unsigned char bool;
+typedef unsigned char BOOL;
 
 #if !defined(FALSE)
 #define FALSE 0

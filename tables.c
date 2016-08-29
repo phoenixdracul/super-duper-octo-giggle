@@ -339,7 +339,7 @@ SKILLTYPE *fread_skill( FILE *fp )
 {
     char buf[MAX_STRING_LENGTH];
     char *word;
-    bool fMatch;
+    BOOL fMatch;
     SKILLTYPE *skill;
 
     CREATE( skill, SKILLTYPE, 1 );
@@ -618,7 +618,7 @@ void fread_social( FILE *fp )
 {
     char buf[MAX_STRING_LENGTH];
     char *word;
-    bool fMatch;
+    BOOL fMatch;
     SOCIALTYPE *social;
 
     CREATE( social, SOCIALTYPE, 1 );
@@ -737,7 +737,7 @@ void fread_command( FILE *fp )
 {
     char buf[MAX_STRING_LENGTH];
     char *word;
-    bool fMatch;
+    BOOL fMatch;
     CMDTYPE *command;
 
     CREATE( command, CMDTYPE, 1 );

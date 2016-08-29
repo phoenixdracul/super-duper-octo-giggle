@@ -55,17 +55,17 @@ extern REL_DATA *last_relation;
 
 CHAR_DATA	*cur_char;
 ROOM_INDEX_DATA	*cur_room;
-bool		 cur_char_died;
+BOOL		 cur_char_died;
 ch_ret		 global_retcode;
 
 int		 cur_obj;
 int		 cur_obj_serial;
-bool		 cur_obj_extracted;
+BOOL		 cur_obj_extracted;
 obj_ret		 global_objcode;
 
 void account_menu( DESCRIPTOR_DATA * d );
 
-bool is_wizvis( CHAR_DATA *ch , CHAR_DATA *victim );
+BOOL is_wizvis( CHAR_DATA *ch , CHAR_DATA *victim );
 
 OBJ_DATA *group_object( OBJ_DATA *obj1, OBJ_DATA *obj2 );
 void delete_reset( RESET_DATA *pReset );
@@ -81,7 +81,7 @@ void  explode( OBJ_DATA *obj )
 	{
 		ROOM_INDEX_DATA *room;
 		CHAR_DATA *xch;
-		bool held = FALSE;
+		BOOL held = FALSE;
 
 		for ( xch = first_char; xch; xch = xch->next )
 			if ( !IS_NPC( xch ))
@@ -213,7 +213,7 @@ void room_explode_2( ROOM_INDEX_DATA *room , int blast )
 
 }
 
-bool is_wizvis( CHAR_DATA *ch , CHAR_DATA *victim )
+BOOL is_wizvis( CHAR_DATA *ch , CHAR_DATA *victim )
 {
 	if ( !IS_NPC(victim)
 			&&   xIS_SET(victim->act, PLR_WIZINVIS)
@@ -469,7 +469,7 @@ int can_carry_w( CHAR_DATA *ch )
 /*
  * See if a player/mob can take a piece of prototype eq		-Thoric
  */
-bool can_take_proto( CHAR_DATA *ch )
+BOOL can_take_proto( CHAR_DATA *ch )
 {
 	if ( IS_IMMORTAL(ch) )
 		return TRUE;
@@ -484,7 +484,7 @@ bool can_take_proto( CHAR_DATA *ch )
 /*
  * See if a string is one of the names of an object.
  */
-bool is_name( const char *str, char *namelist )
+BOOL is_name( const char *str, char *namelist )
 {
 	char name[MAX_INPUT_LENGTH];
 
@@ -498,7 +498,7 @@ bool is_name( const char *str, char *namelist )
 	}
 }
 
-bool is_name_prefix( const char *str, char *namelist )
+BOOL is_name_prefix( const char *str, char *namelist )
 {
 	char name[MAX_INPUT_LENGTH];
 
@@ -516,7 +516,7 @@ bool is_name_prefix( const char *str, char *namelist )
  * See if a string is one of the names of an object.            -Thoric
  * Treats a dash as a word delimiter as well as a space
  */
-bool is_name2( const char *str, char *namelist )
+BOOL is_name2( const char *str, char *namelist )
 {
 	char name[MAX_INPUT_LENGTH];
 
@@ -532,7 +532,7 @@ bool is_name2( const char *str, char *namelist )
 	}
 }
 
-bool is_name2_prefix( const char *str, char *namelist )
+BOOL is_name2_prefix( const char *str, char *namelist )
 {
 	char name[MAX_INPUT_LENGTH];
 
@@ -552,7 +552,7 @@ bool is_name2_prefix( const char *str, char *namelist )
 /*								-Thoric
  * Checks if str is a name in namelist supporting multiple keywords
  */
-bool nifty_is_name( char *str, char *namelist )
+BOOL nifty_is_name( char *str, char *namelist )
 {
 	char name[MAX_INPUT_LENGTH];
 
@@ -569,7 +569,7 @@ bool nifty_is_name( char *str, char *namelist )
 	}
 }
 
-bool nifty_is_name_prefix( char *str, char *namelist )
+BOOL nifty_is_name_prefix( char *str, char *namelist )
 {
 	char name[MAX_INPUT_LENGTH];
 
@@ -589,7 +589,7 @@ bool nifty_is_name_prefix( char *str, char *namelist )
 /*
  * Apply or remove an affect to a character.
  */
-void affect_modify( CHAR_DATA *ch, AFFECT_DATA *paf, bool fAdd )
+void affect_modify( CHAR_DATA *ch, AFFECT_DATA *paf, BOOL fAdd )
 {
 	OBJ_DATA *wield;
 	int mod;
@@ -937,7 +937,7 @@ void affect_strip( CHAR_DATA *ch, int sn )
 /*
  * Return true if a char is affected by a spell.
  */
-bool is_affected( CHAR_DATA *ch, int sn )
+BOOL is_affected( CHAR_DATA *ch, int sn )
 {
 	AFFECT_DATA *paf;
 
@@ -1072,7 +1072,7 @@ OBJ_DATA *obj_to_char( OBJ_DATA *obj, CHAR_DATA *ch )
 {
 	OBJ_DATA *otmp;
 	OBJ_DATA *oret = obj;
-	bool skipgroup, grouped;
+	BOOL skipgroup, grouped;
 	int oweight = get_obj_weight( obj );
 	int onum = get_obj_number( obj );
 	int wear_loc = obj->wear_loc;
@@ -1550,7 +1550,7 @@ void extract_obj( OBJ_DATA *obj )
 /*
  * Extract a char from the world.
  */
-void extract_char( CHAR_DATA *ch, bool fPull )
+void extract_char( CHAR_DATA *ch, BOOL fPull )
 {
 	CHAR_DATA *wch;
 	OBJ_DATA *obj;
@@ -2210,7 +2210,7 @@ OBJ_DATA *get_obj_world( CHAR_DATA *ch, char *argument )
  * Used by get/drop/put/quaff/recite/etc
  * Increasingly freaky based on mental state and drunkeness
  */
-bool ms_find_obj( CHAR_DATA *ch )
+BOOL ms_find_obj( CHAR_DATA *ch )
 {
 	int ms = ch->mental_state;
 	int drunk = IS_NPC(ch) ? 0 : ch->pcdata->condition[COND_DRUNK];
@@ -2273,7 +2273,7 @@ bool ms_find_obj( CHAR_DATA *ch )
  * Generic get obj function that supports optional containers.	-Thoric
  * currently only used for "eat" and "quaff".
  */
-OBJ_DATA *find_obj( CHAR_DATA *ch, char *argument, bool carryonly )
+OBJ_DATA *find_obj( CHAR_DATA *ch, char *argument, BOOL carryonly )
 {
 	char arg1[MAX_INPUT_LENGTH];
 	char arg2[MAX_INPUT_LENGTH];
@@ -2361,7 +2361,7 @@ int get_obj_weight( OBJ_DATA *obj )
 /*
  * True if room is dark.
  */
-bool room_is_dark( ROOM_INDEX_DATA *pRoomIndex )
+BOOL room_is_dark( ROOM_INDEX_DATA *pRoomIndex )
 {
 	if ( !pRoomIndex )
 	{
@@ -2391,7 +2391,7 @@ bool room_is_dark( ROOM_INDEX_DATA *pRoomIndex )
 /*
  * True if room is private.
  */
-bool room_is_private( CHAR_DATA *ch , ROOM_INDEX_DATA *pRoomIndex )
+BOOL room_is_private( CHAR_DATA *ch , ROOM_INDEX_DATA *pRoomIndex )
 {
 	CHAR_DATA *rch;
 	int count;
@@ -2427,7 +2427,7 @@ bool room_is_private( CHAR_DATA *ch , ROOM_INDEX_DATA *pRoomIndex )
 /*
  * True if char can see victim.
  */
-bool can_see( CHAR_DATA *ch, CHAR_DATA *victim )
+BOOL can_see( CHAR_DATA *ch, CHAR_DATA *victim )
 {
 	if (!victim)
 		return FALSE;
@@ -2502,7 +2502,7 @@ bool can_see( CHAR_DATA *ch, CHAR_DATA *victim )
 /*
  * True if char can see obj.
  */
-bool can_see_obj( CHAR_DATA *ch, OBJ_DATA *obj )
+BOOL can_see_obj( CHAR_DATA *ch, OBJ_DATA *obj )
 {
 	if ( !IS_NPC(ch) && xIS_SET(ch->act, PLR_HOLYLIGHT) )
 		return TRUE;
@@ -2537,7 +2537,7 @@ bool can_see_obj( CHAR_DATA *ch, OBJ_DATA *obj )
 /*
  * True if char can drop obj.
  */
-bool can_drop_obj( CHAR_DATA *ch, OBJ_DATA *obj )
+BOOL can_drop_obj( CHAR_DATA *ch, OBJ_DATA *obj )
 {
 	if ( !IS_OBJ_STAT(obj, ITEM_NODROP) )
 		return TRUE;
@@ -2916,7 +2916,7 @@ ch_ret check_room_for_traps( CHAR_DATA *ch, int flag )
 /*
  * return TRUE if an object contains a trap			-Thoric
  */
-bool is_trapped( OBJ_DATA *obj )
+BOOL is_trapped( OBJ_DATA *obj )
 {
 	OBJ_DATA *check;
 
@@ -3265,7 +3265,7 @@ void set_cur_obj( OBJ_DATA *obj )
 /*
  * Check the recently extracted object queue for obj		-Thoric
  */
-bool obj_extracted( OBJ_DATA *obj )
+BOOL obj_extracted( OBJ_DATA *obj )
 {
 	OBJ_DATA *cod;
 
@@ -3383,7 +3383,7 @@ void set_cur_char( CHAR_DATA *ch )
 /*
  * Check to see if ch died recently				-Thoric
  */
-bool char_died( CHAR_DATA *ch )
+BOOL char_died( CHAR_DATA *ch )
 {
 	EXTRACT_CHAR_DATA *ccd;
 
@@ -3399,7 +3399,7 @@ bool char_died( CHAR_DATA *ch )
 /*
  * Add ch to the queue of recently extracted characters		-Thoric
  */
-void queue_extracted_char( CHAR_DATA *ch, bool extract )
+void queue_extracted_char( CHAR_DATA *ch, BOOL extract )
 {
 	EXTRACT_CHAR_DATA *ccd;
 
@@ -3510,7 +3510,7 @@ void remove_timer( CHAR_DATA *ch, sh_int type )
 		extract_timer( ch, timer );
 }
 
-bool in_soft_range( CHAR_DATA *ch, AREA_DATA *tarea )
+BOOL in_soft_range( CHAR_DATA *ch, AREA_DATA *tarea )
 {
 	if ( IS_IMMORTAL(ch) )
 		return TRUE;
@@ -3524,7 +3524,7 @@ bool in_soft_range( CHAR_DATA *ch, AREA_DATA *tarea )
 				return FALSE;
 }
 
-bool in_hard_range( CHAR_DATA *ch, AREA_DATA *tarea )
+BOOL in_hard_range( CHAR_DATA *ch, AREA_DATA *tarea )
 {
 	if ( IS_IMMORTAL(ch) )
 		return TRUE;
@@ -3542,7 +3542,7 @@ bool in_hard_range( CHAR_DATA *ch, AREA_DATA *tarea )
 /*
  * Scryn, standard luck check 2/2/96
  */
-bool chance( CHAR_DATA *ch, sh_int percent ) 
+BOOL chance( CHAR_DATA *ch, sh_int percent ) 
 {
 	/*  sh_int clan_factor, ms;*/
 	sh_int deity_factor, ms;
@@ -3586,7 +3586,7 @@ maximum penalty will only be half that of the other clan types.
 		return FALSE;
 }
 
-bool chance_attrib( CHAR_DATA *ch, sh_int percent, sh_int attrib )
+BOOL chance_attrib( CHAR_DATA *ch, sh_int percent, sh_int attrib )
 {
 	/* Scryn, standard luck check + consideration of 1 attrib 2/2/96*/
 	sh_int  deity_factor;
@@ -3758,11 +3758,11 @@ void separate_obj( OBJ_DATA *obj )
 /*
  * Empty an obj's contents... optionally into another obj, or a room
  */
-bool empty_obj( OBJ_DATA *obj, OBJ_DATA *destobj, ROOM_INDEX_DATA *destroom )
+BOOL empty_obj( OBJ_DATA *obj, OBJ_DATA *destobj, ROOM_INDEX_DATA *destroom )
 {
 	OBJ_DATA *otmp, *otmp_next;
 	CHAR_DATA *ch = obj->carried_by;
-	bool movedsome = FALSE;
+	BOOL movedsome = FALSE;
 
 	if ( !obj )
 	{
@@ -3906,7 +3906,7 @@ void lower_economy( AREA_DATA *tarea, int gold )
 /*
  * Check to see if economy has at least this much gold		   -Thoric
  */
-bool economy_has( AREA_DATA *tarea, int gold )
+BOOL economy_has( AREA_DATA *tarea, int gold )
 {
 	int hasgold = ((tarea->high_economy > 0) ? 1 : 0) * 1000000000
 			+ tarea->low_economy;
@@ -4058,7 +4058,7 @@ int max_weight(OBJ_DATA *obj)
 	return weight;
 }
 
-void check_switches( bool possess )
+void check_switches( BOOL possess )
 {
 	CHAR_DATA *ch;
 
@@ -4066,7 +4066,7 @@ void check_switches( bool possess )
 		check_switch( ch, possess );
 }
 
-void check_switch( CHAR_DATA *ch, bool possess )
+void check_switch( CHAR_DATA *ch, BOOL possess )
 {
 	AFFECT_DATA *paf;
 	CMDTYPE *cmd;

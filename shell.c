@@ -52,8 +52,8 @@
 #include "mud.h"
 
 /* Global variable to protect online compiler code - Samson */
-bool compilelock = FALSE;  /* Reboot/shutdown commands locked during compiles */
-bool bootlock = FALSE;  /* Protects compiler from being used during boot timers */
+BOOL compilelock = FALSE;  /* Reboot/shutdown commands locked during compiles */
+BOOL bootlock = FALSE;  /* Protects compiler from being used during boot timers */
 
 #if !defined(FNDELAY)
 #define FNDELAY O_NDELAY
@@ -126,7 +126,7 @@ void do_mudexec( CHAR_DATA * ch, char *argument )
    int desc;
    int flags;
    pid_t pid;
-   bool iafork = FALSE;
+   BOOL iafork = FALSE;
 
    if( !ch->desc )
       return;

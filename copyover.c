@@ -62,8 +62,8 @@
  */
 int	init_socket		args( ( int port ) );
 void	new_descriptor		args( ( int new_desc ) );
-bool	read_from_descriptor	args( ( DESCRIPTOR_DATA *d ) );
-bool	write_to_descriptor	args( ( int desc, char *txt, int length ) );
+BOOL	read_from_descriptor	args( ( DESCRIPTOR_DATA *d ) );
+BOOL	write_to_descriptor	args( ( int desc, char *txt, int length ) );
 void    init_descriptor		args( ( DESCRIPTOR_DATA *dnew, int desc) );
 
 /*  Warm reboot stuff, gotta make sure to thank Erwin for this :) */
@@ -76,7 +76,7 @@ int		    conjava;		/* JavaMUD controlling desc	*/
 void  account_save args( ( ACCOUNT_DATA *account ) );
 ACCOUNT_DATA *account_fread( char *name );
 
-extern bool copyover_set;
+extern BOOL copyover_set;
 extern int copytimer_seconds;
 extern CHAR_DATA *copyover_ch;
 
@@ -235,7 +235,7 @@ void copyover_recover ()
 	char host[MAX_STRING_LENGTH];
 	char account[MAX_STRING_LENGTH];
 	int desc;
-	bool fOld;
+	BOOL fOld;
 	/*  CHAR_DATA *ch; */ /* Uncomment This Line if putting functions in comm.c -Iczer */
 	log_string ("Copyover recovery initiated");
 

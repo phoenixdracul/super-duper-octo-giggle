@@ -58,7 +58,7 @@ char *ext_flag_string( EXT_BV * bitvector, const char *const flagarray[] );
 void ch_printf_color(CHAR_DATA * ch, char * fmt, ...);
 
 /* from comm.c */
-bool	write_to_descriptor	args( ( int desc, char *txt, int length ) );
+BOOL	write_to_descriptor	args( ( int desc, char *txt, int length ) );
 
 // comments.c
 void note_attach(CHAR_DATA * ch);
@@ -167,7 +167,7 @@ void do_restrict( CHAR_DATA *ch, char *argument )
 	char buf[MAX_STRING_LENGTH];
 	sh_int level, hash;
 	CMDTYPE *cmd;
-	bool found;
+	BOOL found;
 
 	found = FALSE;
 
@@ -2064,7 +2064,7 @@ void do_mfind( CHAR_DATA *ch, char *argument )
 	/*  int vnum; */
 	int hash;
 	int nMatch;
-	bool fAll;
+	BOOL fAll;
 
 	one_argument( argument, arg );
 	if ( arg[0] == '\0' )
@@ -2138,7 +2138,7 @@ void do_ofind( CHAR_DATA *ch, char *argument )
 	/*  int vnum; */
 	int hash;
 	int nMatch;
-	bool fAll;
+	BOOL fAll;
 
 	one_argument( argument, arg );
 	if ( arg[0] == '\0' )
@@ -2209,7 +2209,7 @@ void do_mwhere( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
 	CHAR_DATA *victim;
-	bool found;
+	BOOL found;
 
 	one_argument( argument, arg );
 	if ( arg[0] == '\0' )
@@ -2248,7 +2248,7 @@ void do_bodybag( CHAR_DATA *ch, char *argument )
 	char buf3[MAX_STRING_LENGTH];
 	char arg[MAX_INPUT_LENGTH];
 	OBJ_DATA *obj;
-	bool found;
+	BOOL found;
 
 	one_argument( argument, arg );
 	if ( arg[0] == '\0' )
@@ -2294,7 +2294,7 @@ void do_owhere( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char arg1[MAX_INPUT_LENGTH];
 	OBJ_DATA *obj;
-	bool found;
+	BOOL found;
 	int icnt = 0;
 
 	argument = one_argument( argument, arg );
@@ -2395,7 +2395,7 @@ void do_invade( CHAR_DATA *ch , char *argument )
     CHAR_DATA *victim;
     AREA_DATA *tarea;
     int count, created;
-    bool found=FALSE;
+    BOOL found=FALSE;
     MOB_INDEX_DATA *pMobIndex;
     ROOM_INDEX_DATA *location;
 
@@ -2511,7 +2511,7 @@ void do_reboo( CHAR_DATA *ch, char *argument )
 void do_reboot( CHAR_DATA *ch, char *argument )
 {
 	char buf[MAX_STRING_LENGTH];
-	extern bool mud_down;
+	extern BOOL mud_down;
 	CHAR_DATA *vch;
 
 	if ( str_cmp( argument, "mud now" )
@@ -2563,7 +2563,7 @@ void do_shutdow( CHAR_DATA *ch, char *argument )
 void do_shutdown( CHAR_DATA *ch, char *argument )
 {
 	char buf[MAX_STRING_LENGTH];
-	extern bool mud_down;
+	extern BOOL mud_down;
 	CHAR_DATA *vch;
 
 	if ( str_cmp( argument, "mud now" ) && str_cmp(argument, "nosave") )
@@ -4363,7 +4363,7 @@ void do_users( CHAR_DATA *ch, char *argument )
 void do_force( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
-	bool mobsonly;
+	BOOL mobsonly;
 	argument = one_argument( argument, arg );
 
 	if ( arg[0] == '\0' || argument[0] == '\0' )
@@ -4513,7 +4513,7 @@ void do_holylight( CHAR_DATA *ch, char *argument )
 	return;
 }
 
-bool check_area_conflict( AREA_DATA *area, int low_range, int hi_range )
+BOOL check_area_conflict( AREA_DATA *area, int low_range, int hi_range )
 {
 	if( low_range < area->low_r_vnum && area->low_r_vnum < hi_range )
 		return TRUE;
@@ -4547,7 +4547,7 @@ bool check_area_conflict( AREA_DATA *area, int low_range, int hi_range )
 }
 
 /* Runs the entire list, easier to call in places that have to check them all */
-bool check_area_conflicts( int lo, int hi )
+BOOL check_area_conflicts( int lo, int hi )
 {
 	AREA_DATA *area;
 
@@ -4766,7 +4766,7 @@ void do_loadup( CHAR_DATA *ch, char *argument )
 	char fname[1024];
 	char name[256];
 	struct stat fst;
-	bool loaded;
+	BOOL loaded;
 	DESCRIPTOR_DATA *d;
 	int old_room_vnum;
 	char buf[MAX_STRING_LENGTH];
@@ -5068,7 +5068,7 @@ void do_bestow( CHAR_DATA *ch, char *argument )
 	char tmparg[MAX_INPUT_LENGTH];
 	CHAR_DATA *victim;
 	CMDTYPE *cmd;
-	bool fComm = FALSE;
+	BOOL fComm = FALSE;
 
 	set_char_color( AT_IMMORT, ch );
 
@@ -5121,7 +5121,7 @@ void do_bestow( CHAR_DATA *ch, char *argument )
 	while ( arg[0] != '\0' )
 	{
 		char *cmd_buf, cmd_tmp[MAX_INPUT_LENGTH];
-		bool cFound = FALSE;
+		BOOL cFound = FALSE;
 
 		if ( !(cmd = find_command( arg )) )
 		{
@@ -5190,7 +5190,7 @@ void do_set_boot_time( CHAR_DATA *ch, char *argument)
 {
 	char arg[MAX_INPUT_LENGTH];
 	char arg1[MAX_INPUT_LENGTH];
-	bool check;
+	BOOL check;
 
 	check = FALSE;
 
@@ -5602,7 +5602,7 @@ void do_for (CHAR_DATA *ch, char *argument)
 {
 	char range[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
-	bool fGods = FALSE, fMortals = FALSE, fMobs = FALSE, fEverywhere = FALSE, found;
+	BOOL fGods = FALSE, fMortals = FALSE, fMobs = FALSE, fEverywhere = FALSE, found;
 	ROOM_INDEX_DATA *room, *old_room;
 	CHAR_DATA *p, *p_prev;  /* p_next to p_prev -- TRI */
 	int i;
@@ -6421,7 +6421,7 @@ void do_hell( CHAR_DATA *ch, char *argument )
 	CHAR_DATA *victim;
 	char arg[MAX_INPUT_LENGTH];
 	sh_int time;
-	bool h_d = FALSE;
+	BOOL h_d = FALSE;
 	struct tm *tms;
 
 	argument = one_argument(argument, arg);
@@ -6544,7 +6544,7 @@ void do_unhell( CHAR_DATA *ch, char *argument )
 void do_vsearch( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
-	bool found = FALSE;
+	BOOL found = FALSE;
 	OBJ_DATA *obj;
 	OBJ_DATA *in_obj;
 	int obj_counter = 1;
@@ -6917,7 +6917,7 @@ void do_sedit( CHAR_DATA *ch, char *argument )
 
 	if ( get_trust(ch) > LEVEL_GREATER && !str_cmp( arg2, "name" ) )
 	{
-		bool relocate;
+		BOOL relocate;
 		SOCIALTYPE *checksocial;
 
 		one_argument( argument, arg1 );
@@ -7238,7 +7238,7 @@ void do_cedit( CHAR_DATA *ch, char *argument )
 
 	if ( !str_cmp( arg2, "name" ) )
 	{
-		bool relocate;
+		BOOL relocate;
 		CMDTYPE *checkcmd;
 
 		one_argument( argument, arg1 );
@@ -8141,7 +8141,7 @@ void do_project( CHAR_DATA *ch, char *argument )
 	if ( !str_cmp( arg, "more" ) || !str_cmp( arg, "mine" ) || !str_cmp(arg, "self") )
 	{
 		NOTE_DATA *log;
-		bool MINE = FALSE;
+		BOOL MINE = FALSE;
 		int num_logs=0;
 		pcount = 0;
 
@@ -8177,7 +8177,7 @@ void do_project( CHAR_DATA *ch, char *argument )
 	}
 	if( arg[0] == '\0' || !str_cmp( arg, "list" ) || !str_cmp(arg, "available"))
 	{
-		bool aflag, projects_available;
+		BOOL aflag, projects_available;
 		aflag = FALSE;
 		projects_available = FALSE;
 		if( !str_cmp( arg, "available" ) || !str_cmp(argument, "available"))

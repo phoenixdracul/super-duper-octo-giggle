@@ -48,7 +48,7 @@ SPEC_LIST *first_specfun;
 SPEC_LIST *last_specfun;
 
 
-bool  remove_obj      args( ( CHAR_DATA *ch, int iWear, bool fReplace ) );
+BOOL  remove_obj      args( ( CHAR_DATA *ch, int iWear, BOOL fReplace ) );
 
 /*
  * The following special functions are available for mobiles.
@@ -126,7 +126,7 @@ void load_specfuns( void )
 
 
 /* Simple validation function to be sure a function can be used on mobs */
-bool validate_spec_fun( char *name )
+BOOL validate_spec_fun( char *name )
 {
    SPEC_LIST *specfun;
 
@@ -157,7 +157,7 @@ SPEC_FUN *spec_lookup( char *name )
 }
 
 
-bool spec_make_apprentice_jedi( CHAR_DATA *ch)
+BOOL spec_make_apprentice_jedi( CHAR_DATA *ch)
 {
 //	CHAR_DATA *victim;
 //	CHAR_DATA *v_next;
@@ -176,7 +176,7 @@ bool spec_make_apprentice_jedi( CHAR_DATA *ch)
 	return FALSE;
 }	
 
-bool spec_make_master_jedi( CHAR_DATA *ch){
+BOOL spec_make_master_jedi( CHAR_DATA *ch){
 //    CHAR_DATA *victim;
 //    CHAR_DATA *v_next;
 //
@@ -193,7 +193,7 @@ bool spec_make_master_jedi( CHAR_DATA *ch){
     return FALSE;
 }	
 
-bool spec_make_apprentice_sith( CHAR_DATA *ch){
+BOOL spec_make_apprentice_sith( CHAR_DATA *ch){
 //    CHAR_DATA *victim;
 //    CHAR_DATA *v_next;
 //
@@ -211,14 +211,14 @@ bool spec_make_apprentice_sith( CHAR_DATA *ch){
 }	
 
 
-bool spec_newbie_pilot( CHAR_DATA *ch )
+BOOL spec_newbie_pilot( CHAR_DATA *ch )
 {
     int           home = 32149;
     CHAR_DATA   * victim;
     CHAR_DATA   * v_next;
     OBJ_DATA    * obj;
     char          buf[MAX_STRING_LENGTH];
-    bool          diploma = FALSE;
+    BOOL          diploma = FALSE;
     
     for ( victim = ch->in_room->first_person; victim; victim = v_next )
     {
@@ -264,12 +264,12 @@ bool spec_newbie_pilot( CHAR_DATA *ch )
    return FALSE;
 }
 
-bool spec_jedi( CHAR_DATA *ch )
+BOOL spec_jedi( CHAR_DATA *ch )
 {
    return FALSE;
 }
 
-bool spec_clan_guard( CHAR_DATA *ch )
+BOOL spec_clan_guard( CHAR_DATA *ch )
 {
     CHAR_DATA *victim;
     CHAR_DATA *v_next;
@@ -298,7 +298,7 @@ bool spec_clan_guard( CHAR_DATA *ch )
     return FALSE;
 }
 
-bool spec_ground_troop( CHAR_DATA *ch )
+BOOL spec_ground_troop( CHAR_DATA *ch )
 {
   CHAR_DATA *victim;
   CHAR_DATA *v_next;
@@ -337,7 +337,7 @@ bool spec_ground_troop( CHAR_DATA *ch )
   
 
 
-bool spec_customs_smut( CHAR_DATA *ch )
+BOOL spec_customs_smut( CHAR_DATA *ch )
 {
     CHAR_DATA *victim;
     CHAR_DATA *v_next;
@@ -422,7 +422,7 @@ bool spec_customs_smut( CHAR_DATA *ch )
     return FALSE;
 }
 
-bool spec_customs_weapons( CHAR_DATA *ch )
+BOOL spec_customs_weapons( CHAR_DATA *ch )
 {
     CHAR_DATA *victim;
     CHAR_DATA *v_next;
@@ -510,7 +510,7 @@ bool spec_customs_weapons( CHAR_DATA *ch )
     return FALSE;
 }
 
-bool spec_customs_alcohol( CHAR_DATA *ch )
+BOOL spec_customs_alcohol( CHAR_DATA *ch )
 {   
     CHAR_DATA *victim;
     CHAR_DATA *v_next;
@@ -606,7 +606,7 @@ bool spec_customs_alcohol( CHAR_DATA *ch )
     return FALSE;
 }
 
-bool spec_customs_spice( CHAR_DATA *ch )
+BOOL spec_customs_spice( CHAR_DATA *ch )
 {
     CHAR_DATA *victim;
     CHAR_DATA *v_next;
@@ -691,7 +691,7 @@ bool spec_customs_spice( CHAR_DATA *ch )
     return FALSE;
 }
 
-bool spec_police( CHAR_DATA *ch )
+BOOL spec_police( CHAR_DATA *ch )
 {
     CHAR_DATA *victim;
     CHAR_DATA *v_next;
@@ -744,7 +744,7 @@ bool spec_police( CHAR_DATA *ch )
 
 }
 
-bool spec_police_attack( CHAR_DATA *ch )
+BOOL spec_police_attack( CHAR_DATA *ch )
 {
     CHAR_DATA *victim;
     CHAR_DATA *v_next;
@@ -779,7 +779,7 @@ bool spec_police_attack( CHAR_DATA *ch )
 
 }
 
-bool spec_police_fine( CHAR_DATA *ch )
+BOOL spec_police_fine( CHAR_DATA *ch )
 {
     CHAR_DATA *victim;
     CHAR_DATA *v_next;
@@ -825,7 +825,7 @@ bool spec_police_fine( CHAR_DATA *ch )
 
 }
 
-bool spec_police_jail( CHAR_DATA *ch )
+BOOL spec_police_jail( CHAR_DATA *ch )
 {
 
     ROOM_INDEX_DATA *jail = NULL;
@@ -871,7 +871,7 @@ bool spec_police_jail( CHAR_DATA *ch )
 
 }
 
-bool spec_jedi_healer( CHAR_DATA *ch )
+BOOL spec_jedi_healer( CHAR_DATA *ch )
 {
     CHAR_DATA *victim;
     CHAR_DATA *v_next;
@@ -931,7 +931,7 @@ bool spec_jedi_healer( CHAR_DATA *ch )
 
 
 
-bool spec_dark_jedi( CHAR_DATA *ch )
+BOOL spec_dark_jedi( CHAR_DATA *ch )
 {
     CHAR_DATA *victim;
     CHAR_DATA *v_next;
@@ -983,7 +983,7 @@ bool spec_dark_jedi( CHAR_DATA *ch )
 
 
 
-bool spec_fido( CHAR_DATA *ch )
+BOOL spec_fido( CHAR_DATA *ch )
 {
     OBJ_DATA *corpse;
     OBJ_DATA *c_next;
@@ -1013,7 +1013,7 @@ bool spec_fido( CHAR_DATA *ch )
     return FALSE;
 }
 
-bool spec_stormtrooper( CHAR_DATA *ch )
+BOOL spec_stormtrooper( CHAR_DATA *ch )
 {
     CHAR_DATA *victim;
     CHAR_DATA *v_next;
@@ -1046,7 +1046,7 @@ bool spec_stormtrooper( CHAR_DATA *ch )
 
 }  
 
-bool spec_new_republic_trooper( CHAR_DATA *ch )
+BOOL spec_new_republic_trooper( CHAR_DATA *ch )
 {
     CHAR_DATA *victim;
     CHAR_DATA *v_next;
@@ -1080,7 +1080,7 @@ bool spec_new_republic_trooper( CHAR_DATA *ch )
 }  
 
 
-bool spec_guardian( CHAR_DATA *ch )
+BOOL spec_guardian( CHAR_DATA *ch )
 {
     char buf[MAX_STRING_LENGTH];
     CHAR_DATA *victim;
@@ -1138,7 +1138,7 @@ bool spec_guardian( CHAR_DATA *ch )
 
 
 
-bool spec_janitor( CHAR_DATA *ch )
+BOOL spec_janitor( CHAR_DATA *ch )
 {
     OBJ_DATA *trash;
     OBJ_DATA *trash_next;
@@ -1172,7 +1172,7 @@ bool spec_janitor( CHAR_DATA *ch )
 
 
 
-bool spec_poison( CHAR_DATA *ch )
+BOOL spec_poison( CHAR_DATA *ch )
 {
     CHAR_DATA *victim;
 
@@ -1190,7 +1190,7 @@ bool spec_poison( CHAR_DATA *ch )
 
 
 
-bool spec_thief( CHAR_DATA *ch )
+BOOL spec_thief( CHAR_DATA *ch )
 {
     CHAR_DATA *victim;
     CHAR_DATA *v_next;
@@ -1236,14 +1236,14 @@ bool spec_thief( CHAR_DATA *ch )
     return FALSE;
 }
 
-bool spec_auth( CHAR_DATA *ch )
+BOOL spec_auth( CHAR_DATA *ch )
 {
     CHAR_DATA *victim;
     CHAR_DATA *v_next;
     char buf[MAX_STRING_LENGTH];
     OBJ_INDEX_DATA *pObjIndex;
     OBJ_DATA *obj;
-    bool hasdiploma;
+    BOOL hasdiploma;
     
     for ( victim = ch->in_room->first_person; victim; victim = v_next )
     {
@@ -1284,7 +1284,7 @@ bool spec_auth( CHAR_DATA *ch )
 
 }
 
-bool spec_giveslug( CHAR_DATA *ch )
+BOOL spec_giveslug( CHAR_DATA *ch )
 {
     CHAR_DATA *victim;
     CHAR_DATA *v_next;

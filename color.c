@@ -420,7 +420,7 @@ char * const valid_color[] =
 int const_color_str_len( const char *argument )
 {
 	int  str, count = 0;
-	bool IS_COLOR = FALSE;
+	BOOL IS_COLOR = FALSE;
 
 	for ( str = 0; argument[str] != '\0'; str++ )
 	{
@@ -461,7 +461,7 @@ else if ( argument[str] == '{' )
 int const_color_strnlen( const char *argument, int maxlength )
 {
 	int str, count = 0;
-	bool IS_COLOR = FALSE;
+	BOOL IS_COLOR = FALSE;
 
 	for ( str = 0; argument[str] != '\0'; str++ )
 	{
@@ -506,7 +506,7 @@ else if ( argument[str] == '{' )
 int color_str_len( char *argument )
 {
 	int str, count = 0;
-	bool IS_COLOR = FALSE;
+	BOOL IS_COLOR = FALSE;
 
 	for ( str = 0; argument[str] != '\0'; str++ )
 	{
@@ -547,7 +547,7 @@ else if ( argument[str] == '{' )
 int color_strnlen( char *argument, int maxlength )
 {
 	int str, count = 0;
-	bool IS_COLOR = FALSE;
+	BOOL IS_COLOR = FALSE;
 
 	for ( str = 0; argument[str] != '\0'; str++ )
 	{
@@ -738,7 +738,7 @@ void show_colors( CHAR_DATA *ch )
 
 void do_color( CHAR_DATA *ch, char *argument ) 
 {
-	bool dMatch, cMatch;
+	BOOL dMatch, cMatch;
 	sh_int count = 0, y = 0;
 	char arg[MIL];
 	char arg2[MIL];
@@ -1077,7 +1077,7 @@ int colorcode( const char *col, char *code, CHAR_DATA *ch )
 {
 	const char *ctype = col;
 	int ln = 0;
-	bool ansi;
+	BOOL ansi;
 	int i;
 	char tmp[4];
 

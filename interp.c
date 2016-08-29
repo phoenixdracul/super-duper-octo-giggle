@@ -49,15 +49,15 @@ void subtract_times( struct timeval *etime, struct timeval *stime );
 
 
 
-bool	check_social	args( ( CHAR_DATA *ch, char *command,
+BOOL	check_social	args( ( CHAR_DATA *ch, char *command,
 		char *argument ) );
 
 
 /*
  * Log-all switch.
  */
-bool				fLogAll		= FALSE;
-bool				fLogPC		= FALSE;
+BOOL				fLogAll		= FALSE;
+BOOL				fLogPC		= FALSE;
 
 
 CMDTYPE	   *command_hash[126];	/* hash table for cmd_table */
@@ -66,7 +66,7 @@ SOCIALTYPE *social_index[27];   /* hash table for socials   */
 /*
  * Character not in position for command?
  */
-bool check_pos( CHAR_DATA *ch, sh_int position )
+BOOL check_pos( CHAR_DATA *ch, sh_int position )
 {
 	if ( ch->position < position )
 	{
@@ -122,7 +122,7 @@ void interpret( CHAR_DATA *ch, char *argument )
 	CMDTYPE *cmd = NULL;
 	int trust;
 	int loglvl;
-	bool found;
+	BOOL found;
 	struct timeval time_used;
 	long tmptime;
 
@@ -224,7 +224,7 @@ void interpret( CHAR_DATA *ch, char *argument )
 		 * Check for council powers and/or bestowments
 		 */
 		trust = get_trust( ch );
-		bool no_trust = FALSE;
+		BOOL no_trust = FALSE;
 		for ( cmd = command_hash[LOWER(command[0])%126]; cmd; cmd = cmd->next )
 			if ( !str_prefix( command, cmd->name ))
 			{
@@ -505,7 +505,7 @@ SOCIALTYPE *find_social( char *command )
 	return NULL;
 }
 
-bool check_social( CHAR_DATA *ch, char *command, char *argument )
+BOOL check_social( CHAR_DATA *ch, char *command, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
 	CHAR_DATA *victim;
@@ -628,7 +628,7 @@ bool check_social( CHAR_DATA *ch, char *command, char *argument )
 /*
  * Return true if an argument is completely numeric.
  */
-bool is_number( char *arg )
+BOOL is_number( char *arg )
 {
 	if ( *arg == '\0' )
 		return FALSE;
@@ -755,7 +755,7 @@ void do_timecmd( CHAR_DATA *ch, char *argument )
 {
 	struct timeval stime;
 	struct timeval etime;
-	static bool timing;
+	static BOOL timing;
 	extern CHAR_DATA *timechar;
 	char arg[MAX_INPUT_LENGTH];
 

@@ -796,7 +796,7 @@ void fskill_instruct(CHAR_DATA *ch, char *argument)
 {
 	FORCE_SKILL *fskill,*skill;
 	CHAR_DATA *victim;
-	bool SKILL_FOUND = FALSE;
+	BOOL SKILL_FOUND = FALSE;
 	char name[MAX_STRING_LENGTH];
 	fskill = force_test_skill_use("instruct",ch,FORCE_NONCOMBAT);
 	if(fskill == NULL)
@@ -1609,7 +1609,7 @@ void fskill_makelightsaber( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int chance;
-	bool checktool, checkdura, checkbatt,
+	BOOL checktool, checkdura, checkbatt,
 	checkoven, checkcond, checkcirc, checklens, checkgems, checkmirr;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
@@ -1942,7 +1942,7 @@ void fskill_makedualsaber( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int chance;
-	bool checktool, checkdura, checkbatt,
+	BOOL checktool, checkdura, checkbatt,
 	checkoven, checkcond, checkcirc, checklens, checkgems, checkmirr;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
@@ -2366,7 +2366,7 @@ void fskill_fhelp(CHAR_DATA *ch, char *argument)
 {
 	FORCE_SKILL *fskill;
 	FORCE_HELP *fhelp,*fdefault;
-	bool match = FALSE;
+	BOOL match = FALSE;
 	int x,len;
 	fskill = force_test_skill_use("fhelp",ch,FORCE_NONCOMBAT);
 	if(fskill == NULL)
@@ -2410,7 +2410,7 @@ void fskill_fhelp(CHAR_DATA *ch, char *argument)
 	return;
 }
 
-bool check_reflect(CHAR_DATA *ch,CHAR_DATA *victim, int dam)
+BOOL check_reflect(CHAR_DATA *ch,CHAR_DATA *victim, int dam)
 {
 	OBJ_DATA *wield,*chwield;
 	CHAR_DATA *rch;
@@ -2608,7 +2608,7 @@ void fskill_instill( CHAR_DATA * ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int bonus = 0, balance;
-	bool fail = FALSE;
+	BOOL fail = FALSE;
 
 	fskill = force_test_skill_use("instill", ch, FORCE_NONCOMBAT);
 	if(fskill == NULL)
@@ -2779,9 +2779,9 @@ void fskill_callforce( CHAR_DATA *ch, char *argument )
 {
 	AFFECT_DATA af;
 	int bonus, duration;
-	bool call_light=FALSE;
-	bool call_neutral=FALSE;
-	bool call_dark=FALSE;
+	BOOL call_light=FALSE;
+	BOOL call_neutral=FALSE;
+	BOOL call_dark=FALSE;
 
 	if( IS_NPC(ch) )
 		return;

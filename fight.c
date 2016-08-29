@@ -73,13 +73,13 @@ int	xp_compute	args( ( CHAR_DATA *gch, CHAR_DATA *victim ) );
 int	align_compute	args( ( CHAR_DATA *gch, CHAR_DATA *victim ) );
 ch_ret	one_hit		args( ( CHAR_DATA *ch, CHAR_DATA *victim, int dt ) );
 int	obj_hitroll	args( ( OBJ_DATA *obj ) );
-bool    get_cover( CHAR_DATA *ch );
-bool	dual_flip = FALSE;
+BOOL    get_cover( CHAR_DATA *ch );
+BOOL	dual_flip = FALSE;
 char *rand_death( CHAR_DATA * ch );
 void trigger_autodraw(CHAR_DATA *ch);
 
 
-bool loot_coins_from_corpse( CHAR_DATA *ch, OBJ_DATA *corpse )
+BOOL loot_coins_from_corpse( CHAR_DATA *ch, OBJ_DATA *corpse )
 {
 	OBJ_DATA *content, *content_next;
 	int oldgold = ch->gold;
@@ -125,7 +125,7 @@ bool loot_coins_from_corpse( CHAR_DATA *ch, OBJ_DATA *corpse )
 /*
  * Check to see if weapon is poisoned.
  */
-bool is_wielding_poisoned( CHAR_DATA *ch )
+BOOL is_wielding_poisoned( CHAR_DATA *ch )
 {
 	OBJ_DATA *obj;
 
@@ -140,7 +140,7 @@ bool is_wielding_poisoned( CHAR_DATA *ch )
 /*
  * hunting, hating and fearing code				-Thoric
  */
-bool is_hunting( CHAR_DATA *ch, CHAR_DATA *victim )
+BOOL is_hunting( CHAR_DATA *ch, CHAR_DATA *victim )
 {
 	if ( !ch->hunting || ch->hunting->who != victim )
 		return FALSE;
@@ -148,7 +148,7 @@ bool is_hunting( CHAR_DATA *ch, CHAR_DATA *victim )
 	return TRUE;
 }
 
-bool is_hating( CHAR_DATA *ch, CHAR_DATA *victim )
+BOOL is_hating( CHAR_DATA *ch, CHAR_DATA *victim )
 {
 	if ( !ch->hating || ch->hating->who != victim )
 		return FALSE;
@@ -156,7 +156,7 @@ bool is_hating( CHAR_DATA *ch, CHAR_DATA *victim )
 	return TRUE;
 }
 
-bool is_fearing( CHAR_DATA *ch, CHAR_DATA *victim )
+BOOL is_fearing( CHAR_DATA *ch, CHAR_DATA *victim )
 {
 	if ( !ch->fearing || ch->fearing->who != victim )
 		return FALSE;
@@ -724,9 +724,9 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 	int	prof_gsn;
 	ch_ret retcode;
 	int chance;
-	bool fail, deflect;
+	BOOL fail, deflect;
 	AFFECT_DATA af;
-	bool second;
+	BOOL second;
 
 	if (dt == gsn_second_attack)
 	{
@@ -1261,7 +1261,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 		if ( dt >= 0 && dt < top_sn )
 		{
 			SKILLTYPE *skill = skill_table[dt];
-			bool found = FALSE;
+			BOOL found = FALSE;
 
 			if ( skill->imm_char && skill->imm_char[0] != '\0' )
 			{
@@ -1536,7 +1536,7 @@ float calc_res_min( CHAR_DATA * ch, int r)
     return y * (float)q / 1000.0 + ch->base_res[r - APPLY_RES_1];
 }
 
-bool deflect_attack(CHAR_DATA * ch)
+BOOL deflect_attack(CHAR_DATA * ch)
 {
 	OBJ_DATA * obj;
 	AFFECT_DATA * af;
@@ -1583,8 +1583,8 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 	CHAR_DATA *gch;
 	sh_int dameq;
 	int room;
-	bool npcvict;
-	bool loot;
+	BOOL npcvict;
+	BOOL loot;
 	int  xp_gain;
 	OBJ_DATA *damobj, *wield, *victwield;
 	ch_ret retcode;
@@ -1656,7 +1656,7 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 		{
 			if ( dt >= 0 && dt < top_sn )
 			{
-				bool found = FALSE;
+				BOOL found = FALSE;
 				SKILLTYPE *skill = skill_table[dt];
 
 				if ( skill->imm_char && skill->imm_char[0] != '\0' )
@@ -2220,7 +2220,7 @@ ch_ret damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 	return rNONE;
 }
 
-bool is_safe( CHAR_DATA *ch, CHAR_DATA *victim )
+BOOL is_safe( CHAR_DATA *ch, CHAR_DATA *victim )
 {
 	if ( !victim )
 		return FALSE;
@@ -2251,7 +2251,7 @@ bool is_safe( CHAR_DATA *ch, CHAR_DATA *victim )
    cuts out imms and safe rooms as well 
    for info only */
 
-bool is_safe_nm( CHAR_DATA *ch, CHAR_DATA *victim )
+BOOL is_safe_nm( CHAR_DATA *ch, CHAR_DATA *victim )
 {
 	return FALSE;
 }
@@ -2260,7 +2260,7 @@ bool is_safe_nm( CHAR_DATA *ch, CHAR_DATA *victim )
 /*
  * just verify that a corpse looting is legal
  */
-bool legal_loot( CHAR_DATA *ch, CHAR_DATA *victim )
+BOOL legal_loot( CHAR_DATA *ch, CHAR_DATA *victim )
 {
 	/* pc's can now loot .. why not .. death is pretty final */
 	if ( !IS_NPC(ch) )
@@ -2453,7 +2453,7 @@ void set_fighting( CHAR_DATA *ch, CHAR_DATA *victim )
  */
 void trigger_autodraw(CHAR_DATA *ch)
 {
-	bool found = FALSE;
+	BOOL found = FALSE;
 	OBJ_DATA * obj;
 
 	// Make sure they are actually wearing a holter and
@@ -2525,7 +2525,7 @@ void free_fight( CHAR_DATA *ch )
 /*
  * Stop fights.
  */
-void stop_fighting( CHAR_DATA *ch, bool fBoth )
+void stop_fighting( CHAR_DATA *ch, BOOL fBoth )
 {
 	CHAR_DATA *fch;
 
@@ -2955,8 +2955,8 @@ void dam_message( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 	char punct;
 	sh_int dampc;
 	struct skill_type *skill = NULL;
-	bool gcflag = FALSE;
-	bool gvflag = FALSE;
+	BOOL gcflag = FALSE;
+	BOOL gvflag = FALSE;
 
 	if ( ! dam )
 		dampc = 0;
@@ -3042,7 +3042,7 @@ void dam_message( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 				attack	= skill->noun_damage;
 				if ( dam == 0 )
 				{
-					bool found = FALSE;
+					BOOL found = FALSE;
 
 					if ( skill->miss_char && skill->miss_char[0] != '\0' )
 					{
@@ -3253,7 +3253,7 @@ void do_murder( CHAR_DATA *ch, char *argument )
 	return;
 }
 
-bool in_arena( CHAR_DATA *ch )
+BOOL in_arena( CHAR_DATA *ch )
 {
 
 	if ( !str_cmp( ch->in_room->area->filename, "arena.are" ) )
@@ -3347,7 +3347,7 @@ void do_flee( CHAR_DATA *ch, char *argument )
 	return;
 }
 
-bool get_cover( CHAR_DATA *ch )
+BOOL get_cover( CHAR_DATA *ch )
 {
 	ROOM_INDEX_DATA *was_in;
 	ROOM_INDEX_DATA *now_in;

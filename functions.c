@@ -54,7 +54,7 @@ char *strrep( const char *src, const char *sch, const char *rep )
 { 
    int lensrc = strlen( src ), lensch = strlen( sch ), lenrep = strlen( rep ), x, y, in_p; 
    static char newsrc[MAX_STRING_LENGTH]; 
-   bool searching = FALSE; 
+   BOOL searching = FALSE; 
 
    newsrc[0] = '\0'; 
    for( x = 0, in_p = 0; x < lensrc; x++, in_p++ ) 
@@ -122,7 +122,7 @@ char *strlinwrp(char *src, int length)
 {
   int srclen,in_p,x,last_line;
   char newstr[MAX_STRING_LENGTH];
-  bool looking;
+  BOOL looking;
     if(!length)
       length = 60;
     srclen = strlen(src);
@@ -252,7 +252,7 @@ char *htmlcolor( const char *src )
   
   int srclen,in_p,i,count;
   char newstr[MAX_STRING_LENGTH];
-  bool looking;
+  BOOL looking;
   srclen = strlen(src);
   in_p=0; STRFREE(newstr); count=0;
   looking=FALSE;

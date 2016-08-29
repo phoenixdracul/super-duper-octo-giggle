@@ -43,7 +43,7 @@
 
 extern const char *  const   wear_locs [];
 
-static bool carryingvnum_visit( CHAR_DATA * ch, OBJ_DATA *obj, int vnum )
+static BOOL carryingvnum_visit( CHAR_DATA * ch, OBJ_DATA *obj, int vnum )
 {
 /*
    pager_printf(ch, "***obj=%s vnum=%d\n\r", obj->name, obj->pIndexData->vnum );
@@ -122,7 +122,7 @@ void uphold_supermob( int *curr_serial, int serial, ROOM_INDEX_DATA **supermob_r
 /* Moved these to mud.h as I needed two of them for mpsleep -rkb */ 
 int mprog_do_command( char *cmnd, CHAR_DATA *mob, CHAR_DATA *actor, 
                       OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target, CHAR_DATA *rndm, 
-                      bool ignore, bool ignore_ors );
+                      BOOL ignore, BOOL ignore_ors );
 
 
 
@@ -148,9 +148,9 @@ MPSLEEP_DATA *current_mpsleep = NULL;
  */
 
 char *	mprog_next_command	args( ( char* clist ) );
-bool	mprog_seval		args( ( char* lhs, char* opr, char* rhs,
+BOOL	mprog_seval		args( ( char* lhs, char* opr, char* rhs,
                                         CHAR_DATA *mob ) );
-bool	mprog_veval		args( ( int lhs, char* opr, int rhs,
+BOOL	mprog_veval		args( ( int lhs, char* opr, int rhs,
                                         CHAR_DATA *mob ) );
 int	mprog_do_ifcheck	args( ( char* ifcheck, CHAR_DATA* mob,
 				       CHAR_DATA* actor, OBJ_DATA* obj,
@@ -160,17 +160,17 @@ void	mprog_translate		args( ( char ch, char* t, CHAR_DATA* mob,
 				       CHAR_DATA *vict, OBJ_DATA *v_obj, CHAR_DATA* rndm ) );
 void	mprog_driver		args( ( char* com_list, CHAR_DATA* mob,
 				       CHAR_DATA* actor, OBJ_DATA* obj,
-				       CHAR_DATA *victim, OBJ_DATA *target, bool single_step ) );
+				       CHAR_DATA *victim, OBJ_DATA *target, BOOL single_step ) );
 
 
-bool mprog_keyword_check	args( ( const char *argu, const char *argl ) );
+BOOL mprog_keyword_check	args( ( const char *argu, const char *argl ) );
 
 
-bool oprog_wordlist_check( char *arg, CHAR_DATA *mob, CHAR_DATA *actor, OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target, int type, OBJ_DATA *iobj );
+BOOL oprog_wordlist_check( char *arg, CHAR_DATA *mob, CHAR_DATA *actor, OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target, int type, OBJ_DATA *iobj );
 void set_supermob(OBJ_DATA *obj);
-bool oprog_percent_check( CHAR_DATA *mob, CHAR_DATA *actor, OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target, int type);
+BOOL oprog_percent_check( CHAR_DATA *mob, CHAR_DATA *actor, OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target, int type);
 void rprog_percent_check( CHAR_DATA *mob, CHAR_DATA *actor, OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target, int type);
-bool rprog_wordlist_check( char *arg, CHAR_DATA *mob, CHAR_DATA *actor,
+BOOL rprog_wordlist_check( char *arg, CHAR_DATA *mob, CHAR_DATA *actor,
 			  OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target, int type, ROOM_INDEX_DATA *room );
 
 
@@ -197,7 +197,7 @@ char * strstr(s1,s2) const char *s1; const char *s2;
 #define DT_QUEST_DIR "../quests/"
 
 void MarkQuestComplete(char *quest, CHAR_DATA *player);
-bool CheckQuestComplete(char *quest, CHAR_DATA *player);
+BOOL CheckQuestComplete(char *quest, CHAR_DATA *player);
 
 
 static size_t deleteLine( char* buffer, size_t size, const char* playerName )
@@ -205,7 +205,7 @@ static size_t deleteLine( char* buffer, size_t size, const char* playerName )
   // file format assumed to be as specified in the question i.e. name{space}somevalue{space}someothervalue\n
   // find playerName
   char* p = buffer; 
-  bool done = FALSE;
+  BOOL done = FALSE;
   size_t len = strlen(playerName);
   size_t newSize = 0;
   do
@@ -326,11 +326,11 @@ void MarkQuestComplete(char *quest, CHAR_DATA *player)
 	finds the quest entry in /quests/player_name.qdt, and returns 1 if
 	found.
 */
-bool CheckQuestComplete(char *quest, CHAR_DATA *player)
+BOOL CheckQuestComplete(char *quest, CHAR_DATA *player)
 {
 	char quest_file[100];
 	char read_string[100];
-	bool bFound;
+	BOOL bFound;
 	FILE * read;
 
 	strcpy(quest_file, DT_QUEST_DIR);
@@ -413,17 +413,17 @@ char *mprog_next_command( char *clist )
  *  still have trailing spaces so be careful when editing since:
  *  "guard" and "guard " are not equal.
  */
-bool mprog_seval( char *lhs, char *opr, char *rhs, CHAR_DATA *mob )
+BOOL mprog_seval( char *lhs, char *opr, char *rhs, CHAR_DATA *mob )
 {
 
   if ( !str_cmp( opr, "==" ) )
-    return ( bool )( !str_cmp( lhs, rhs ) );
+    return ( BOOL )( !str_cmp( lhs, rhs ) );
   if ( !str_cmp( opr, "!=" ) )
-    return ( bool )( str_cmp( lhs, rhs ) );
+    return ( BOOL )( str_cmp( lhs, rhs ) );
   if ( !str_cmp( opr, "/" ) )
-    return ( bool )( !str_infix( rhs, lhs ) );
+    return ( BOOL )( !str_infix( rhs, lhs ) );
   if ( !str_cmp( opr, "!/" ) )
-    return ( bool )( str_infix( rhs, lhs ) );
+    return ( BOOL )( str_infix( rhs, lhs ) );
 
   sprintf( log_buf, "Improper MOBprog operator '%s'", opr );
   progbug( log_buf, mob );
@@ -431,7 +431,7 @@ bool mprog_seval( char *lhs, char *opr, char *rhs, CHAR_DATA *mob )
 
 }
 
-bool mprog_veval( int lhs, char *opr, int rhs, CHAR_DATA *mob )
+BOOL mprog_veval( int lhs, char *opr, int rhs, CHAR_DATA *mob )
 {
 
   if ( !str_cmp( opr, "==" ) )
@@ -466,7 +466,7 @@ bool mprog_veval( int lhs, char *opr, int rhs, CHAR_DATA *mob )
  * optional but if one is there then both must be. The spaces are all
  * optional. The evaluation of the opr expressions is farmed out
  * to reduce the redundancy of the mammoth if statement list.
- * If there are errors, then return BERR otherwise return boolean 1,0
+ * If there are errors, then return BERR otherwise return BOOLean 1,0
  * Redone by Altrag.. kill all that big copy-code that performs the
  * same action on each variable..
  */
@@ -1205,7 +1205,7 @@ bool mprog_veval( int lhs, char *opr, int rhs, CHAR_DATA *mob )
  * optional but if one is there then both must be. The spaces are all
  * optional. The evaluation of the opr expressions is farmed out
  * to reduce the redundancy of the mammoth if statement list.
- * If there are errors, then return BERR otherwise return boolean 1,0
+ * If there are errors, then return BERR otherwise return BOOLean 1,0
  * Redone by Altrag.. kill all that big copy-code that performs the
  * same action on each variable..
  */
@@ -2961,7 +2961,7 @@ else
  *
  */
 void mprog_driver ( char *com_list, CHAR_DATA *mob, CHAR_DATA *actor,
-		   OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target, bool single_step)
+		   OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target, BOOL single_step)
 {
   char tmpcmndlst[ MAX_STRING_LENGTH ];
   char *command_list;
@@ -2972,11 +2972,11 @@ void mprog_driver ( char *com_list, CHAR_DATA *mob, CHAR_DATA *actor,
   int count2	   = 0;
   int ignorelevel  = 0;
   int iflevel, result;
-  bool ifstate[MAX_IFS][ DO_ELSE + 1 ];
+  BOOL ifstate[MAX_IFS][ DO_ELSE + 1 ];
   static int prog_nest;
   MPSLEEP_DATA *mpsleep = NULL;
   char arg[MAX_INPUT_LENGTH];
-  bool oldMPSilent;
+  BOOL oldMPSilent;
 
   if ( IS_AFFECTED( mob, AFF_CHARM ) || IS_AFFECTED(mob, AFF_POSSESS) )
     return;
@@ -2995,7 +2995,7 @@ void mprog_driver ( char *com_list, CHAR_DATA *mob, CHAR_DATA *actor,
     return;
   }
 
-  /* Make sure all ifstate bools are set to FALSE */
+  /* Make sure all ifstate BOOLs are set to FALSE */
   for ( iflevel = 0; iflevel < MAX_IFS; iflevel++ )
   {
     for ( count = 0; count < DO_ELSE; count++ )
@@ -3379,7 +3379,7 @@ log_string( "BERR" );
  */
 int mprog_do_command( char *cmnd, CHAR_DATA *mob, CHAR_DATA *actor, 
                       OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target, CHAR_DATA *rndm, 
-                      bool ignore, bool ignore_ors )
+                      BOOL ignore, BOOL ignore_ors )
 {
   char firstword[MAX_INPUT_LENGTH];
   char *ifcheck;
@@ -3394,7 +3394,7 @@ int mprog_do_command( char *cmnd, CHAR_DATA *mob, CHAR_DATA *actor,
 
   if ( !str_cmp( firstword, "if" ) )
   {
-    /* Ok, we found an if.  According to the boolean 'ignore', either
+    /* Ok, we found an if.  According to the BOOLean 'ignore', either
        ignore the ifcheck and report that back to mprog_driver or do
        the ifcheck and report whether it was successful. */
     if ( ignore )
@@ -3413,7 +3413,7 @@ int mprog_do_command( char *cmnd, CHAR_DATA *mob, CHAR_DATA *actor,
 
   if ( !str_cmp( firstword, "or" ) )
   {
-    /* Same behavior as with ifs, but use the boolean 'ignore_ors' to
+    /* Same behavior as with ifs, but use the BOOLean 'ignore_ors' to
        decide which way to go. */
     if ( ignore_ors )
       return ORIGNORED;
@@ -3443,7 +3443,7 @@ int mprog_do_command( char *cmnd, CHAR_DATA *mob, CHAR_DATA *actor,
 
   /* Ok, didn't find an if, an or, an else or an endif.  
      If the command is in an if or else section that is not to be 
-     performed, the boolean 'ignore' is set to true and we just 
+     performed, the BOOLean 'ignore' is set to true and we just 
      return.  If not, we try to execute the command. */
 
   if ( ignore )
@@ -3500,7 +3500,7 @@ void mpsleep_update()
 {
  MPSLEEP_DATA *mpsleep;
  MPSLEEP_DATA *tmpMpsleep;
- bool delete_it;
+ BOOL delete_it;
 
  mpsleep = first_mpsleep;
  while (mpsleep)
@@ -3563,7 +3563,7 @@ void mpsleep_update()
 }
 
 
-bool mprog_keyword_check( const char *argu, const char *argl )
+BOOL mprog_keyword_check( const char *argu, const char *argl )
 {
     char word[MAX_INPUT_LENGTH];
     char arg1[MAX_INPUT_LENGTH];
@@ -3616,7 +3616,7 @@ bool mprog_keyword_check( const char *argu, const char *argl )
  *  on a certain percent, or trigger on a keyword or word phrase.
  *  To see how this works, look at the various trigger routines..
  */
-bool mprog_wordlist_check( char *arg, CHAR_DATA *mob, CHAR_DATA *actor,
+BOOL mprog_wordlist_check( char *arg, CHAR_DATA *mob, CHAR_DATA *actor,
 			  OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target, int type )
 {
 
@@ -3629,7 +3629,7 @@ bool mprog_wordlist_check( char *arg, CHAR_DATA *mob, CHAR_DATA *actor,
   char       *dupl;
   char       *end;
   int	      i;
-  bool	      executed=FALSE;
+  BOOL	      executed=FALSE;
 
 
   for ( mprg = mob->pIndexData->mudprogs; mprg; mprg = mprg->next )
@@ -3707,7 +3707,7 @@ void mprog_time_check( CHAR_DATA *mob, CHAR_DATA *actor, OBJ_DATA *obj,
                          CHAR_DATA *victim, OBJ_DATA *target, int type)
 {
  MPROG_DATA * mprg;
- bool       trigger_time;
+ BOOL       trigger_time;
 
  for ( mprg = mob->pIndexData->mudprogs; mprg; mprg = mprg->next )
    {
@@ -3773,7 +3773,7 @@ void mprog_act_trigger( char *buf, CHAR_DATA *mob, CHAR_DATA *ch,
 {
     MPROG_ACT_LIST * tmp_act;
     MPROG_DATA *mprg;
-    bool found = FALSE;
+    BOOL found = FALSE;
 
     if ( IS_NPC( mob )
     &&   HAS_PROG( mob->pIndexData, ACT_PROG ) )
@@ -4141,7 +4141,7 @@ void mprog_speech_trigger( char *txt, CHAR_DATA *actor )
     }
 }
 
-bool mprog_command_trigger( CHAR_DATA *actor, char *txt )
+BOOL mprog_command_trigger( CHAR_DATA *actor, char *txt )
 {
     CHAR_DATA *vmob;
 
@@ -4288,7 +4288,7 @@ int oprog_custom_trigger(char *command, char *argument, CHAR_DATA *ch)
   char pcom[MAX_STRING_LENGTH];
   char parg[MAX_STRING_LENGTH];
   char *temp;
-  bool found = FALSE;
+  BOOL found = FALSE;
   OBJ_DATA *vobj;
     if((room = ch->in_room) == NULL)
       return 0;
@@ -4370,7 +4370,7 @@ int mprog_custom_trigger(char *command, char *argument, CHAR_DATA *ch)
   char pcom[MAX_STRING_LENGTH];
   char parg[MAX_STRING_LENGTH];
   char *temp;
-  bool found = FALSE;
+  BOOL found = FALSE;
   CHAR_DATA *vmob;
     if((room = ch->in_room) == NULL)
       return 0;
@@ -4415,7 +4415,7 @@ int rprog_custom_trigger(char *command, char *argument, CHAR_DATA *ch)
   char pcom[MAX_STRING_LENGTH];
   char parg[MAX_STRING_LENGTH];
   char *temp;
-  bool found = FALSE;
+  BOOL found = FALSE;
     if((room = ch->in_room) == NULL)
       return 0;
     for ( mprg = room->mudprogs; mprg; mprg = mprg->next )
@@ -4448,11 +4448,11 @@ int rprog_custom_trigger(char *command, char *argument, CHAR_DATA *ch)
   return 1;
 }
 
-bool oprog_percent_check( CHAR_DATA *mob, CHAR_DATA *actor, OBJ_DATA *obj,
+BOOL oprog_percent_check( CHAR_DATA *mob, CHAR_DATA *actor, OBJ_DATA *obj,
 			  CHAR_DATA *victim, OBJ_DATA *target, int type)
 {
     MPROG_DATA * mprg;
-    bool executed = FALSE;
+    BOOL executed = FALSE;
 
     for ( mprg = obj->pIndexData->mudprogs; mprg; mprg = mprg->next )
 	if ( mprg->type == type
@@ -4513,7 +4513,7 @@ void oprog_speech_trigger( char *txt, CHAR_DATA *ch )
  return;
 }
 
-/*bool oprog_command_trigger( CHAR_DATA *ch, char *txt )
+/*BOOL oprog_command_trigger( CHAR_DATA *ch, char *txt )
 {
     OBJ_DATA *vobj;
 
@@ -4556,10 +4556,10 @@ void oprog_wear_trigger( CHAR_DATA *ch, OBJ_DATA *obj )
     }
 }
 
-bool oprog_use_trigger( CHAR_DATA *ch, OBJ_DATA *obj, CHAR_DATA *vict,
+BOOL oprog_use_trigger( CHAR_DATA *ch, OBJ_DATA *obj, CHAR_DATA *vict,
                         OBJ_DATA *targ, void *vo )
 {
-    bool executed = FALSE;
+    BOOL executed = FALSE;
 
     if ( HAS_PROG(obj->pIndexData, USE_PROG) )
     {
@@ -4740,7 +4740,7 @@ void oprog_act_trigger( char *buf, OBJ_DATA *mobj, CHAR_DATA *ch,
 }
 
 
-bool oprog_wordlist_check( char *arg, CHAR_DATA *mob, CHAR_DATA *actor,
+BOOL oprog_wordlist_check( char *arg, CHAR_DATA *mob, CHAR_DATA *actor,
 			  OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target, int type, OBJ_DATA *iobj )
 {
   char        temp1[ MAX_STRING_LENGTH ];
@@ -4752,7 +4752,7 @@ bool oprog_wordlist_check( char *arg, CHAR_DATA *mob, CHAR_DATA *actor,
   char       *dupl;
   char       *end;
   int         i;
-  bool	      executed = FALSE;
+  BOOL	      executed = FALSE;
 
 
   for ( mprg = iobj->pIndexData->mudprogs; mprg; mprg = mprg->next )
@@ -4999,7 +4999,7 @@ void rprog_speech_trigger( char *txt, CHAR_DATA *ch )
    }
 }
 
-/*bool rprog_command_trigger( CHAR_DATA *ch, char *txt )
+/*BOOL rprog_command_trigger( CHAR_DATA *ch, char *txt )
 {
    if( HAS_PROG(ch->in_room, CMD_PROG) )
    {
@@ -5020,7 +5020,7 @@ void rprog_random_trigger( CHAR_DATA *ch )
    }
 }
 
-bool rprog_wordlist_check( char *arg, CHAR_DATA *mob, CHAR_DATA *actor,
+BOOL rprog_wordlist_check( char *arg, CHAR_DATA *mob, CHAR_DATA *actor,
 			  OBJ_DATA *obj, CHAR_DATA *victim, OBJ_DATA *target, int type, ROOM_INDEX_DATA *room )
 {
 
@@ -5033,7 +5033,7 @@ bool rprog_wordlist_check( char *arg, CHAR_DATA *mob, CHAR_DATA *actor,
   char       *dupl;
   char       *end;
   int         i;
-  bool	      executed = FALSE;
+  BOOL	      executed = FALSE;
 
   if ( actor && !char_died(actor) && actor->in_room )
     room = actor->in_room;
@@ -5096,7 +5096,7 @@ void rprog_time_check( CHAR_DATA *mob, CHAR_DATA *actor, OBJ_DATA *obj,
 			ROOM_INDEX_DATA *room, int type )
 {
   MPROG_DATA * mprg;
-  bool 	       trigger_time;
+  BOOL 	       trigger_time;
 
   for ( mprg = room->mudprogs; mprg; mprg = mprg->next )
   {

@@ -83,8 +83,8 @@ if( !strcasecmp( (word), (literal) ) )  \
 int imcwait;   /* Reconnect timer */
 int imcconnect_attempts;   /* How many times have we tried to reconnect? */
 unsigned long imc_sequencenumber;   /* sequence# for outgoing packets */
-bool imcpacketdebug = FALSE;
-bool default_packets_registered = FALSE; // Cheesy global for a stupid problem!
+BOOL imcpacketdebug = FALSE;
+BOOL default_packets_registered = FALSE; // Cheesy global for a stupid problem!
 time_t imcucache_clock; /* prune ucache stuff regularly */
 time_t imc_time;  /* Current clock time for the client */
 
@@ -263,7 +263,7 @@ char *imcstrrep( const char *src, const char *sch, const char *rep )
 {
    int lensrc = strlen( src ), lensch = strlen( sch ), lenrep = strlen( rep ), x, y, in_p;
    static char newsrc[LGST];
-   bool searching = FALSE;
+   BOOL searching = FALSE;
 
    newsrc[0] = '\0';
    for( x = 0, in_p = 0; x < lensrc; x++, in_p++ )
@@ -325,7 +325,7 @@ char *imcstrrep( const char *src, const char *sch, const char *rep )
    return newsrc;
 }
 
-const char *imcone_argument( const char *argument, char *arg_first )
+char *imcone_argument( char *argument, char *arg_first )
 {
    char cEnd;
    int count;
@@ -493,7 +493,7 @@ void imcpager_printf( CHAR_DATA * ch, const char *fmt, ... )
  * Low level utility functions. *
  ********************************/
 
-bool imcstr_prefix( const char *astr, const char *bstr )
+BOOL imcstr_prefix( const char *astr, const char *bstr )
 {
    if( !astr )
    {
@@ -531,7 +531,7 @@ char *imccapitalize( const char *str )
 }
 
 /* Does the list have the member in it? */
-bool imc_hasname( const char *list, const char *member )
+BOOL imc_hasname( const char *list, const char *member )
 {
    if( !list || list[0] == '\0' )
       return FALSE;
@@ -594,7 +594,7 @@ char *imc_mudof( const char *src )
    static char mud[SMST];
    char *person;
 
-   if( !( person = strchr( src, '@' ) ) )
+   if( !( person = strchr( CAST(const char*)(src), '@' ) ) )
       imcstrlcpy( mud, src, SMST );
    else
       imcstrlcpy( mud, person + 1, SMST );
@@ -622,7 +622,7 @@ char *imc_channel_nameof( const char *src )
 {
    static char name[SMST];
    size_t x, y = 0;
-   bool colon = FALSE;
+   BOOL colon = FALSE;
 
    for( x = 0; x < strlen( src ); x++ )
    {
@@ -652,7 +652,7 @@ char *escape_string( const char *src )
 {
    static char newstr[LGST];
    size_t x, y = 0;
-   bool quote = FALSE, endquote = FALSE;
+   BOOL quote = FALSE, endquote = FALSE;
 
    if( strchr( src, ' ' ) )
    {
@@ -733,7 +733,7 @@ char *imcgetname( const char *from )
 }
 
 /* check if a packet from a given source should be ignored */
-bool imc_isbanned( const char *who )
+BOOL imc_isbanned( const char *who )
 {
    IMC_BAN *mud;
 
@@ -745,7 +745,7 @@ bool imc_isbanned( const char *who )
    return FALSE;
 }
 
-bool imc_isignoring( CHAR_DATA * ch, const char *ignore )
+BOOL imc_isignoring( CHAR_DATA * ch, const char *ignore )
 {
    IMC_IGNORE *temp;
 
@@ -857,7 +857,7 @@ REMOTEINFO *imc_find_reminfo( const char *name )
    return NULL;
 }
 
-bool check_mud( CHAR_DATA * ch, const char *mud )
+BOOL check_mud( CHAR_DATA * ch, const char *mud )
 {
    REMOTEINFO *r = imc_find_reminfo( mud );
 
@@ -875,7 +875,7 @@ bool check_mud( CHAR_DATA * ch, const char *mud )
    return TRUE;
 }
 
-bool check_mudof( CHAR_DATA * ch, const char *mud )
+BOOL check_mudof( CHAR_DATA * ch, const char *mud )
 {
    return check_mud( ch, imc_mudof( mud ) );
 }
@@ -890,7 +890,7 @@ int get_imcpermvalue( const char *flag )
    return -1;
 }
 
-bool imccheck_permissions( CHAR_DATA * ch, int checkvalue, int targetvalue, bool enforceequal )
+BOOL imccheck_permissions( CHAR_DATA * ch, int checkvalue, int targetvalue, BOOL enforceequal )
 {
    if( checkvalue < 0 || checkvalue > IMCPERM_IMP )
    {
@@ -943,7 +943,7 @@ void imc_freeban( IMC_BAN * ban )
    IMCDISPOSE( ban );
 }
 
-bool imc_delban( const char *what )
+BOOL imc_delban( const char *what )
 {
    IMC_BAN *ban, *ban_next;
 
@@ -994,7 +994,7 @@ void imc_freechan( IMC_CHANNEL * c )
    IMCDISPOSE( c );
 }
 
-void imcformat_channel( CHAR_DATA * ch, IMC_CHANNEL * d, int format, bool all )
+void imcformat_channel( CHAR_DATA * ch, IMC_CHANNEL * d, int format, BOOL all )
 {
    IMC_CHANNEL *c = NULL;
    char buf[LGST];
@@ -1057,7 +1057,7 @@ void imcformat_channel( CHAR_DATA * ch, IMC_CHANNEL * d, int format, bool all )
 }
 
 void imc_new_channel( const char *chan, const char *owner, const char *ops, const char *invite, const char *exclude,
-                      bool copen, int perm, const char *lname )
+                      BOOL copen, int perm, const char *lname )
 {
    IMC_CHANNEL *c;
 
@@ -1099,7 +1099,7 @@ void imc_new_channel( const char *chan, const char *owner, const char *ops, cons
 int imcfread_number( FILE * fp )
 {
    int number;
-   bool sign;
+   BOOL sign;
    char c;
 
    do
@@ -1363,7 +1363,7 @@ void imc_freepacket( IMC_PACKET * p )
 
 int find_next_esign( const char *string, int current )
 {
-   bool quote = FALSE;
+   BOOL quote = FALSE;
 
    if( string[current] == '=' )
       current++;
@@ -1393,7 +1393,7 @@ char *imc_getData( char *output, const char *key, const char *packet )
 {
    int current = 0;
    size_t i = 0;
-   bool quote = FALSE;
+   BOOL quote = FALSE;
 
    output[0] = '\0';
 
@@ -2226,7 +2226,7 @@ char *imc_assemble_who( void )
    CHAR_DATA *person;
    DESCRIPTOR_DATA *d;
    int pcount = 0;
-   bool plr = FALSE, imm = FALSE;
+   BOOL plr = FALSE, imm = FALSE;
    char plrheader[SMST], immheader[SMST], rank[SMST], flags[SMST], name[SMST], title[SMST], plrline[SMST], immline[SMST];
    char plrlines[LGST], immlines[LGST], head[LGST], tail[LGST];
    static char master[LGST];  /* The final result that gets returned */
@@ -2616,7 +2616,7 @@ PFUN( imc_recv_iceupdate )
    IMC_CHANNEL *c;
    char chan[SMST], owner[SMST], ops[SMST], invite[SMST], exclude[SMST], policy[SMST], level[SMST], lname[SMST];
    int perm;
-   bool copen;
+   BOOL copen;
 
    imc_getData( chan, "channel", packet );
    imc_getData( owner, "owner", packet );
@@ -3049,7 +3049,7 @@ void imc_handle_autosetup( char *source, char *servername, char *cmd, char *txt,
    imc_shutdown( FALSE );
 }
 
-bool imc_write_socket( void )
+BOOL imc_write_socket( void )
 {
    const char *ptr = this_imcmud->outbuf;
    int nleft = this_imcmud->outtop, nwritten = 0;
@@ -3160,6 +3160,7 @@ void imc_process_authentication( const char *packet )
    {
       if( strcasecmp( this_imcmud->serverpw, pw ) )
       {
+         imclog( "pw: %s", pw);
          imclog( "%s sent an improper serverpassword.", rname );
          imc_shutdown( FALSE );
          return;
@@ -3194,7 +3195,7 @@ void imc_process_authentication( const char *packet )
 /*
  * Transfer one line from input buffer to input line.
  */
-bool imc_read_buffer( void )
+BOOL imc_read_buffer( void )
 {
    size_t i = 0, j = 0;
    unsigned char ended = 0;
@@ -3229,11 +3230,11 @@ bool imc_read_buffer( void )
    return ended;
 }
 
-bool imc_read_socket( void )
+BOOL imc_read_socket( void )
 {
    size_t iStart, iErr;
    short loop_count = 0;
-   bool begin = TRUE;
+   BOOL begin = TRUE;
 
    iStart = strlen( this_imcmud->inbuf );
 
@@ -3455,9 +3456,9 @@ void imc_char_login( CHAR_DATA * ch )
       imc_send_ucache_update( CH_IMCNAME( ch ), sex );
 }
 
-bool imc_loadchar( CHAR_DATA * ch, FILE * fp, const char *word )
+BOOL imc_loadchar( CHAR_DATA * ch, FILE * fp, const char *word )
 {
-   bool fMatch = FALSE;
+   BOOL fMatch = FALSE;
 
 #if !defined(IMCSTANDALONE)
    if( IS_NPC( ch ) )
@@ -3849,7 +3850,7 @@ void imc_save_channels( void )
 void imc_readchannel( IMC_CHANNEL * channel, FILE * fp )
 {
    const char *word;
-   bool fMatch;
+   BOOL fMatch;
 
    for( ;; )
    {
@@ -4056,7 +4057,7 @@ void imc_savecolor( void )
 void imc_readcolor( IMC_COLOR * color, FILE * fp )
 {
    const char *word;
-   bool fMatch;
+   BOOL fMatch;
 
    for( ;; )
    {
@@ -4172,7 +4173,7 @@ void imc_readhelp( IMC_HELP_DATA * help, FILE * fp )
    const char *word;
    char hbuf[LGST];
    int permvalue;
-   bool fMatch;
+   BOOL fMatch;
 
    for( ;; )
    {
@@ -4319,7 +4320,7 @@ void imc_readcommand( IMC_CMD_DATA * cmd, FILE * fp )
    IMC_ALIAS *alias;
    const char *word;
    int permvalue;
-   bool fMatch;
+   BOOL fMatch;
 
    for( ;; )
    {
@@ -4389,7 +4390,7 @@ void imc_readcommand( IMC_CMD_DATA * cmd, FILE * fp )
    }
 }
 
-bool imc_load_commands( void )
+BOOL imc_load_commands( void )
 {
    FILE *fp;
    IMC_CMD_DATA *cmd;
@@ -4445,7 +4446,7 @@ bool imc_load_commands( void )
 void imc_readucache( IMCUCACHE_DATA * user, FILE * fp )
 {
    const char *word;
-   bool fMatch;
+   BOOL fMatch;
 
    for( ;; )
    {
@@ -4582,7 +4583,7 @@ void imc_save_config( void )
 void imcfread_config_file( FILE * fin )
 {
    const char *word;
-   bool fMatch;
+   BOOL fMatch;
 
    for( ;; )
    {
@@ -4661,7 +4662,7 @@ void imcfread_config_file( FILE * fin )
    }
 }
 
-bool imc_read_config( int desc )
+BOOL imc_read_config( int desc )
 {
    FILE *fin;
    char cbase[SMST];
@@ -4990,7 +4991,7 @@ int ipv4_connect( void )
    return desc;
 }
 
-bool imc_server_connect( void )
+BOOL imc_server_connect( void )
 {
 #if defined(IPV6)
    struct addrinfo hints, *ai_list, *ai;
@@ -5122,7 +5123,7 @@ void imc_delete_templates( void )
    imc_delete_who_template(  );
 }
 
-void free_imcdata( bool complete )
+void free_imcdata( BOOL complete )
 {
    REMOTEINFO *p, *pnext;
    IMC_BAN *ban, *ban_next;
@@ -5233,7 +5234,7 @@ void imc_hotboot( void )
 }
 
 /* Shutdown IMC2 */
-void imc_shutdown( bool reconnect )
+void imc_shutdown( BOOL reconnect )
 {
    if( this_imcmud && this_imcmud->state == IMC_OFFLINE )
       return;
@@ -5256,7 +5257,7 @@ void imc_shutdown( bool reconnect )
 }
 
 /* Startup IMC2 */
-bool imc_startup_network( bool connected )
+BOOL imc_startup_network( BOOL connected )
 {
    imclog( "%s", "IMC2 Network Initializing..." );
 
@@ -5302,7 +5303,7 @@ bool imc_startup_network( bool connected )
    return TRUE;
 }
 
-void imc_startup( bool force, int desc, bool connected )
+void imc_startup( BOOL force, int desc, BOOL connected )
 {
    imcwait = 0;
 
@@ -5415,7 +5416,7 @@ IMC_CMD( imccommand )
 }
 
 /* need exactly 2 %s's, and no other format specifiers */
-bool verify_format( const char *fmt, short sneed )
+BOOL verify_format( const char *fmt, short sneed )
 {
    const char *c;
    int i = 0;
@@ -5449,7 +5450,7 @@ IMC_CMD( imcsetup )
    char imccmd[SMST], chan[SMST], arg1[SMST], buf[LGST];
    IMC_CHANNEL *c = NULL;
    int x;
-   bool all = FALSE;
+   BOOL all = FALSE;
 
    argument = imcone_argument( argument, imccmd );
    argument = imcone_argument( argument, chan );
@@ -7143,7 +7144,7 @@ IMC_CMD( imccedit )
    IMC_CMD_DATA *cmd, *tmp;
    IMC_ALIAS *alias, *alias_next;
    char name[SMST], option[SMST];
-   bool found = FALSE, aliasfound = FALSE;
+   BOOL found = FALSE, aliasfound = FALSE;
 
    argument = imcone_argument( argument, name );
    argument = imcone_argument( argument, option );
@@ -7359,7 +7360,7 @@ IMC_CMD( imchedit )
 {
    IMC_HELP_DATA *help;
    char name[SMST], cmd[SMST];
-   bool found = FALSE;
+   BOOL found = FALSE;
 
    argument = imcone_argument( argument, name );
    argument = imcone_argument( argument, cmd );
@@ -7482,7 +7483,7 @@ const char *imc_find_social( CHAR_DATA * ch, const char *sname, const char *pers
    SOCIAL_DATA *social;
 #else
    int cmd;
-   bool found;
+   BOOL found;
 #endif
 
    socname[0] = '\0';
@@ -7659,7 +7660,7 @@ char *imc_act_string( const char *format, CHAR_DATA * ch, CHAR_DATA * vic )
    char tmp_str[LGST];
    const char *i = "";
    char *point;
-   bool should_upper = FALSE;
+   BOOL should_upper = FALSE;
 
    if( !format || format[0] == '\0' || !ch )
       return NULL;
@@ -8017,13 +8018,13 @@ IMC_FUN *imc_function( const char *func )
 }
 
 /* Check for IMC channels, return TRUE to stop command processing, FALSE otherwise */
-bool imc_command_hook( CHAR_DATA * ch, char *command, char *argument )
+BOOL imc_command_hook( CHAR_DATA * ch, char *command, char *argument )
 {
    IMC_CMD_DATA *cmd;
    IMC_ALIAS *alias;
    IMC_CHANNEL *c;
    const char *p;
-bug("made it here");
+
 #if !defined(IMCSTANDALONE)
    if( IS_NPC( ch ) )
       return FALSE;
@@ -8181,7 +8182,7 @@ bug("made it here");
 #if defined(IMCSTANDALONE)
 int main( int argc, char **argv )
 {
-   bool client_down = FALSE;
+   BOOL client_down = FALSE;
 
    first_descriptor = last_descriptor = NULL;
 

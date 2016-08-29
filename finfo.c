@@ -60,7 +60,7 @@ void fread_forcehelp( FORCE_HELP *fhelp, FILE *fp )
 {
     char buf[MAX_STRING_LENGTH];
     char *word;
-    bool fMatch;
+    BOOL fMatch;
  
     for ( ; ; )
     {
@@ -95,12 +95,12 @@ void fread_forcehelp( FORCE_HELP *fhelp, FILE *fp )
 	}
 }
 
-bool load_forcehelp( char *forcehelpfile )
+BOOL load_forcehelp( char *forcehelpfile )
 {
     char filename[256];
     FORCE_HELP *fhelp;
     FILE *fp;
-    bool found;
+    BOOL found;
 
     CREATE( fhelp, FORCE_HELP, 1 );
 
@@ -274,7 +274,7 @@ void fread_forceskill( FORCE_SKILL *fskill, FILE *fp )
 {
     char buf[MAX_STRING_LENGTH];
     char *word;
-    bool fMatch;
+    BOOL fMatch;
  
     for ( ; ; )
     {
@@ -339,13 +339,13 @@ void fread_forceskill( FORCE_SKILL *fskill, FILE *fp )
     }
 }
 
-bool load_forceskill( char *forceskillfile )
+BOOL load_forceskill( char *forceskillfile )
 {
     char filename[256];
     FORCE_SKILL *fskill;
     FILE *fp;
     DO_FUN *fun;
-    bool found;
+    BOOL found;
 
     CREATE( fskill, FORCE_SKILL, 1 );
 

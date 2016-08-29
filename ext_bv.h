@@ -36,10 +36,10 @@ struct extended_bitvector
   */
 char *ext_flag_string( EXT_BV * bitvector, const char *const flagarray[] );
 char *ext_flag_string2( EXT_BV * bitvector, const char *const flagarray[] );
-bool ext_is_empty( EXT_BV * bits );
+BOOL ext_is_empty( EXT_BV * bits );
 void ext_clear_bits( EXT_BV * bits );
 int ext_has_bits( EXT_BV * var, EXT_BV * bits );
-bool ext_same_bits( EXT_BV * var, EXT_BV * bits );
+BOOL ext_same_bits( EXT_BV * var, EXT_BV * bits );
 void ext_set_bits( EXT_BV * var, EXT_BV * bits );
 void ext_remove_bits( EXT_BV * var, EXT_BV * bits );
 void ext_toggle_bits( EXT_BV * var, EXT_BV * bits );

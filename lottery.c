@@ -80,7 +80,7 @@
 
 
 /* Locals */
-bool load_lottery args( ( LOTTERY_DATA * lot ) );
+BOOL load_lottery args( ( LOTTERY_DATA * lot ) );
 void fread_lottery( LOTTERY_DATA * lot, FILE * fp );
 void save_lottery( LOTTERY_DATA lot );
 char *format_lottery_time( char *output, int total_minutes );
@@ -340,11 +340,11 @@ void do_lottery( CHAR_DATA * ch, char *argument )
    return;
 }
 
-bool load_lottery( LOTTERY_DATA * lot )
+BOOL load_lottery( LOTTERY_DATA * lot )
 {
    char filename[MAX_INPUT_LENGTH];
    FILE *fp;
-   bool found;
+   BOOL found;
 
    found = FALSE;
    sprintf( filename, "%slottery.dat", SYSTEM_DIR );

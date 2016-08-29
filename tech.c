@@ -52,7 +52,7 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
     int affecttype, affectammount;
     char name[MAX_STRING_LENGTH];
     int level, chance;
-    bool checklens, checkbat, checksuper, checkcircuit, checktool; 
+    BOOL checklens, checkbat, checksuper, checkcircuit, checktool; 
     OBJ_DATA *obj;
     OBJ_INDEX_DATA *pObjIndex;
             
@@ -436,7 +436,7 @@ void do_showmodules( CHAR_DATA *ch, char *argument ){
 void do_removemodule( CHAR_DATA *ch, char *argument )
 {
   SHIP_DATA *ship;
-  bool checktool;
+  BOOL checktool;
   OBJ_DATA *obj;
   char arg[MAX_INPUT_LENGTH];
   char buf[MAX_INPUT_LENGTH];
@@ -979,7 +979,7 @@ void do_makejetpack( CHAR_DATA *ch, char *argument )
     char arg[MAX_INPUT_LENGTH];
     char buf[MAX_STRING_LENGTH];
     int level, chance, strength;
-    bool checktool, checkbatt, checkchem, checkcirc, checkmetal;
+    BOOL checktool, checkbatt, checkchem, checkcirc, checkmetal;
     OBJ_DATA *obj;
     OBJ_INDEX_DATA *pObjIndex;
     int vnum;

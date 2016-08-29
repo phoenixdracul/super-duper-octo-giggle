@@ -50,15 +50,15 @@
 BOARD_DATA *		first_board;
 BOARD_DATA *		last_board;
 
-bool	is_note_to	args( ( CHAR_DATA *ch, NOTE_DATA *pnote ) );
+BOOL	is_note_to	args( ( CHAR_DATA *ch, NOTE_DATA *pnote ) );
 void	note_attach	args( ( CHAR_DATA *ch ) );
 void	note_remove	args( ( CHAR_DATA *ch, BOARD_DATA *board,
 		NOTE_DATA *pnote ) );
-void  	do_note		args( ( CHAR_DATA *ch, char *arg_passed, bool IS_MAIL) );
+void  	do_note		args( ( CHAR_DATA *ch, char *arg_passed, BOOL IS_MAIL) );
 
 
 
-bool can_remove( CHAR_DATA *ch, BOARD_DATA *board )
+BOOL can_remove( CHAR_DATA *ch, BOARD_DATA *board )
 {
 	/* If your trust is high enough, you can remove it. */
 	if ( get_trust( ch ) >= board->min_remove_level )
@@ -72,7 +72,7 @@ bool can_remove( CHAR_DATA *ch, BOARD_DATA *board )
 	return FALSE;
 }
 
-bool can_read( CHAR_DATA *ch, BOARD_DATA *board )
+BOOL can_read( CHAR_DATA *ch, BOARD_DATA *board )
 {
 	/* If your trust is high enough, you can read it. */
 	if ( get_trust( ch ) >= board->min_read_level )
@@ -96,7 +96,7 @@ bool can_read( CHAR_DATA *ch, BOARD_DATA *board )
 	return FALSE;
 }
 
-bool can_post( CHAR_DATA *ch, BOARD_DATA *board )
+BOOL can_post( CHAR_DATA *ch, BOARD_DATA *board )
 {
 	/* If your trust is high enough, you can post. */
 	if ( get_trust( ch ) >= board->min_post_level )
@@ -176,7 +176,7 @@ BOARD_DATA *find_board( CHAR_DATA *ch )
 }
 
 
-bool is_note_to( CHAR_DATA *ch, NOTE_DATA *pnote )
+BOOL is_note_to( CHAR_DATA *ch, NOTE_DATA *pnote )
 {
 	if ( !str_cmp( ch->name, pnote->sender ) )
 		return TRUE;
@@ -395,7 +395,7 @@ void do_mailroom(CHAR_DATA *ch, char *argument)
 	}
 }
 
-void do_note( CHAR_DATA *ch, char *arg_passed, bool IS_MAIL )
+void do_note( CHAR_DATA *ch, char *arg_passed, BOOL IS_MAIL )
 {
 	char buf[MAX_STRING_LENGTH];
 	char arg[MAX_INPUT_LENGTH];
@@ -410,8 +410,8 @@ void do_note( CHAR_DATA *ch, char *arg_passed, bool IS_MAIL )
 	char short_desc_buf[MAX_STRING_LENGTH];
 	char long_desc_buf[MAX_STRING_LENGTH];
 	char keyword_buf[MAX_STRING_LENGTH];
-	bool mfound = FALSE;
-	bool wasfound = FALSE;
+	BOOL mfound = FALSE;
+	BOOL wasfound = FALSE;
 
 	if ( IS_NPC(ch) )
 		return;
@@ -531,7 +531,7 @@ void do_note( CHAR_DATA *ch, char *arg_passed, bool IS_MAIL )
 
 	if ( !str_cmp( arg, "read" ) )
 	{
-		bool fAll;
+		BOOL fAll;
 
 		board = find_board( ch );
 		if ( !board )
@@ -1188,7 +1188,7 @@ BOARD_DATA *read_board( char *boardfile, FILE *fp )
 	BOARD_DATA *board;
 	char *word;
 	char  buf[MAX_STRING_LENGTH];
-	bool fMatch;
+	BOOL fMatch;
 	char letter;
 
 	do
@@ -1411,7 +1411,7 @@ void do_makeboard( CHAR_DATA *ch, char *argument )
 void do_bset( CHAR_DATA *ch, char *argument )
 {
 	BOARD_DATA *board;
-	bool found;
+	BOOL found;
 	char arg1[MAX_INPUT_LENGTH];
 	char arg2[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
@@ -1616,7 +1616,7 @@ void do_bset( CHAR_DATA *ch, char *argument )
 void do_bstat( CHAR_DATA *ch, char *argument )
 {
 	BOARD_DATA *board;
-	bool found;
+	BOOL found;
 	char arg[MAX_INPUT_LENGTH];
 
 	argument = one_argument( argument, arg );

@@ -1839,7 +1839,7 @@ void do_mppkset( CHAR_DATA *ch, char *argument )
 ch_ret simple_damage( CHAR_DATA *ch, CHAR_DATA *victim, int dam, int dt )
 {
     sh_int dameq;
-    bool npcvict;
+    BOOL npcvict;
     OBJ_DATA *damobj;
     ch_ret retcode;
 

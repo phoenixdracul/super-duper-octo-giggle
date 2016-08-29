@@ -48,7 +48,7 @@
 
 extern int	top_room;
 
-bool mob_snipe( CHAR_DATA *ch , CHAR_DATA *victim);
+BOOL mob_snipe( CHAR_DATA *ch , CHAR_DATA *victim);
 ch_ret  one_hit             args( ( CHAR_DATA *ch, CHAR_DATA *victim, int dt ) );
 ROOM_INDEX_DATA *generate_exit( ROOM_INDEX_DATA *in_room, EXIT_DATA **pexit );
 
@@ -77,7 +77,7 @@ ROOM_INDEX_DATA *toroom( ROOM_INDEX_DATA *room, sh_int door )
     return (get_exit( room, door )->to_room);
 }
 
-bool valid_edge( ROOM_INDEX_DATA *room, sh_int door )
+BOOL valid_edge( ROOM_INDEX_DATA *room, sh_int door )
 {
     EXIT_DATA *pexit;
     ROOM_INDEX_DATA *to_room;
@@ -367,7 +367,7 @@ void found_prey( CHAR_DATA *ch, CHAR_DATA *victim )
 
 void hunt_victim( CHAR_DATA *ch )
 {
-   bool found;
+   BOOL found;
    CHAR_DATA *tmp;
    sh_int ret;
 
@@ -455,7 +455,7 @@ void hunt_victim( CHAR_DATA *ch )
    }
 }
 
-bool mob_snipe( CHAR_DATA *ch, CHAR_DATA *victim )
+BOOL mob_snipe( CHAR_DATA *ch, CHAR_DATA *victim )
 {
    sh_int            dir, dist;
    sh_int            max_dist = 3;
@@ -463,7 +463,7 @@ bool mob_snipe( CHAR_DATA *ch, CHAR_DATA *victim )
    ROOM_INDEX_DATA * was_in_room;
    ROOM_INDEX_DATA * to_room;
    char              buf[MAX_STRING_LENGTH];
-   bool              pfound = FALSE;
+   BOOL              pfound = FALSE;
 
  if ( !ch->in_room || !victim->in_room )
         return FALSE;

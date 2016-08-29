@@ -21,7 +21,7 @@ void	boot_log		args( ( const char *str, ... ) );
 void load_tga_room_reset( ROOM_INDEX_DATA * room, FILE * fp );
 
 
-extern bool fBootDb;
+extern BOOL fBootDb;
 extern MOB_INDEX_DATA *	mob_index_hash		[MAX_KEY_HASH];
 extern OBJ_INDEX_DATA *	obj_index_hash		[MAX_KEY_HASH];
 extern ROOM_INDEX_DATA *	room_index_hash		[MAX_KEY_HASH];
@@ -65,8 +65,8 @@ void load_tga_mobiles( AREA_DATA * tarea, FILE * fp )
       int vnum;
       char letter;
       int iHash;
-      bool oldmob;
-      bool tmpBootDb;
+      BOOL oldmob;
+      BOOL tmpBootDb;
 
       letter = fread_letter( fp );
       if( letter != '#' )
@@ -452,7 +452,7 @@ void load_tga_mobiles( AREA_DATA * tarea, FILE * fp )
    return;
 }
 
-void load_tga_objects( AREA_DATA * tarea, FILE * fp, bool stockfote )
+void load_tga_objects( AREA_DATA * tarea, FILE * fp, BOOL stockfote )
 {
    OBJ_INDEX_DATA *pObjIndex = NULL;
    char letter;
@@ -475,8 +475,8 @@ void load_tga_objects( AREA_DATA * tarea, FILE * fp, bool stockfote )
       char buf[MAX_STRING_LENGTH];
       int vnum;
       int iHash;
-      bool tmpBootDb;
-      bool oldobj;
+      BOOL tmpBootDb;
+      BOOL oldobj;
 
       letter = fread_letter( fp );
       if( letter != '#' )
@@ -711,7 +711,7 @@ void load_tga_objects( AREA_DATA * tarea, FILE * fp, bool stockfote )
    return;
 }
 
-void load_tga_rooms( AREA_DATA * tarea, FILE * fp, bool stockfote )
+void load_tga_rooms( AREA_DATA * tarea, FILE * fp, BOOL stockfote )
 {
    ROOM_INDEX_DATA *pRoomIndex;
    char buf[MAX_STRING_LENGTH];
@@ -733,8 +733,8 @@ void load_tga_rooms( AREA_DATA * tarea, FILE * fp, bool stockfote )
       char letter;
       int door;
       int iHash;
-      bool tmpBootDb;
-      bool oldroom;
+      BOOL tmpBootDb;
+      BOOL oldroom;
 
       int x1, x2, x3, x4, x5, x6, x7;
 
@@ -1095,7 +1095,7 @@ void load_tga_resets( AREA_DATA * tarea, FILE * fp )
 {
    ROOM_INDEX_DATA *pRoomIndex = NULL;
    ROOM_INDEX_DATA *roomlist;
-   bool not01 = FALSE;
+   BOOL not01 = FALSE;
    int count = 0;
 
    if( !tarea )
@@ -1286,7 +1286,7 @@ void load_tga_room_reset( ROOM_INDEX_DATA * room, FILE * fp )
    char letter;
    int extra, arg1, arg2, arg3;
    short arg4 = -1, arg5 = -1, arg6 = -1;
-   bool not01 = FALSE;
+   BOOL not01 = FALSE;
    int count = 0;
 
    letter = fread_letter( fp );

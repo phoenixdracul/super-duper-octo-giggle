@@ -49,7 +49,7 @@ void save_vendor(ROOM_INDEX_DATA *room);
 CD *	find_keeper	args( ( CHAR_DATA *ch ) );
 CD *	find_fixer	args( ( CHAR_DATA *ch ) );
 int	get_cost	args( ( CHAR_DATA *ch, CHAR_DATA *keeper,
-		OBJ_DATA *obj, bool fBuy ) );
+		OBJ_DATA *obj, BOOL fBuy ) );
 int 	get_repaircost  args( ( CHAR_DATA *keeper, OBJ_DATA *obj ) );
 #undef CD
 
@@ -146,11 +146,11 @@ CHAR_DATA *find_fixer( CHAR_DATA *ch )
 	return keeper;
 }
 
-int get_cost( CHAR_DATA *ch, CHAR_DATA *keeper, OBJ_DATA *obj, bool fBuy )
+int get_cost( CHAR_DATA *ch, CHAR_DATA *keeper, OBJ_DATA *obj, BOOL fBuy )
 {
 	SHOP_DATA *pShop;
 	int cost = 0;
-	bool richcustomer;
+	BOOL richcustomer;
 	int profitmod;
 
 	if ( !obj || ( pShop = keeper->pIndexData->pShop ) == NULL )
@@ -217,7 +217,7 @@ int get_repaircost( CHAR_DATA *keeper, OBJ_DATA *obj )
 	REPAIR_DATA *rShop;
 	int cost;
 	int itype;
-	bool found;
+	BOOL found;
 
 	if ( !obj || ( rShop = keeper->pIndexData->rShop ) == NULL )
 		return 0;
@@ -272,7 +272,7 @@ void do_buy( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
 	int maxgold;
-	bool debit;
+	BOOL debit;
 	OBJ_DATA *obj;
 
 	argument = one_argument( argument, arg );
@@ -294,7 +294,7 @@ void do_buy( CHAR_DATA *ch, char *argument )
 			debit = FALSE;
 		else if ( !str_cmp( "atm", argument ) || !str_cmp( "debit", argument ) )
 		{
-			bool has_card = FALSE;
+			BOOL has_card = FALSE;
 
 			for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 			{
@@ -403,7 +403,7 @@ void do_buy( CHAR_DATA *ch, char *argument )
 			debit = FALSE;
 		else if ( !str_cmp( "atm", argument ) || !str_cmp( "debit", argument ) )
 		{
-			bool has_card = FALSE;
+			BOOL has_card = FALSE;
 
 			for ( obj = ch->last_carrying; obj; obj = obj->prev_content )
 			{
@@ -425,7 +425,7 @@ void do_buy( CHAR_DATA *ch, char *argument )
 		if ( !obj && arg[0] == '#' )
 		{
 			int onum, oref;
-			bool ofound = FALSE;
+			BOOL ofound = FALSE;
 
 			onum =0;
 			oref = atoi(arg+1);
@@ -609,7 +609,7 @@ void do_list( CHAR_DATA *ch, char *argument )
 	{
 		ROOM_INDEX_DATA *pRoomIndexNext;
 		CHAR_DATA *pet;
-		bool found;
+		BOOL found;
 
 		pRoomIndexNext = get_room_index( ch->in_room->vnum + 1 );
 		if ( !pRoomIndexNext )
@@ -646,7 +646,7 @@ void do_list( CHAR_DATA *ch, char *argument )
 		OBJ_DATA *obj;
 		int cost;
 		int oref = 0;
-		bool found;
+		BOOL found;
 
 		one_argument( argument, arg );
 

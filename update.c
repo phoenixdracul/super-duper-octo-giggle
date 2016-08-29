@@ -47,7 +47,7 @@ extern int ppl_in_arena;
 extern int ppl_challenged;
 extern int num_in_arena();
 
-extern bool copyover_set;	// True if a copyover timer is active.
+extern BOOL copyover_set;	// True if a copyover timer is active.
 extern int copytimer_seconds;
 extern CHAR_DATA *copyover_ch;
 
@@ -291,8 +291,8 @@ void advance_level( CHAR_DATA *ch , int ability)
 	{
 		skill = URANGE(1, (ch->skill_level[ability] + 10) / 20, 4);
 		if (ch->skill_level[ability] > 15)
-			skill += (ch->perm_wis - 12) / 4;
-		else if (ch->skill_level[ability] % (0 - (ch->perm_wis - 17)) == 0)
+			skill += 1 + (wis_app[URANGE(0, get_curr_wish(ch), 25)] / 2);
+		else if (ch->skill_level[ability] % (wis_app[URANGE(0, get_curr_wis(ch), 25)] == 0)
 			skill += 1;
 		if ( ch->main_ability == ability && (ch->skill_level[ability] % 10) == 0 )
 			feat = 1;
@@ -873,7 +873,7 @@ void mobile_update( void )
 				&&   !IS_SET(pexit->to_room->room_flags, ROOM_NO_MOB) )
 		{
 			CHAR_DATA *rch;
-			bool found;
+			BOOL found;
 
 			found = FALSE;
 			for ( rch  = ch->in_room->first_person;
@@ -2091,7 +2091,7 @@ void lottery_update(  )
 }
 
 /* From interp.c */
-bool check_social  args( ( CHAR_DATA *ch, char *command, char *argument ) );
+BOOL check_social  args( ( CHAR_DATA *ch, char *command, char *argument ) );
 
 /*
  * drunk randoms	- Tricops
@@ -2206,7 +2206,7 @@ void auth_update( void )
 	CHAR_DATA *victim;
 	DESCRIPTOR_DATA *d;
 	char log_buf [MAX_INPUT_LENGTH];
-	bool first_time = TRUE;         /* so titles are only done once */
+	BOOL first_time = TRUE;         /* so titles are only done once */
 
 	for ( d = first_descriptor; d; d = d->next )
 	{
@@ -2232,7 +2232,7 @@ void auth_update( void )
 	CHAR_DATA *victim;
 	DESCRIPTOR_DATA *d;
 	char buf [MAX_INPUT_LENGTH], log_buf [MAX_INPUT_LENGTH];
-	bool found_hit = FALSE;         /* was at least one found? */
+	BOOL found_hit = FALSE;         /* was at least one found? */
 
 	strcpy (log_buf, "Pending authorizations:\n\r" );
 	for ( d = first_descriptor; d; d = d->next )
@@ -2425,7 +2425,7 @@ void remove_portal( OBJ_DATA *portal )
 	ROOM_INDEX_DATA *fromRoom, *toRoom;
 	CHAR_DATA *ch;
 	EXIT_DATA *pexit;
-	bool found;
+	BOOL found;
 
 	if ( !portal )
 	{
@@ -2494,7 +2494,7 @@ void reboot_check( time_t reset )
 			UMIN(sizeof(times)/sizeof(*times), sizeof(tmsg)/sizeof(*tmsg));
 	char buf[MAX_STRING_LENGTH];
 	static int trun;
-	static bool init;
+	static BOOL init;
 
 	if ( !init || reset >= current_time )
 	{
@@ -2518,7 +2518,7 @@ void reboot_check( time_t reset )
 	if ( new_boot_time_t <= current_time )
 	{
 		CHAR_DATA *vch;
-		extern bool mud_down;
+		extern BOOL mud_down;
 
 		if ( auction->item )
 		{
@@ -2558,23 +2558,23 @@ void reboot_check( time_t reset )
 void reboot_check( char *arg )
 {
 	char buf[MAX_STRING_LENGTH];
-	extern bool mud_down;
+	extern BOOL mud_down;
 	/*struct tm *timestruct;
     int timecheck;*/
 	CHAR_DATA *vch;
 
 	/*Bools to show which pre-boot echoes we've done. */
-	static bool thirty  = FALSE;
-	static bool fifteen = FALSE;
-	static bool ten     = FALSE;
-	static bool five    = FALSE;
-	static bool four    = FALSE;
-	static bool three   = FALSE;
-	static bool two     = FALSE;
-	static bool one     = FALSE;
+	static BOOL thirty  = FALSE;
+	static BOOL fifteen = FALSE;
+	static BOOL ten     = FALSE;
+	static BOOL five    = FALSE;
+	static BOOL four    = FALSE;
+	static BOOL three   = FALSE;
+	static BOOL two     = FALSE;
+	static BOOL one     = FALSE;
 
 	/* This function can be called by do_setboot when the reboot time
-       is being manually set to reset all the bools. */
+       is being manually set to reset all the BOOLs. */
 	if ( !str_cmp( arg, "reset" ) )
 	{
 		thirty  = FALSE;

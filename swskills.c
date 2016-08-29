@@ -46,7 +46,7 @@ ch_ret  one_hit             args( ( CHAR_DATA *ch, CHAR_DATA *victim, int dt ) )
 int     xp_compute                ( CHAR_DATA *ch , CHAR_DATA *victim );
 ROOM_INDEX_DATA *generate_exit( ROOM_INDEX_DATA *in_room, EXIT_DATA **pexit );
 int ris_save( CHAR_DATA *ch, int chance, int ris );
-void explode_emissile  args( ( CHAR_DATA *ch, ROOM_INDEX_DATA *proom, int mindam, int maxdam, bool incendiary) );
+void explode_emissile  args( ( CHAR_DATA *ch, ROOM_INDEX_DATA *proom, int mindam, int maxdam, BOOL incendiary) );
 CHAR_DATA *get_char_room_mp( CHAR_DATA *ch, char *argument );
 
 /* from shops.c */
@@ -67,7 +67,7 @@ void do_makeblade( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int level, chance, charge, value;
-	bool checktool, checkdura, checkbatt, checkoven;
+	BOOL checktool, checkdura, checkbatt, checkoven;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum;
@@ -319,7 +319,7 @@ void do_makeblaster( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int level, chance, value;
-	bool checktool, checkdura, checkbatt, checkoven, checkcond, checkcirc, checkammo;
+	BOOL checktool, checkdura, checkbatt, checkoven, checkcond, checkcirc, checkammo;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum, power, scope, ammo;
@@ -621,7 +621,7 @@ void do_makelightsaber( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int chance;
-	bool checktool, checkdura, checkbatt,
+	BOOL checktool, checkdura, checkbatt,
 	checkoven, checkcond, checkcirc, checklens, checkgems, checkmirr;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
@@ -949,7 +949,7 @@ void do_makemedpac( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int level, chance;
-	bool checktool, checkdura, checkchem, checkoven, checkneedle, checkfab, checkdrink;
+	BOOL checktool, checkdura, checkchem, checkoven, checkneedle, checkfab, checkdrink;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum;
@@ -1315,7 +1315,7 @@ void do_makegrenade( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int level, chance, strength, weight;
-	bool checktool, checkdrink, checkbatt, checkchem, checkcirc;
+	BOOL checktool, checkdrink, checkbatt, checkchem, checkcirc;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum;
@@ -1529,7 +1529,7 @@ void do_makelandmine( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int level, chance, strength, weight;
-	bool checktool, checkdrink, checkbatt, checkchem, checkcirc;
+	BOOL checktool, checkdrink, checkbatt, checkchem, checkcirc;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum;
@@ -1743,7 +1743,7 @@ void do_makelight( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int level, chance, strength;
-	bool checktool, checkbatt, checkchem, checkcirc, checklens;
+	BOOL checktool, checkbatt, checkchem, checkcirc, checklens;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum;
@@ -1955,7 +1955,7 @@ void do_makejewelry( CHAR_DATA *ch, char *argument )
 	char arg2[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int level, chance;
-	bool checktool, checkoven, checkmetal;
+	BOOL checktool, checkoven, checkmetal;
 	OBJ_DATA *obj;
 	OBJ_DATA *metal;
 	AFFECT_DATA *paf;
@@ -2237,7 +2237,7 @@ void do_makearmor( CHAR_DATA *ch, char *argument )
 	char arg2[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int level, chance;
-	bool checksew, checkfab;
+	BOOL checksew, checkfab;
 	OBJ_DATA *obj;
 	OBJ_DATA *material;
 	int value;
@@ -2465,7 +2465,7 @@ void do_makecomlink( CHAR_DATA *ch, char *argument)
 	char arg2[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int chance;
-	bool checktool, checkgem, checkbatt, checkcirc;
+	BOOL checktool, checkgem, checkbatt, checkcirc;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum;
@@ -2675,7 +2675,7 @@ void do_makeshield( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int chance;
-	bool checktool, checkbatt, checkcond, checkcirc, checkgems;
+	BOOL checktool, checkbatt, checkcond, checkcirc, checkgems;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum, level, charge, gemtype;
@@ -2905,7 +2905,7 @@ void do_makecontainer( CHAR_DATA *ch, char *argument )
 	char arg2[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int level, chance;
-	bool checksew, checkfab;
+	BOOL checksew, checkfab;
 	OBJ_DATA *obj;
 	OBJ_DATA *material;
 	int value;
@@ -3112,7 +3112,7 @@ void do_makeholster( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int level, chance;
-	bool checksew, checkfab, checkdura, checktool;
+	BOOL checksew, checkfab, checkdura, checktool;
 	OBJ_DATA *obj;
 	OBJ_DATA *material;
 	OBJ_DATA *duraplast;
@@ -3302,7 +3302,7 @@ void do_gemcutting( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int level, schance;
-	bool checktool, checkore;
+	BOOL checktool, checkore;
 	OBJ_DATA *obj, *ore;
 	strcpy( arg, argument );
 
@@ -3712,7 +3712,7 @@ void do_torture( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	CHAR_DATA *victim;
 	int chance, dam;
-	bool fail;
+	BOOL fail;
 
 	if ( !IS_NPC(ch)
 			&&  ch->pcdata->learned[gsn_torture] <= 0  )
@@ -3916,7 +3916,7 @@ void do_mine( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
 	OBJ_DATA *obj;
-	bool shovel;
+	BOOL shovel;
 	sh_int move;
 
 	if ( ch->pcdata->learned[gsn_mine] <= 0 )
@@ -4097,7 +4097,7 @@ void do_snipe( CHAR_DATA *ch, char *argument )
 	CHAR_DATA       * victim;
 	int               chance;
 	char              buf[MAX_STRING_LENGTH];
-	bool              pfound = FALSE;
+	BOOL              pfound = FALSE;
 
 	if ( IS_SET( ch->in_room->room_flags, ROOM_SAFE ) )
 	{
@@ -4857,7 +4857,7 @@ void do_hijack( CHAR_DATA *ch, char *argument )
 	int x;
 	SHIP_DATA *ship;
 	char buf[MAX_STRING_LENGTH];
-	bool uhoh = FALSE;
+	BOOL uhoh = FALSE;
 	//    CHAR_DATA *guard;      <--- For the guard shits below
 	//    ROOM_INDEX_DATA *room;
 
@@ -5900,7 +5900,7 @@ void do_repair( CHAR_DATA *ch, char *argument)
 	OBJ_DATA *obj,*cobj;
 	char arg[MAX_STRING_LENGTH];
 	int chance;
-	bool checktool, checksew;
+	BOOL checktool, checksew;
 
 	strcpy(arg, argument);
 
@@ -6038,7 +6038,7 @@ void do_makeduallightsaber( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int chance;
-	bool checktool, checkdura, checkbatt,
+	BOOL checktool, checkdura, checkbatt,
 	checkoven, checkcond, checkcirc, checklens, checkgems, checkmirr;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
@@ -6355,7 +6355,7 @@ void do_makepike( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int level, chance, charge, value;
-	bool checktool, checkdura, checkbatt, checkoven;
+	BOOL checktool, checkdura, checkbatt, checkoven;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum;
@@ -6587,7 +6587,7 @@ void do_makepike( CHAR_DATA *ch, char *argument )
 void do_makebug( CHAR_DATA *ch, char *argument )
 {
 	int level, chance;
-	bool checktool,checkbatt,checkcirc;
+	BOOL checktool,checkbatt,checkcirc;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum;
@@ -6743,7 +6743,7 @@ void do_makebug( CHAR_DATA *ch, char *argument )
 void do_makebeacon( CHAR_DATA *ch, char *argument )
 {
 	int level, chance;
-	bool checktool,checkbatt,checkcirc;
+	BOOL checktool,checkbatt,checkcirc;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum;
@@ -6900,7 +6900,7 @@ void do_plantbeacon( CHAR_DATA *ch, char *argument )
 {
 	SHIP_DATA *ship;
 	OBJ_DATA *obj;
-	bool checkbeacon = FALSE;
+	BOOL checkbeacon = FALSE;
 	char buf[MAX_STRING_LENGTH];
 
 	if(IS_NPC(ch)) return;
@@ -7203,7 +7203,7 @@ void do_nullifybeacons(CHAR_DATA *ch, char *argument)
 void do_makebinders( CHAR_DATA *ch, char *argument )
 {
 	int level, chance;
-	bool checktool,checkoven,checkdura;
+	BOOL checktool,checkoven,checkdura;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum;
@@ -7437,7 +7437,7 @@ void do_slicelock (CHAR_DATA *ch, char *argument)
         CHAR_DATA *gch;
         EXIT_DATA *dexit;
         OBJ_DATA *obj;
-        bool checkdata;
+        BOOL checkdata;
         int chances;
 
         for (obj = ch->last_carrying; obj; obj = obj->prev_content)

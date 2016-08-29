@@ -46,15 +46,15 @@ ACCOUNT_CHARACTER_DATA *account_get_character( ACCOUNT_DATA *account, char *name
 extern int	top_affect;
 extern int	top_reset;
 extern int	top_ed;
-extern bool	fBootDb;
+extern BOOL	fBootDb;
 
 extern char * const dam_type_table[RES_MAX];
 
 int  generate_hp    args( ( int level, int num, int size, int plus ) );
 char *sprint_reset  args( ( RESET_DATA *pReset, short *num) );
 void fix_exits      args( ( void ) );
-bool check_area_conflict( AREA_DATA *carea, int low_range, int hi_range );
-bool validate_spec_fun( char *name );
+BOOL check_area_conflict( AREA_DATA *carea, int low_range, int hi_range );
+BOOL validate_spec_fun( char *name );
 char *ext_flag_string( EXT_BV * bitvector, const char *const flagarray[] );
 
 REL_DATA *first_relation = NULL;
@@ -339,7 +339,7 @@ char *flag_string( int bitvector, const char * const flagarray[] )
 }
 
 
-bool can_rmodify( CHAR_DATA *ch, ROOM_INDEX_DATA *room )
+BOOL can_rmodify( CHAR_DATA *ch, ROOM_INDEX_DATA *room )
 {
 	int vnum = room->vnum;
 	AREA_DATA *pArea;
@@ -361,7 +361,7 @@ bool can_rmodify( CHAR_DATA *ch, ROOM_INDEX_DATA *room )
 	return FALSE;
 }
 
-bool can_omodify( CHAR_DATA *ch, OBJ_DATA *obj )
+BOOL can_omodify( CHAR_DATA *ch, OBJ_DATA *obj )
 {
 	int vnum = obj->pIndexData->vnum;
 	AREA_DATA *pArea;
@@ -383,7 +383,7 @@ bool can_omodify( CHAR_DATA *ch, OBJ_DATA *obj )
 	return FALSE;
 }
 
-bool can_oedit( CHAR_DATA *ch, OBJ_INDEX_DATA *obj )
+BOOL can_oedit( CHAR_DATA *ch, OBJ_INDEX_DATA *obj )
 {
 	int vnum = obj->vnum;
 	AREA_DATA *pArea;
@@ -406,7 +406,7 @@ bool can_oedit( CHAR_DATA *ch, OBJ_INDEX_DATA *obj )
 }
 
 
-bool can_mmodify( CHAR_DATA *ch, CHAR_DATA *mob )
+BOOL can_mmodify( CHAR_DATA *ch, CHAR_DATA *mob )
 {
 	int vnum;
 	AREA_DATA *pArea;
@@ -443,7 +443,7 @@ bool can_mmodify( CHAR_DATA *ch, CHAR_DATA *mob )
 	return FALSE;
 }
 
-bool can_medit( CHAR_DATA *ch, MOB_INDEX_DATA *mob )
+BOOL can_medit( CHAR_DATA *ch, MOB_INDEX_DATA *mob )
 {
 	int vnum = mob->vnum;
 	AREA_DATA *pArea;
@@ -1082,7 +1082,7 @@ void stop_editing( CHAR_DATA *ch )
 	 CHAR_DATA *victim;
 	 int value;
 	 int minattr, maxattr;
-	 bool lockvictim;
+	 BOOL lockvictim;
 	 char *origarg = argument;
 
 	 if( IS_NPC( ch ) )
@@ -2282,7 +2282,7 @@ void stop_editing( CHAR_DATA *ch )
 
 	 if( !str_cmp( arg2, "flags" ) )
 	 {
-		 bool protoflag = FALSE, ftoggle = FALSE;
+		 BOOL protoflag = FALSE, ftoggle = FALSE;
 
 		 if( !IS_NPC( victim ) && get_trust( ch ) < LEVEL_GREATER )
 		 {
@@ -3062,7 +3062,7 @@ void stop_editing( CHAR_DATA *ch )
 	 char outbuf[MAX_STRING_LENGTH];
 	 OBJ_DATA *obj, *tmpobj;
 	 EXTRA_DESCR_DATA *ed;
-	 bool lockobj;
+	 BOOL lockobj;
 	 char *origarg = argument;
 
 	 int value, tmp;
@@ -4107,7 +4107,7 @@ void stop_editing( CHAR_DATA *ch )
 	 char arg3 [MAX_INPUT_LENGTH];
 	 ROOM_INDEX_DATA *location;
 	 int value;
-	 bool proto;
+	 BOOL proto;
 
 	 smash_tilde( argument );
 	 argument = one_argument( argument, arg1 );
@@ -4766,7 +4766,7 @@ void stop_editing( CHAR_DATA *ch )
 
 	 if( !str_cmp( arg, "exit" ) )
 	 {
-		 bool addexit, numnotdir;
+		 BOOL addexit, numnotdir;
 
 		 argument = one_argument( argument, arg2 );
 		 argument = one_argument( argument, arg3 );
@@ -4896,7 +4896,7 @@ void stop_editing( CHAR_DATA *ch )
 		 ROOM_INDEX_DATA *tmploc;
 		 int vnum, exnum;
 		 char rvnum[MAX_INPUT_LENGTH];
-		 bool numnotdir;
+		 BOOL numnotdir;
 
 		 argument = one_argument( argument, arg2 );
 		 argument = one_argument( argument, arg3 );
@@ -5116,7 +5116,7 @@ void stop_editing( CHAR_DATA *ch )
  //		return;
  //	}
  //	int roomNum;
- //	bool found = FALSE;
+ //	BOOL found = FALSE;
  //	for(roomNum = pArea->low_r_vnum; !found && roomNum < pArea->hi_r_vnum; ++roomNum)
  //	{
  //		if(get_room_index(roomNum) == NULL)
@@ -5303,7 +5303,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
     char cmd[MAX_INPUT_LENGTH];
     char buf[MAX_INPUT_LENGTH];
     sh_int x, line, max_buf_lines;
-    bool save;
+    BOOL save;
 
     if ( (d = ch->desc) == NULL )
     {
@@ -5664,7 +5664,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 	 char buf2[MAX_STRING_LENGTH];
 	 char taf[1024];
 	 AREA_DATA *tarea, *tmp;
-	 bool created = FALSE;
+	 BOOL created = FALSE;
 
 	 if ( IS_NPC( ch ) )
 		 return;
@@ -5810,7 +5810,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 	 return ed;
  }
 
- bool DelRExtra( ROOM_INDEX_DATA *room, char *keywords )
+ BOOL DelRExtra( ROOM_INDEX_DATA *room, char *keywords )
  {
 	 EXTRA_DESCR_DATA *rmed;
 
@@ -5849,7 +5849,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 	 return ed;
  }
 
- bool DelOExtra( OBJ_DATA *obj, char *keywords )
+ BOOL DelOExtra( OBJ_DATA *obj, char *keywords )
  {
 	 EXTRA_DESCR_DATA *rmed;
 
@@ -5888,7 +5888,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 	 return ed;
  }
 
- bool DelOExtraProto( OBJ_INDEX_DATA *obj, char *keywords )
+ BOOL DelOExtraProto( OBJ_INDEX_DATA *obj, char *keywords )
  {
 	 EXTRA_DESCR_DATA *rmed;
 
@@ -5907,7 +5907,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 	 return TRUE;
  }
 
- void fold_area( AREA_DATA *tarea, char *filename, bool install )
+ void fold_area( AREA_DATA *tarea, char *filename, BOOL install )
  {
 	 RESET_DATA          *pReset, *tReset, *gReset;
 	 ROOM_INDEX_DATA	*room;
@@ -5923,7 +5923,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 	 FILE		*fpout;
 	 int			 vnum;
 	 int			 val0, val1, val2, val3, val4, val5;
-	 bool		 complexmob;
+	 BOOL		 complexmob;
 
 	 sprintf( buf, "Saving %s...", tarea->filename );
 	 log_string_plus( buf, LOG_NORMAL, LEVEL_GREATER );
@@ -6398,7 +6398,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 		 tarea = ch->pcdata->area;
 	 else
 	 {
-		 bool found;
+		 BOOL found;
 
 		 if ( get_trust( ch ) < LEVEL_GOD )
 		 {
@@ -6453,7 +6453,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 		 tarea = ch->pcdata->area;
 	 else
 	 {
-		 bool found;
+		 BOOL found;
 
 		 if ( get_trust( ch ) < LEVEL_GOD )
 		 {
@@ -6640,7 +6640,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
  void do_astat( CHAR_DATA *ch, char *argument )
  {
 	 AREA_DATA *tarea;
-	 bool proto, found;
+	 BOOL proto, found;
 
 
 
@@ -6732,7 +6732,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
  }
 
  /* check other areas for a conflict while ignoring the current area --Remcon */
- bool check_for_area_conflicts( AREA_DATA *carea, int lo, int hi )
+ BOOL check_for_area_conflicts( AREA_DATA *carea, int lo, int hi )
  {
 	 AREA_DATA *area;
 
@@ -6752,7 +6752,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 	 char arg1[MAX_INPUT_LENGTH];
 	 char arg2[MAX_INPUT_LENGTH];
 	 char arg3[MAX_INPUT_LENGTH];
-	 bool proto, found;
+	 BOOL proto, found;
 	 int vnum, value;
 
 	 argument = one_argument( argument, arg1 );
@@ -7520,7 +7520,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 	 if ( !str_cmp( arg2, "delete" ) )
 	 {
 		 int num;
-		 bool found;
+		 BOOL found;
 
 		 if ( !mprog )
 		 {
@@ -7803,7 +7803,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 	 if ( !str_cmp( arg2, "delete" ) )
 	 {
 		 int num;
-		 bool found;
+		 BOOL found;
 
 		 if ( !mprog )
 		 {
@@ -8084,7 +8084,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
 	 if ( !str_cmp( arg1, "delete" ) )
 	 {
 		 int num;
-		 bool found;
+		 BOOL found;
 
 		 if ( !mprog )
 		 {

@@ -84,7 +84,7 @@ DECLARE_DO_FUN( do_mudexec ); /* New shell command piper - Samson 4-16-98 */
 DECLARE_DO_FUN( do_grep ); /* Noplex's in-game grep interface - Samson 12-19-01 */
 
 void send_telcode( int desc, int ddww, int code );
-bool check_forks( DESCRIPTOR_DATA * d, char *cmdline );
+BOOL check_forks( DESCRIPTOR_DATA * d, char *cmdline );
 
-extern bool compilelock;
-extern bool bootlock;
+extern BOOL compilelock;
+extern BOOL bootlock;

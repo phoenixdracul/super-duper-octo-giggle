@@ -471,7 +471,7 @@ void edit_buffer( CHAR_DATA *ch, char *argument )
     EDITOR_LINE *newline;
     char cmd[MAX_INPUT_LENGTH];
     sh_int linelen;
-    bool cont_line;
+    BOOL cont_line;
     char *p;
 
     d = ch->desc;
@@ -598,7 +598,7 @@ void edit_buffer_code( CHAR_DATA *ch, char *argument )
     EDITOR_LINE *newline;
     char cmd[MAX_INPUT_LENGTH];
     sh_int linelen;
-    bool cont_line;
+    BOOL cont_line;
     char *p;
 
     d = ch->desc;
@@ -1260,7 +1260,7 @@ char *finer_one_argument( char *argument, char *arg_first )
 {
     char cEnd;
     sh_int count;
-    bool escaped;
+    BOOL escaped;
 
     count = 0;
 

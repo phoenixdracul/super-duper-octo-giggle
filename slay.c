@@ -92,7 +92,7 @@ SLAY_DATA *get_slay( char *name )
 void fread_slay( SLAY_DATA *slay, FILE *fp )
 {
    const char *word;
-   bool fMatch;
+   BOOL fMatch;
 
    for ( ; ; )
    {
@@ -258,7 +258,7 @@ void do_slay( CHAR_DATA *ch, char *argument )
     SLAY_DATA *slay;
     char type[MAX_INPUT_LENGTH];
     char who[MAX_INPUT_LENGTH];
-    bool found = FALSE;
+    BOOL found = FALSE;
     char buf[MAX_STRING_LENGTH];
 
     if ( IS_NPC(ch) )
@@ -596,7 +596,7 @@ void do_fslay( CHAR_DATA * ch, char *argument )
    SLAY_DATA *slay;  
    char type[MAX_INPUT_LENGTH];  
    char who[MAX_INPUT_LENGTH];  
-   bool found = FALSE;  
+   BOOL found = FALSE;  
    char buf[MAX_STRING_LENGTH];  
    DESCRIPTOR_DATA *d;  
    

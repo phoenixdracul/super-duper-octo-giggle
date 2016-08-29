@@ -394,7 +394,7 @@ int			top_vroom;
 /*
  * Semi-locals.
  */
-bool			fBootDb;
+BOOL			fBootDb;
 FILE *			fpArea;
 char			strArea[MAX_INPUT_LENGTH];
 char			bname[MAX_STRING_LENGTH];
@@ -419,20 +419,20 @@ void	load_mobiles2	args( ( AREA_DATA *tarea, FILE *fp ) );
 void	load_tga_mobiles( AREA_DATA * tarea, FILE * fp );
 void	load_objects	args( ( AREA_DATA *tarea, FILE *fp ) );
 void	load_objects2	args( ( AREA_DATA *tarea, FILE *fp ) );
-void	load_tga_objects( AREA_DATA * tarea, FILE * fp, bool stockfote );
+void	load_tga_objects( AREA_DATA * tarea, FILE * fp, BOOL stockfote );
 void 	load_projects   args( ( void ) );
 void	load_resets		args( ( AREA_DATA *tarea, FILE *fp ) );
 void	load_tga_resets( AREA_DATA * tarea, FILE * fp );
 void	load_rooms		args( ( AREA_DATA *tarea, FILE *fp ) );
-void	load_tga_rooms( AREA_DATA * tarea, FILE * fp, bool stockfote );
+void	load_tga_rooms( AREA_DATA * tarea, FILE * fp, BOOL stockfote );
 void	load_shops		args( ( AREA_DATA *tarea, FILE *fp ) );
 void	load_tga_shops(AREA_DATA *tarea, FILE *fp);
 void 	load_repairs	args( ( AREA_DATA *tarea, FILE *fp ) );
 void	load_specials	args( ( AREA_DATA *tarea, FILE *fp ) );
 void    load_ranges		args( ( AREA_DATA *tarea, FILE *fp ) );
 void	load_buildlist	args( ( void ) );
-bool	load_systemdata	args( ( SYSTEM_DATA *sys ) );
-bool 	load_lottery 	args( ( LOTTERY_DATA * lot ) );
+BOOL	load_systemdata	args( ( SYSTEM_DATA *sys ) );
+BOOL 	load_lottery 	args( ( LOTTERY_DATA * lot ) );
 void    load_banlist    args( ( void ) );
 void	initialize_economy args( ( void ) );
 void	initialize_ooc_history args( (void) );
@@ -488,7 +488,7 @@ void shutdown_mud( char *reason )
 /*
  * Big mama top level function.
  */
-void boot_db( bool fCopyOver )
+void boot_db( BOOL fCopyOver )
 {
 	sh_int wear, x;
 
@@ -1232,8 +1232,8 @@ void load_mobiles( AREA_DATA *tarea, FILE *fp )
 		int vnum;
 		char letter;
 		int iHash;
-		bool oldmob;
-		bool tmpBootDb;
+		BOOL oldmob;
+		BOOL tmpBootDb;
 
 		letter				= fread_letter( fp );
 		if ( letter != '#' )
@@ -1464,8 +1464,8 @@ void load_mobiles2( AREA_DATA *tarea, FILE *fp )
 		int vnum;
 		char letter;
 		int iHash;
-		bool oldmob;
-		bool tmpBootDb;
+		BOOL oldmob;
+		BOOL tmpBootDb;
 
 		letter				= fread_letter( fp );
 		if ( letter != '#' )
@@ -1697,8 +1697,8 @@ void load_objects( AREA_DATA *tarea, FILE *fp )
 		char buf[MAX_STRING_LENGTH];
 		int vnum;
 		int iHash;
-		bool tmpBootDb;
-		bool oldobj;
+		BOOL tmpBootDb;
+		BOOL oldobj;
 
 		letter				= fread_letter( fp );
 		if ( letter != '#' )
@@ -1893,8 +1893,8 @@ void load_objects2( AREA_DATA *tarea, FILE *fp )
 		char buf[MAX_STRING_LENGTH];
 		int vnum;
 		int iHash;
-		bool tmpBootDb;
-		bool oldobj;
+		BOOL tmpBootDb;
+		BOOL oldobj;
 
 		letter				= fread_letter( fp );
 		if ( letter != '#' )
@@ -2072,7 +2072,7 @@ void load_resets( AREA_DATA *tarea, FILE *fp )
 {
 	ROOM_INDEX_DATA *pRoomIndex = NULL;
 	ROOM_INDEX_DATA *roomlist;
-	bool not01 = FALSE;
+	BOOL not01 = FALSE;
 	int count = 0;
 
 	if( !tarea )
@@ -2262,7 +2262,7 @@ void load_room_reset( ROOM_INDEX_DATA *room, FILE *fp )
 	EXIT_DATA *pexit;
 	char letter;
 	int extra, arg1, arg2, arg3;
-	bool not01 = FALSE;
+	BOOL not01 = FALSE;
 	int count = 0;
 
 	letter = fread_letter( fp );
@@ -2379,8 +2379,8 @@ void load_rooms( AREA_DATA *tarea, FILE *fp )
 		char letter;
 		int door;
 		int iHash;
-		bool tmpBootDb;
-		bool oldroom;
+		BOOL tmpBootDb;
+		BOOL oldroom;
 		int x1, x2, x3, x4, x5, x6, x7;
 
 		letter				= fread_letter( fp );
@@ -2791,7 +2791,7 @@ void fix_exits( void )
 				pRoomIndex;
 				pRoomIndex  = pRoomIndex->next )
 		{
-			bool fexit;
+			BOOL fexit;
 
 			fexit = FALSE;
 			for ( pexit = pRoomIndex->first_exit; pexit; pexit = pexit_next )
@@ -3709,7 +3709,7 @@ char fread_letter( FILE *fp )
 int fread_number( FILE *fp )
 {
 	int number;
-	bool sign;
+	BOOL sign;
 	char c;
 
 	do
@@ -3869,7 +3869,7 @@ char *str_dup( char const *str )
 	return ret;
 }
 
-bool is_valid_filename( CHAR_DATA *ch, const char *direct, const char *filename )
+BOOL is_valid_filename( CHAR_DATA *ch, const char *direct, const char *filename )
 {
 	char newfilename[256];
 	struct stat fst;
@@ -4206,7 +4206,7 @@ char *fread_word( FILE *fp )
 void fread_lottery( LOTTERY_DATA * lot, FILE * fp )
 {
    char *word;
-   bool fMatch;
+   BOOL fMatch;
 
    lot->last_winner = NULL;
 
@@ -4521,7 +4521,7 @@ int number_mm( void )
   * Return TRUE if different
   *   (compatibility with historical functions).
   */
- bool str_cmp( const char *astr, const char *bstr )
+ BOOL str_cmp( const char *astr, const char *bstr )
  {
 	 if ( !astr )
 	 {
@@ -4555,7 +4555,7 @@ int number_mm( void )
   * Return TRUE if astr not a prefix of bstr
   *   (compatibility with historical functions).
   */
- bool str_prefix( const char *astr, const char *bstr )
+ BOOL str_prefix( const char *astr, const char *bstr )
  {
 	 if ( !astr )
 	 {
@@ -4585,7 +4585,7 @@ int number_mm( void )
   * Returns TRUE is astr not part of bstr.
   *   (compatibility with historical functions).
   */
- bool str_infix( const char *astr, const char *bstr )
+ BOOL str_infix( const char *astr, const char *bstr )
  {
 	 int sstr1;
 	 int sstr2;
@@ -4612,7 +4612,7 @@ int number_mm( void )
   * Return TRUE if astr not a suffix of bstr
   *   (compatibility with historical functions).
   */
- bool str_suffix( const char *astr, const char *bstr )
+ BOOL str_suffix( const char *astr, const char *bstr )
  {
 	 int sstr1;
 	 int sstr2;
@@ -4674,7 +4674,7 @@ int number_mm( void )
  /*
   * Returns TRUE or FALSE if a letter is a vowel			-Thoric
   */
- bool isavowel( char letter )
+ BOOL isavowel( char letter )
  {
 	 char c;
 
@@ -4981,14 +4981,14 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
   * wizlist builder!						-Thoric
   */
 
- void towizfile( const char *line, bool Border )
+ void towizfile( const char *line, BOOL Border )
  {
 	 int filler, xx,ofiller;
 	 char outline[MAX_STRING_LENGTH];
 	 char outline2[MAX_STRING_LENGTH];
 	 FILE *wfp;
 	 FILE *wwwfp;
-	 bool SNIP = FALSE;
+	 BOOL SNIP = FALSE;
 	 outline[0] = '\0';
 	 outline2[0] = '\0';
 	 if ( line && line[0] != '\0' )
@@ -5272,7 +5272,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 	 FILE       *progfile;
 	 char        letter;
 	 MPROG_DATA *mprg_next, *mprg2;
-	 bool        done = FALSE;
+	 BOOL        done = FALSE;
 
 	 sprintf( MUDProgfile, "%s%s", PROG_DIR, f );
 
@@ -5398,7 +5398,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
  {
 	 MPROG_DATA *mprg;
 	 char        letter;
-	 bool        done = FALSE;
+	 BOOL        done = FALSE;
 
 	 if ( ( letter = fread_letter( fp ) ) != '>' )
 	 {
@@ -5498,7 +5498,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 	 FILE       *progfile;
 	 char        letter;
 	 MPROG_DATA *mprg_next, *mprg2;
-	 bool        done = FALSE;
+	 BOOL        done = FALSE;
 
 	 sprintf( MUDProgfile, "%s%s", PROG_DIR, f );
 
@@ -5624,7 +5624,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
  {
 	 MPROG_DATA *mprg;
 	 char        letter;
-	 bool        done = FALSE;
+	 BOOL        done = FALSE;
 
 	 if ( ( letter = fread_letter( fp ) ) != '>' )
 	 {
@@ -5710,7 +5710,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 	 FILE       *progfile;
 	 char        letter;
 	 MPROG_DATA *mprg_next, *mprg2;
-	 bool        done = FALSE;
+	 BOOL        done = FALSE;
 
 	 sprintf( MUDProgfile, "%s%s", PROG_DIR, f );
 
@@ -5836,7 +5836,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
  {
 	 MPROG_DATA *mprg;
 	 char        letter;
-	 bool        done = FALSE;
+	 BOOL        done = FALSE;
 
 	 if ( ( letter = fread_letter( fp ) ) != '>' )
 	 {
@@ -5908,7 +5908,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
  /*************************************************************/
  /* Function to delete a room index.  Called from do_rdelete in build.c
   Narn, May/96
-  Don't ask me why they return bool.. :).. oh well.. -- Alty
+  Don't ask me why they return BOOL.. :).. oh well.. -- Alty
   Don't ask me either, so I changed it to void. - Samson
   */
  void delete_room( ROOM_INDEX_DATA *room )
@@ -6455,7 +6455,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
  EXIT_DATA *make_exit( ROOM_INDEX_DATA *pRoomIndex, ROOM_INDEX_DATA *to_room, sh_int door )
  {
 	 EXIT_DATA *pexit, *texit;
-	 bool broke;
+	 BOOL broke;
 
 	 CREATE( pexit, EXIT_DATA, 1 );
 	 pexit->vdir		= door;
@@ -6510,7 +6510,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 	 ROOM_INDEX_DATA *pRoomIndex;
 	 EXIT_DATA *pexit, *rev_exit;
 	 int rnum;
-	 bool fexit;
+	 BOOL fexit;
 
 	 for ( rnum = tarea->low_r_vnum; rnum <= tarea->hi_r_vnum; rnum++ )
 	 {
@@ -6718,7 +6718,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 	 char word[81];
 	 int low, hi;
 	 int mlow, mhi, olow, ohi, rlow, rhi;
-	 bool badfile = FALSE;
+	 BOOL badfile = FALSE;
 	 char temp;
 
 	 dp = opendir( GOD_DIR );
@@ -6821,11 +6821,11 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
  /*
   * Sort by room vnums					-Altrag & Thoric
   */
- void sort_area( AREA_DATA *pArea, bool proto )
+ void sort_area( AREA_DATA *pArea, BOOL proto )
  {
 	 AREA_DATA *area = NULL;
 	 AREA_DATA *first_sort, *last_sort;
-	 bool found;
+	 BOOL found;
 
 	 if ( !pArea )
 	 {
@@ -6896,7 +6896,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
   * Display vnums currently assigned to areas		-Altrag & Thoric
   * Sorted, and flagged if loaded.
   */
- void show_vnums( CHAR_DATA *ch, int low, int high, bool proto, bool shownl,
+ void show_vnums( CHAR_DATA *ch, int low, int high, BOOL proto, BOOL shownl,
 		 char *loadst, char *notloadst )
  {
 	 AREA_DATA *pArea, *first_sort;
@@ -7069,7 +7069,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
  void fread_sysdata( SYSTEM_DATA *sys, FILE *fp )
  {
 	 char *word;
-	 bool fMatch;
+	 BOOL fMatch;
 
 	 sys->time_of_max = NULL;
 	 for ( ; ; )
@@ -7187,11 +7187,11 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
  /*
   * Load the sysdata file
   */
- bool load_systemdata( SYSTEM_DATA *sys )
+ BOOL load_systemdata( SYSTEM_DATA *sys )
  {
 	 char filename[MAX_INPUT_LENGTH];
 	 FILE *fp;
-	 bool found;
+	 BOOL found;
 
 	 found = FALSE;
 	 sprintf( filename, "%ssysdata.dat", SYSTEM_DIR );
@@ -7305,7 +7305,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 	 NOTE_DATA *log, *tlog;
 	 char *word;
 	 char buf[MAX_STRING_LENGTH];
-	 bool fMatch;
+	 BOOL fMatch;
 	 char letter;
 
 	 do
@@ -7533,7 +7533,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 	 AREA_DATA *pArea;
 	 char arg1[MAX_STRING_LENGTH];
 	 char arg2[MAX_STRING_LENGTH];
-	 bool room, mob, obj, all, area_conflict;
+	 BOOL room, mob, obj, all, area_conflict;
 	 int low_range, high_range;
 
 	 room = FALSE;
@@ -7881,7 +7881,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
  float fread_float( FILE *fp )
  {
 	 float number;
-	 bool sign, decimal;
+	 BOOL sign, decimal;
 	 char c;
 	 double place = 0;
 

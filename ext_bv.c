@@ -64,7 +64,7 @@ char *ext_flag_string2( EXT_BV * bitvector, const char *const flagarray[] )
  */
 
 /* check to see if the extended bitvector is completely empty */
-bool ext_is_empty( EXT_BV * bits )
+BOOL ext_is_empty( EXT_BV * bits )
 {
    int x;
 
@@ -100,7 +100,7 @@ int ext_has_bits( EXT_BV * var, EXT_BV * bits )
 }
 
 /* for use by xSAME_BITS() -- works like == */
-bool ext_same_bits( EXT_BV * var, EXT_BV * bits )
+BOOL ext_same_bits( EXT_BV * var, EXT_BV * bits )
 {
    int x;
 

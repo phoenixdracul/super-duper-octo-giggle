@@ -48,24 +48,24 @@ void	say_spell	args( ( CHAR_DATA *ch, int sn ) );
 CHAR_DATA *make_poly_mob args( (CHAR_DATA *ch, int vnum) );
 ch_ret	spell_affect	args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
 ch_ret	spell_affectchar args( ( int sn, int level, CHAR_DATA *ch, void *vo ) );
-extern bool fBootDb;
+extern BOOL fBootDb;
 /* from shops.c */
 CHAR_DATA * find_keeper  args( ( CHAR_DATA *ch ) );
 
 /*
  * Is immune to a damage type
  */
-bool is_immune( CHAR_DATA *ch, short damtype )
+BOOL is_immune( CHAR_DATA *ch, short damtype )
 {
    switch( damtype )
    {
-      case SD_FIRE:           return((bool) IS_SET( ch->immune, RIS_FIRE ) );
-      case SD_COLD:           return((bool) IS_SET( ch->immune, RIS_COLD ) );
-      case SD_ELECTRICITY:    return((bool) IS_SET( ch->immune, RIS_ELECTRICITY ) );
-      case SD_ENERGY:         return((bool) IS_SET( ch->immune, RIS_ENERGY ) );
-      case SD_ACID:           return((bool) IS_SET( ch->immune, RIS_ACID ) );
-      case SD_POISON:         return((bool) IS_SET( ch->immune, RIS_POISON ) );
-      case SD_DRAIN:          return((bool) IS_SET( ch->immune, RIS_DRAIN ) );
+      case SD_FIRE:           return((BOOL) IS_SET( ch->immune, RIS_FIRE ) );
+      case SD_COLD:           return((BOOL) IS_SET( ch->immune, RIS_COLD ) );
+      case SD_ELECTRICITY:    return((BOOL) IS_SET( ch->immune, RIS_ELECTRICITY ) );
+      case SD_ENERGY:         return((BOOL) IS_SET( ch->immune, RIS_ENERGY ) );
+      case SD_ACID:           return((BOOL) IS_SET( ch->immune, RIS_ACID ) );
+      case SD_POISON:         return((BOOL) IS_SET( ch->immune, RIS_POISON ) );
+      case SD_DRAIN:          return((BOOL) IS_SET( ch->immune, RIS_DRAIN ) );
    }
    return FALSE;
 }
@@ -232,7 +232,7 @@ int ch_bsearch_skill( CHAR_DATA *ch, const char *name, int first, int top )
 }
 
 
-int find_spell( CHAR_DATA *ch, const char *name, bool know )
+int find_spell( CHAR_DATA *ch, const char *name, BOOL know )
 {
     if ( IS_NPC(ch) || !know )
 	return bsearch_skill( name, gsn_first_spell, gsn_first_skill-1 );
@@ -240,7 +240,7 @@ int find_spell( CHAR_DATA *ch, const char *name, bool know )
 	return ch_bsearch_skill( ch, name, gsn_first_spell, gsn_first_skill-1 );
 }
 
-int find_skill( CHAR_DATA *ch, const char *name, bool know )
+int find_skill( CHAR_DATA *ch, const char *name, BOOL know )
 {
     if ( IS_NPC(ch) || !know )
 	return bsearch_skill( name, gsn_first_skill, gsn_first_weapon-1 );
@@ -248,7 +248,7 @@ int find_skill( CHAR_DATA *ch, const char *name, bool know )
 	return ch_bsearch_skill( ch, name, gsn_first_skill, gsn_first_weapon-1 );
 }
 
-int find_weapon( CHAR_DATA *ch, const char *name, bool know )
+int find_weapon( CHAR_DATA *ch, const char *name, BOOL know )
 {
     if ( IS_NPC(ch) || !know )
 	return bsearch_skill( name, gsn_first_weapon, gsn_first_tongue-1 );
@@ -256,7 +256,7 @@ int find_weapon( CHAR_DATA *ch, const char *name, bool know )
 	return ch_bsearch_skill( ch, name, gsn_first_weapon, gsn_first_tongue-1 );
 }
 
-int find_tongue( CHAR_DATA *ch, const char *name, bool know )
+int find_tongue( CHAR_DATA *ch, const char *name, BOOL know )
 {
     if ( IS_NPC(ch) || !know )
 	return bsearch_skill( name, gsn_first_tongue, gsn_top_sn-1 );
@@ -593,7 +593,7 @@ int dice_parse(CHAR_DATA *ch, int level, char *exp)
  * Compute a saving throw.
  * Negative apply's make saving throw better.
  */
-bool saves_poison_death( int level, CHAR_DATA *victim )
+BOOL saves_poison_death( int level, CHAR_DATA *victim )
 {
     int save;
     if(!victim){
@@ -604,7 +604,7 @@ bool saves_poison_death( int level, CHAR_DATA *victim )
     save = URANGE( 5, save, 95 );
     return chance( victim, save );
 }
-bool saves_wands( int level, CHAR_DATA *victim )
+BOOL saves_wands( int level, CHAR_DATA *victim )
 {
     int save;
 
@@ -615,7 +615,7 @@ bool saves_wands( int level, CHAR_DATA *victim )
     save = URANGE( 5, save, 95 );
     return chance( victim, save );
 }
-bool saves_para_petri( int level, CHAR_DATA *victim )
+BOOL saves_para_petri( int level, CHAR_DATA *victim )
 {
     int save;
 
@@ -623,7 +623,7 @@ bool saves_para_petri( int level, CHAR_DATA *victim )
     save = URANGE( 5, save, 95 );
     return chance( victim, save );
 }
-bool saves_breath( int level, CHAR_DATA *victim )
+BOOL saves_breath( int level, CHAR_DATA *victim )
 {
     int save;
 
@@ -631,7 +631,7 @@ bool saves_breath( int level, CHAR_DATA *victim )
     save = URANGE( 5, save, 95 );
     return chance( victim, save );
 }
-bool saves_spell_staff( int level, CHAR_DATA *victim )
+BOOL saves_spell_staff( int level, CHAR_DATA *victim )
 {
     int save;
 
@@ -665,13 +665,13 @@ bool saves_spell_staff( int level, CHAR_DATA *victim )
  * ^ decrease component's value[4], and extract if it reaches 0
  * & decrease component's value[5], and extract if it reaches 0
  */
-bool process_spell_components( CHAR_DATA *ch, int sn )
+BOOL process_spell_components( CHAR_DATA *ch, int sn )
 {
      SKILLTYPE *skill	= get_skilltype(sn);
      char *comp		= skill->components;
      char *check;
      char arg[MAX_INPUT_LENGTH];
-     bool consume, fail, found;
+     BOOL consume, fail, found;
      int  val, value;
      OBJ_DATA *obj;
 
@@ -983,7 +983,7 @@ void do_cast( CHAR_DATA *ch, char *argument )
     int mana;
     int sn;
     ch_ret retcode;
-    bool dont_wait = FALSE;
+    BOOL dont_wait = FALSE;
     SKILLTYPE *skill = NULL;
     struct timeval time_used;
 
@@ -1621,7 +1621,7 @@ ch_ret spell_call_lightning( int sn, int level, CHAR_DATA *ch, void *vo )
     CHAR_DATA *vch;
     CHAR_DATA *vch_next;
     int dam;
-    bool ch_died;
+    BOOL ch_died;
     ch_ret retcode;
 
     if ( !IS_OUTSIDE(ch) )
@@ -2193,7 +2193,7 @@ ch_ret spell_earthquake( int sn, int level, CHAR_DATA *ch, void *vo )
 {
     CHAR_DATA *vch;
     CHAR_DATA *vch_next;
-    bool ch_died;
+    BOOL ch_died;
     ch_ret retcode;
     SKILLTYPE *skill = get_skilltype(sn);
 
@@ -2901,7 +2901,7 @@ ch_ret spell_locate_object( int sn, int level, CHAR_DATA *ch, void *vo )
     char buf[MAX_INPUT_LENGTH];
     OBJ_DATA *obj;
     OBJ_DATA *in_obj;
-    bool found;
+    BOOL found;
     int cnt;
 
     found = FALSE;
@@ -3028,7 +3028,7 @@ ch_ret spell_poison( int sn, int level, CHAR_DATA *ch, void *vo )
     CHAR_DATA *victim = (CHAR_DATA *) vo;
     AFFECT_DATA af;
     int chance;
-    bool first = TRUE;
+    BOOL first = TRUE;
 
     send_to_char("You feel the hatred grow within you!\n\r", ch);
         ch->alignment = ch->alignment - 100;
@@ -3065,7 +3065,7 @@ ch_ret spell_remove_trap( int sn, int level, CHAR_DATA *ch, void *vo )
 {
     OBJ_DATA *obj;
     OBJ_DATA *trap;
-    bool found;
+    BOOL found;
     int retcode;
     SKILLTYPE *skill = get_skilltype(sn);
 
@@ -3485,7 +3485,7 @@ ch_ret spell_gas_breath( int sn, int level, CHAR_DATA *ch, void *vo )
     CHAR_DATA *vch_next;
     int dam;
     int hpch;
-    bool ch_died;
+    BOOL ch_died;
 
     ch_died = FALSE;
 
@@ -3820,7 +3820,7 @@ ch_ret spell_animate_dead( int sn, int level, CHAR_DATA *ch, void *vo )
     OBJ_DATA  *corpse_next;
     OBJ_DATA  *obj;
     OBJ_DATA  *obj_next;
-    bool      found;
+    BOOL      found;
     MOB_INDEX_DATA *pMobIndex;
     AFFECT_DATA af;
     char       buf[MAX_STRING_LENGTH];
@@ -4201,7 +4201,7 @@ ch_ret spell_spiral_blast( int sn, int level, CHAR_DATA *ch, void *vo )
     CHAR_DATA *vch_next;
     int dam;
     int hpch;
-    bool ch_died;
+    BOOL ch_died;
  
     ch_died = FALSE;
 
@@ -4297,10 +4297,10 @@ ch_ret spell_helical_flow( int sn, int level, CHAR_DATA *ch, void *vo )
 /*
  * saving throw check						-Thoric
  */
-bool check_save( int sn, int level, CHAR_DATA *ch, CHAR_DATA *victim )
+BOOL check_save( int sn, int level, CHAR_DATA *ch, CHAR_DATA *victim )
 {
     SKILLTYPE *skill = get_skilltype(sn);
-    bool saved = FALSE;
+    BOOL saved = FALSE;
 
     if ( SPELL_FLAG(skill, SF_PKSENSITIVE)
     &&  !IS_NPC(ch) && !IS_NPC(victim) )
@@ -4330,7 +4330,7 @@ ch_ret spell_attack( int sn, int level, CHAR_DATA *ch, void *vo )
 {
     CHAR_DATA *victim = (CHAR_DATA *) vo;
     SKILLTYPE *skill = get_skilltype(sn);
-    bool saved = check_save( sn, level, ch, victim );
+    BOOL saved = check_save( sn, level, ch, victim );
     int dam;
     ch_ret retcode;
 
@@ -4364,10 +4364,10 @@ ch_ret spell_area_attack( int sn, int level, CHAR_DATA *ch, void *vo )
 {
     CHAR_DATA *vch, *vch_next;
     SKILLTYPE *skill = get_skilltype(sn);
-    bool saved;
-    bool affects;
+    BOOL saved;
+    BOOL affects;
     int dam;
-    bool ch_died = FALSE;
+    BOOL ch_died = FALSE;
     ch_ret retcode;
 
     send_to_char("You feel the hatred grow within you!\n\r", ch);
@@ -4431,7 +4431,7 @@ ch_ret spell_affectchar( int sn, int level, CHAR_DATA *ch, void *vo )
     SKILLTYPE *skill = get_skilltype(sn);
     CHAR_DATA *victim = (CHAR_DATA *) vo;
     int chance;
-    bool affected = FALSE, first = TRUE;
+    BOOL affected = FALSE, first = TRUE;
     ch_ret retcode = rNONE;
 
     if ( SPELL_FLAG( skill, SF_RECASTABLE ) )
@@ -4585,9 +4585,9 @@ ch_ret spell_affect( int sn, int level, CHAR_DATA *ch, void *vo )
     SMAUG_AFF *saf;
     SKILLTYPE *skill = get_skilltype(sn);
     CHAR_DATA *victim = (CHAR_DATA *) vo;
-    bool groupsp;
-    bool areasp;
-    bool hitchar, hitroom, hitvict = FALSE;
+    BOOL groupsp;
+    BOOL areasp;
+    BOOL hitchar, hitroom, hitvict = FALSE;
     ch_ret retcode;
 
     if ( !skill->affects )

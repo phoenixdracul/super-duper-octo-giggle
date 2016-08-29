@@ -99,7 +99,7 @@ void save_timedata( void )
 void fread_timedata( FILE * fp )
 {
    char *word = NULL;
-   bool fMatch = FALSE;
+   BOOL fMatch = FALSE;
 
    for( ;; )
    {
@@ -131,11 +131,11 @@ void fread_timedata( FILE * fp )
    }
 }
 
-bool load_timedata( void )
+BOOL load_timedata( void )
 {
    char filename[MIL];
    FILE *fp;
-   bool found;
+   BOOL found;
 
    found = FALSE;
    sprintf( filename, "%stime.dat", SYSTEM_DIR );
@@ -226,7 +226,7 @@ time_t now_time;
 short deleted = 0;
 short days = 0;
 
-void fread_pfile( FILE * fp, time_t tdiff, char *fname, bool count )
+void fread_pfile( FILE * fp, time_t tdiff, char *fname, BOOL count )
 {
    char *word;
    char *name = NULL;
@@ -234,7 +234,7 @@ void fread_pfile( FILE * fp, time_t tdiff, char *fname, bool count )
    short level = 0;
    short file_ver = 0;
    int pact2;
-   bool fMatch;
+   BOOL fMatch;
    ROOM_INDEX_DATA *plr_home;
    char homebuf[MSL];
 
@@ -365,7 +365,7 @@ void fread_pfile( FILE * fp, time_t tdiff, char *fname, bool count )
    return;
 }
 
-void read_pfile( char *dirname, char *filename, bool count )
+void read_pfile( char *dirname, char *filename, BOOL count )
 {
    FILE *fp;
    char fname[MSL];
@@ -408,7 +408,7 @@ void read_pfile( char *dirname, char *filename, bool count )
    return;
 }
 
-void pfile_scan( bool count )
+void pfile_scan( BOOL count )
 {
    DIR *dp;
    struct dirent *dentry;
@@ -488,7 +488,7 @@ void fread_fpfile( CHAR_DATA *ch, FILE *fp, char *fname )
 {
    char *word;
    char *name = NULL;
-   bool fMatch;
+   BOOL fMatch;
    sh_int ftype, fstatus;
    char buftype[MSL], bufstatus[MSL], buffinal[MSL];
    for ( ; ; )

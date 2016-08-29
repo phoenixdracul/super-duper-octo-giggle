@@ -183,7 +183,7 @@ void do_clone( CHAR_DATA *ch, char *argument )
 	char bestowments[MAX_STRING_LENGTH];
 	EXT_BV flags;
 	ROOM_INDEX_DATA *home;
-	bool secondroom;
+	BOOL secondroom;
 
 	if ( IS_NPC(ch) )
 	{
@@ -310,7 +310,7 @@ void do_backup( CHAR_DATA *ch, char *argument )
 	char bestowments[MAX_STRING_LENGTH];
 	EXT_BV flags;
 	ROOM_INDEX_DATA *home;
-	bool secondroom;
+	BOOL secondroom;
 
 	if ( IS_NPC(ch) )
 	{
@@ -421,7 +421,7 @@ void do_ammo( CHAR_DATA *ch, char *argument )
 {
 	OBJ_DATA *wield;
 	OBJ_DATA *obj;
-	bool checkammo = FALSE;
+	BOOL checkammo = FALSE;
 	int charge =0;
 
 	obj = NULL;
@@ -1079,7 +1079,7 @@ void do_fill( CHAR_DATA *ch, char *argument )
 	OBJ_DATA *source;
 	sh_int    dest_item, src_item1, src_item2, src_item3, src_item4;
 	int       diff;
-	bool      all = FALSE;
+	BOOL      all = FALSE;
 
 	argument = one_argument( argument, arg1 );
 	argument = one_argument( argument, arg2 );
@@ -1203,7 +1203,7 @@ void do_fill( CHAR_DATA *ch, char *argument )
 
 	if ( !source )
 	{
-		bool      found = FALSE;
+		BOOL      found = FALSE;
 		OBJ_DATA *src_next;
 
 		found = FALSE;
@@ -1279,7 +1279,7 @@ void do_fill( CHAR_DATA *ch, char *argument )
 		char name[MAX_INPUT_LENGTH];
 		CHAR_DATA *gch;
 		char *pd;
-		bool found = FALSE;
+		BOOL found = FALSE;
 
 		if ( source == obj )
 		{
@@ -1324,7 +1324,7 @@ void do_fill( CHAR_DATA *ch, char *argument )
 
 			if ( str_cmp( name, ch->name ) && !IS_IMMORTAL(ch) )
 			{
-				bool fGroup;
+				BOOL fGroup;
 
 				fGroup = FALSE;
 				for ( gch = first_char; gch; gch = gch->next )
@@ -1871,11 +1871,11 @@ void do_recite( CHAR_DATA *ch, char *argument )
 /*
  * Function to handle the state changing of a triggerobject (lever)  -Thoric
  */
-void pullorpush( CHAR_DATA *ch, OBJ_DATA *obj, bool pull )
+void pullorpush( CHAR_DATA *ch, OBJ_DATA *obj, BOOL pull )
 {
 	char buf[MAX_STRING_LENGTH];
 	CHAR_DATA		*rch;
-	bool		 isup;
+	BOOL		 isup;
 	ROOM_INDEX_DATA	*room,  *to_room;
 	EXIT_DATA		*pexit, *pexit_rev;
 	int			 edir;
@@ -2712,8 +2712,8 @@ void do_train( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
 	CHAR_DATA *mob;
-	bool tfound = FALSE;
-	bool successful = FALSE;
+	BOOL tfound = FALSE;
+	BOOL successful = FALSE;
 
 	if ( IS_NPC(ch) )
 		return;
@@ -3874,7 +3874,7 @@ void do_debitorder( CHAR_DATA *ch, char *argument)
 	return;
 }
 
-void tfold_area( AREA_DATA * tarea, const char *filename, bool install )
+void tfold_area( AREA_DATA * tarea, const char *filename, BOOL install )
 {
    RESET_DATA *pReset, *tReset, *gReset;
    ROOM_INDEX_DATA *room;
@@ -3890,7 +3890,7 @@ void tfold_area( AREA_DATA * tarea, const char *filename, bool install )
    FILE *fpout;
    int vnum;
    int val0, val1, val2, val3, val4, val5, val6;
-   bool complexmob;
+   BOOL complexmob;
 
    if( IS_SET( tarea->status, AREA_DELETED ) )
       return;
@@ -4348,7 +4348,7 @@ void do_tsavearea( CHAR_DATA *ch, char *argument )
       tarea = ch->pcdata->area;
    else
    {
-      bool found;
+      BOOL found;
 
       if( get_trust( ch ) < LEVEL_TRUEIMM )
       {

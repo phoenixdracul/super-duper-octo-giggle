@@ -75,12 +75,12 @@ void  account_nanny args( ( DESCRIPTOR_DATA *d, char *argument ) );
 void  account_save args( ( ACCOUNT_DATA *account ) );
 void  account_charater_fread args ( ( ACCOUNT_CHARACTER_DATA *ach, FILE *fp ) );
 ACCOUNT_DATA *account_fread args((char *name));
-bool account_add_character( ACCOUNT_DATA *account, char *name, bool pending, bool newcharacter );
+BOOL account_add_character( ACCOUNT_DATA *account, char *name, BOOL pending, BOOL newcharacter );
 void account_menu( DESCRIPTOR_DATA * d );
 void account_update_character(CHAR_DATA *ch);
-bool  check_reconnect( DESCRIPTOR_DATA * d, char *name, bool fConn );
+BOOL  check_reconnect( DESCRIPTOR_DATA * d, char *name, BOOL fConn );
 void  show_title( DESCRIPTOR_DATA * d );
-bool  check_playing args( ( DESCRIPTOR_DATA *d, char *name, bool kick ) );
+BOOL  check_playing args( ( DESCRIPTOR_DATA *d, char *name, BOOL kick ) );
 
 const char account_echo_off_str[] = { IAC, WILL, TELOPT_ECHO, '\0' };
 const char account_echo_on_str[] = { IAC, WONT, TELOPT_ECHO, '\0' };
@@ -233,7 +233,7 @@ void account_update_character(CHAR_DATA *ch)
 			ch->pcdata->last_changes = ch->pcdata->account->last_changes;
 	}
 }
-bool account_character_playing( char *name )
+BOOL account_character_playing( char *name )
 {
 	CHAR_DATA *ch;
 
@@ -246,7 +246,7 @@ bool account_character_playing( char *name )
 	return FALSE;
 }
 
-bool account_add_character( ACCOUNT_DATA *account, char *name, bool pending, bool newcharacter )
+BOOL account_add_character( ACCOUNT_DATA *account, char *name, BOOL pending, BOOL newcharacter )
 {
 	ACCOUNT_CHARACTER_DATA *ach;
 	FILE *fp;
@@ -381,7 +381,7 @@ ACCOUNT_DATA *account_fread( char *name )
 	ACCOUNT_DATA *account;
 	char filename[256];
 	char *word;
-	bool fMatch = FALSE;
+	BOOL fMatch = FALSE;
 
 	if( !name )
 		return NULL;
@@ -712,7 +712,7 @@ void do_setaccount(CHAR_DATA *ch, char *argument)	// TODO
 
 }
 
-bool check_multi_account(DESCRIPTOR_DATA *d)	// TODO
+BOOL check_multi_account(DESCRIPTOR_DATA *d)	// TODO
 {
 	return FALSE;
 }
@@ -720,8 +720,8 @@ bool check_multi_account(DESCRIPTOR_DATA *d)	// TODO
 void account_charater_fread( ACCOUNT_CHARACTER_DATA *ach, FILE *fp )
 {
 	ROOM_INDEX_DATA *room;
-	char *word;
-	bool fMatch = FALSE;
+	const char *word;
+	BOOL fMatch = FALSE;
 	int room_num = 0;
 
 	for(;;)
@@ -771,7 +771,7 @@ void account_nanny( DESCRIPTOR_DATA *d, char *argument )
 	char ar[MAX_STRING_LENGTH];
 	ACCOUNT_CHARACTER_DATA *ach, *account_character;
 	DESCRIPTOR_DATA *desc;
-	bool chk = FALSE;
+	BOOL chk = FALSE;
 
 	switch( d->connected )
 	{

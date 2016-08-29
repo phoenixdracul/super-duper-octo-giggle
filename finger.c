@@ -76,7 +76,7 @@ typedef struct finger_data {
 
 void read_finger args(( CHAR_DATA *ch, char *argument ));
 void fread_finger args(( CHAR_DATA *ch, FILE *fp, char *laston ));
-bool file_exist args(( char *name ));
+BOOL file_exist args(( char *name ));
 
 
 
@@ -248,7 +248,7 @@ void fread_finger( CHAR_DATA *ch, FILE *fp, char *laston )
 	char buf[MAX_STRING_LENGTH];
 	const char *word;
 	int version = 1;
-	bool fMatch;
+	BOOL fMatch;
 	
 	CREATE(finger, FINGER_DATA ,1 );
 	for ( ; ; )
@@ -560,7 +560,7 @@ void do_setself( CHAR_DATA *ch, char *argument )
 }
    
 
-bool file_exist( char *name )
+BOOL file_exist( char *name )
 {
 	/*
 	 * F_OK = Existance of the file

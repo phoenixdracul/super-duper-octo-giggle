@@ -41,9 +41,9 @@
 char will_compress2_str[] = { IAC, WILL, TELOPT_COMPRESS2, '\0' };
 char start_compress2_str[] = { IAC, SB, TELOPT_COMPRESS2, IAC, SE, '\0' };
 
-bool write_to_descriptor( DESCRIPTOR_DATA * d, char *txt, int length );
+BOOL write_to_descriptor( DESCRIPTOR_DATA * d, char *txt, int length );
 
-bool process_compressed( DESCRIPTOR_DATA * d )
+BOOL process_compressed( DESCRIPTOR_DATA * d )
 {
    int iStart = 0, nBlock, nWrite, len;
 
@@ -89,7 +89,7 @@ bool process_compressed( DESCRIPTOR_DATA * d )
    return TRUE;
 }
 
-bool compressStart( DESCRIPTOR_DATA * d )
+BOOL compressStart( DESCRIPTOR_DATA * d )
 {
    z_stream *s;
 
@@ -124,7 +124,7 @@ bool compressStart( DESCRIPTOR_DATA * d )
    return TRUE;
 }
 
-bool compressEnd( DESCRIPTOR_DATA * d )
+BOOL compressEnd( DESCRIPTOR_DATA * d )
 {
    unsigned char dummy[1];
 

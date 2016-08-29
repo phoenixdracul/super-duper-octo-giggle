@@ -47,7 +47,7 @@
  */
 void  write_corpses   args( ( CHAR_DATA *ch, char *name ) );
 void    show_list_to_char  args( ( OBJ_DATA *list, CHAR_DATA *ch,
-		bool fShort, bool fShowNothing ) );
+		BOOL fShort, BOOL fShowNothing ) );
 void save_vendor		args((ROOM_INDEX_DATA *room));
 
 /*
@@ -55,8 +55,8 @@ void save_vendor		args((ROOM_INDEX_DATA *room));
  */
 void	get_obj		args( ( CHAR_DATA *ch, OBJ_DATA *obj,
 		OBJ_DATA *container ) );
-bool	remove_obj	args( ( CHAR_DATA *ch, int iWear, bool fReplace ) );
-void	wear_obj	args( ( CHAR_DATA *ch, OBJ_DATA *obj, bool fReplace, sh_int wear_bit ) );
+BOOL	remove_obj	args( ( CHAR_DATA *ch, int iWear, BOOL fReplace ) );
+void	wear_obj	args( ( CHAR_DATA *ch, OBJ_DATA *obj, BOOL fReplace, sh_int wear_bit ) );
 
 
 /*
@@ -199,7 +199,7 @@ void do_get( CHAR_DATA *ch, char *argument )
 	OBJ_DATA *obj_next;
 	OBJ_DATA *container;
 	sh_int number;
-	bool found;
+	BOOL found;
 
 	argument = one_argument( argument, arg1 );
 	if ( is_number(arg1) )
@@ -268,7 +268,7 @@ void do_get( CHAR_DATA *ch, char *argument )
 		else
 		{
 			sh_int cnt = 0;
-			bool fAll;
+			BOOL fAll;
 			char *chk;
 
 			if ( IS_SET( ch->in_room->room_flags, ROOM_DONATION ) )
@@ -296,7 +296,7 @@ void do_get( CHAR_DATA *ch, char *argument )
 					if(IS_SET(obj->extra_flags, ITEM_UNIQUE))
 					{
 						OBJ_DATA *pObj;
-						bool canGet = TRUE;
+						BOOL canGet = TRUE;
 						for ( pObj = ch->first_carrying; pObj; pObj = pObj->next_content )
 							if ( can_see_obj(ch, pObj) && pObj->pIndexData->vnum == obj->pIndexData->vnum )
 							{
@@ -371,7 +371,7 @@ void do_get( CHAR_DATA *ch, char *argument )
 			if(IS_SET(container->extra_flags, ITEM_UNIQUE))
 			{
 				OBJ_DATA *pObj;
-//				bool canGet = TRUE;
+//				BOOL canGet = TRUE;
 				for ( pObj = ch->first_carrying; pObj; pObj = pObj->next_content )
 					if ( can_see_obj(ch, pObj) && pObj->pIndexData->vnum == container->pIndexData->vnum )
 					{
@@ -411,7 +411,7 @@ void do_get( CHAR_DATA *ch, char *argument )
 			if(IS_SET(obj->extra_flags, ITEM_UNIQUE))
 			{
 				OBJ_DATA *pObj;
-//				bool canGet = TRUE;
+//				BOOL canGet = TRUE;
 				for ( pObj = ch->first_carrying; pObj; pObj = pObj->next_content )
 					if ( can_see_obj(ch, pObj) && pObj->pIndexData->vnum == obj->pIndexData->vnum )
 					{
@@ -431,7 +431,7 @@ void do_get( CHAR_DATA *ch, char *argument )
 		else
 		{
 			int cnt = 0;
-			bool fAll;
+			BOOL fAll;
 			char *chk;
 
 			/* 'get all container' or 'get all.obj container' */
@@ -459,7 +459,7 @@ void do_get( CHAR_DATA *ch, char *argument )
 					if(IS_SET(obj->extra_flags, ITEM_UNIQUE))
 					{
 						OBJ_DATA *pObj;
-						bool canGet = TRUE;
+						BOOL canGet = TRUE;
 						for ( pObj = ch->first_carrying; pObj; pObj = pObj->next_content )
 							if ( can_see_obj(ch, pObj) && pObj->pIndexData->vnum == obj->pIndexData->vnum )
 							{
@@ -632,15 +632,15 @@ void do_holster( CHAR_DATA *ch, char *argument)
 	return;
 }
 
-bool can_dual( CHAR_DATA *ch );
+BOOL can_dual( CHAR_DATA *ch );
 
 void do_draw( CHAR_DATA *ch, char *argument)
 {
 	char arg1[MAX_INPUT_LENGTH];
 	OBJ_DATA *weapon;
 	OBJ_DATA *second_weapon;
-	bool weapon_found = FALSE;
-	bool dual_found = FALSE;
+	BOOL weapon_found = FALSE;
+	BOOL dual_found = FALSE;
 
 	argument = one_argument( argument, arg1 );
 
@@ -781,7 +781,7 @@ void do_put( CHAR_DATA *ch, char *argument )
 	CLAN_DATA *clan;
 	sh_int	count;
 	int		number;
-	bool	save_char = FALSE;
+	BOOL	save_char = FALSE;
 
 	argument = one_argument( argument, arg1 );
 	if ( is_number(arg1) )
@@ -992,9 +992,9 @@ void do_put( CHAR_DATA *ch, char *argument )
 	}
 	else
 	{
-		bool found = FALSE;
+		BOOL found = FALSE;
 		int cnt = 0;
-		bool fAll;
+		BOOL fAll;
 		char *chk;
 
 		if ( !str_cmp(arg1, "all") )
@@ -1089,7 +1089,7 @@ void do_drop( CHAR_DATA *ch, char *argument )
 	char logbuf[MAX_STRING_LENGTH];
 	OBJ_DATA *obj;
 	OBJ_DATA *obj_next;
-	bool found;
+	BOOL found;
 	CLAN_DATA *clan;
 	int number;
 
@@ -1222,7 +1222,7 @@ void do_drop( CHAR_DATA *ch, char *argument )
 	{
 		int cnt = 0;
 		char *chk;
-		bool fAll;
+		BOOL fAll;
 
 		if ( !str_cmp(arg, "all") )
 			fAll = TRUE;
@@ -1583,7 +1583,7 @@ obj_ret damage_obj( OBJ_DATA *obj )
 /*
  * Remove an object.
  */
-bool remove_obj( CHAR_DATA *ch, int iWear, bool fReplace )
+BOOL remove_obj( CHAR_DATA *ch, int iWear, BOOL fReplace )
 {
 	OBJ_DATA *obj, *tmpobj;
 
@@ -1626,7 +1626,7 @@ bool remove_obj( CHAR_DATA *ch, int iWear, bool fReplace )
 /*
  * See if char could be capable of dual-wielding		-Thoric
  */
-bool could_dual( CHAR_DATA *ch )
+BOOL could_dual( CHAR_DATA *ch )
 {
 	if ( IS_NPC(ch) )
 		return TRUE;
@@ -1641,13 +1641,13 @@ bool could_dual( CHAR_DATA *ch )
  *
  * Original version by Thoric.
  */
-bool can_dual( CHAR_DATA *ch )
+BOOL can_dual( CHAR_DATA *ch )
 {
 	/*
 	 * We must assume that when they come in, they are NOT wielding something. We
 	 * take care of the actual value later. -Orion
 	 */
-	bool wielding[2], alreadyWielding = FALSE;
+	BOOL wielding[2], alreadyWielding = FALSE;
 	wielding[0] = FALSE;
 	wielding[1] = FALSE;
 
@@ -1723,7 +1723,7 @@ bool can_dual( CHAR_DATA *ch )
  * Check to see if there is room to wear another object on this location
  * (Layered clothing support)
  */
-bool can_layer( CHAR_DATA *ch, OBJ_DATA *obj, sh_int wear_loc )
+BOOL can_layer( CHAR_DATA *ch, OBJ_DATA *obj, sh_int wear_loc )
 {
 	OBJ_DATA   *otmp;
 	sh_int	bitlayers = 0;
@@ -1749,12 +1749,12 @@ bool can_layer( CHAR_DATA *ch, OBJ_DATA *obj, sh_int wear_loc )
  * Big repetitive code, ick.
  * Restructured a bit to allow for specifying body location	-Thoric
  */
-void wear_obj( CHAR_DATA *ch, OBJ_DATA *obj, bool fReplace, sh_int wear_bit )
+void wear_obj( CHAR_DATA *ch, OBJ_DATA *obj, BOOL fReplace, sh_int wear_bit )
 {
 	char buf[MAX_STRING_LENGTH];
 	OBJ_DATA *tmpobj;
 	sh_int bit, tmp;
-	bool check_size;
+	BOOL check_size;
 
 	separate_obj( obj );
 
@@ -2663,7 +2663,7 @@ void do_bury( CHAR_DATA *ch, char *argument )
 {
 	char arg[MAX_INPUT_LENGTH];
 	OBJ_DATA *obj;
-	bool shovel;
+	BOOL shovel;
 	sh_int move;
 
 	one_argument( argument, arg );
@@ -3317,13 +3317,13 @@ void do_auction (CHAR_DATA *ch, char *argument)
 
 /* Make objects in rooms that are nofloor fall - Scryn 1/23/96 */
 
-void obj_fall( OBJ_DATA *obj, bool through )
+void obj_fall( OBJ_DATA *obj, BOOL through )
 {
 	EXIT_DATA *pexit;
 	ROOM_INDEX_DATA *to_room;
 	static int fall_count;
 	char buf[MAX_STRING_LENGTH];
-	static bool is_falling; /* Stop loops from the call to obj_to_room()  -- Altrag */
+	static BOOL is_falling; /* Stop loops from the call to obj_to_room()  -- Altrag */
 
 	if ( !obj->in_room || is_falling )
 		return;

@@ -129,7 +129,7 @@ struct prototype_room
 PROTO_ROOM *first_prototype_room;
 PROTO_ROOM *last_prototype_room;
 
-void instaroom( AREA_DATA *pArea, ROOM_INDEX_DATA *pRoom, bool dodoors );
+void instaroom( AREA_DATA *pArea, ROOM_INDEX_DATA *pRoom, BOOL dodoors );
 void shiplist(CHAR_DATA *ch);
 char *primary_beam_name_proto(int shiptype);
 char *secondary_beam_name_proto(int shiptype);
@@ -211,13 +211,13 @@ void do_buymobship(CHAR_DATA *ch, char *argument ) //Improved by Michael to allo
    char arg[MAX_STRING_LENGTH];
    char shipname[MAX_STRING_LENGTH];
    char buf[MAX_STRING_LENGTH];
-   bool found_proto = FALSE;
+   BOOL found_proto = FALSE;
    AREA_DATA *tarea;
    CLAN_DATA *clan;
    CLAN_DATA *mainclan;
    SPACE_DATA *system;
    PLANET_DATA *planet;
-   bool fsys, fplan, fcap;
+   BOOL fsys, fplan, fcap;
 
    argument = one_argument( argument, arg );
 
@@ -514,7 +514,7 @@ void do_orderclanship(CHAR_DATA *ch, char *argument )
   int x,size,ship_type,vnum;
   SHIP_DATA *ship;
   char arg[MAX_STRING_LENGTH];
-  bool found_proto = FALSE;
+  BOOL found_proto = FALSE;
   AREA_DATA *tarea;
   CLAN_DATA   *clan;
   CLAN_DATA   *mainclan;
@@ -705,7 +705,7 @@ void do_ordership(CHAR_DATA *ch, char *argument)
   int x,size,ship_type,vnum,count;
   SHIP_DATA *ship;
   char arg[MAX_STRING_LENGTH];
-  bool found_proto = FALSE;
+  BOOL found_proto = FALSE;
   AREA_DATA *tarea;
   BMARKET_DATA *marketship;
   char *bmshipname;
@@ -1041,7 +1041,7 @@ void do_listmobships(CHAR_DATA *ch, char *argument)
 	{
 		if(ship->type == MOB_SHIP)
 		{
-			bool room_found = FALSE;
+			BOOL room_found = FALSE;
 			if(!ship->in_room && ship->shipstate != SHIP_HYPERSPACE)
 			{
 				room_found = TRUE;
@@ -1130,10 +1130,10 @@ void do_makemobship( CHAR_DATA *ch, char *argument ){
 	int x,size,ship_type,vnum,count;
 	SHIP_DATA *ship;
 	char arg[MAX_STRING_LENGTH];
-	bool found_proto = FALSE;
+	BOOL found_proto = FALSE;
 	AREA_DATA *tarea;
 	SPACE_DATA *system;
-	bool fsys = FALSE;
+	BOOL fsys = FALSE;
 
 	count=0;
 
@@ -1557,7 +1557,7 @@ int make_prototype_rooms(int ship_type, int vnum,AREA_DATA *tarea,char *Sname)
 
 int find_vnum_block(int num_needed)
 {
-  bool counting = FALSE;
+  BOOL counting = FALSE;
   int count = 0;
   AREA_DATA *tarea;
   int lrange;
@@ -1783,12 +1783,12 @@ void write_all_prototypes()
     write_prototype_list();
 }
 
-bool load_prototype_header(FILE *fp,int prototype)
+BOOL load_prototype_header(FILE *fp,int prototype)
 {
   char buf[MAX_STRING_LENGTH];
   char *word;
-  bool done = FALSE;
-  bool fMatch;
+  BOOL done = FALSE;
+  BOOL fMatch;
     while(!done)
     {
       word   = feof( fp ) ? "End" : fread_word( fp );
@@ -1862,13 +1862,13 @@ bool load_prototype_header(FILE *fp,int prototype)
   return TRUE;
 }
 
-bool fread_prototype_room( FILE *fp, int prototype)
+BOOL fread_prototype_room( FILE *fp, int prototype)
 {
   PROTO_ROOM *proom;
   char buf[MAX_STRING_LENGTH];
   char *word;
-  bool done = FALSE;
-  bool fMatch;
+  BOOL done = FALSE;
+  BOOL fMatch;
     CREATE(proom, PROTO_ROOM, 1);
     proom->what_prototype = prototype;
     while(!done)
@@ -1957,11 +1957,11 @@ bool fread_prototype_room( FILE *fp, int prototype)
   return TRUE;
 }
     
-bool load_prototype_rooms( FILE *fp, int prototype)
+BOOL load_prototype_rooms( FILE *fp, int prototype)
 {
   char letter;
   char *word;
-  bool done = FALSE;
+  BOOL done = FALSE;
     while(!done)
     {
     	letter = fread_letter( fp );
@@ -1989,9 +1989,9 @@ int load_prototype( char *prototypefile, int prototype)
 {
     char filename[256];
     FILE *fp;
-    bool found = FALSE;
+    BOOL found = FALSE;
     int stage = -1;
-    bool ok = TRUE;
+    BOOL ok = TRUE;
     char letter;
     char *word;
     
@@ -2744,7 +2744,7 @@ void save_market_list()
 void add_market_ship( SHIP_DATA *ship )
 {
     BMARKET_DATA *marketship;
-    bool found;
+    BOOL found;
 
     if(!ship)  return;
     
@@ -3080,7 +3080,7 @@ void do_installmodule( CHAR_DATA *ch, char *argument )
   SHIP_DATA *ship;
   MODULE_DATA *mod;
   int i=0, maxmod;
-  bool checktool,checkmod;
+  BOOL checktool,checkmod;
   OBJ_DATA *obj;
   OBJ_DATA *modobj;
   char arg[MAX_INPUT_LENGTH];

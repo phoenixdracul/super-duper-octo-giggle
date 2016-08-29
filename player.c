@@ -868,7 +868,7 @@ void do_locker( CHAR_DATA * ch, char *argument )
    char arg[MAX_INPUT_LENGTH];
    int locker_cost = 1000;
    OBJ_DATA *locker;
-   bool foot = FALSE;
+   BOOL foot = FALSE;
 
    if( IS_NPC( ch ) )
       return;
@@ -1072,7 +1072,7 @@ void do_locker( CHAR_DATA * ch, char *argument )
    return;
 }
 
-void fwrite_locker( CHAR_DATA * ch, OBJ_DATA * locker, bool foot )
+void fwrite_locker( CHAR_DATA * ch, OBJ_DATA * locker, BOOL foot )
 {
    /*
     * Variables
@@ -1266,7 +1266,7 @@ void do_equipment( CHAR_DATA *ch, char *argument )
 {
     OBJ_DATA *obj;
     int iWear, dam;
-    bool found;
+    BOOL found;
     char buf[MAX_STRING_LENGTH];
     
     set_char_color( AT_RED, ch );

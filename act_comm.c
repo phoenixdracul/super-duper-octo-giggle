@@ -127,7 +127,7 @@ void do_beep( CHAR_DATA *ch, char *argument )
 	CHAR_DATA *victim;
 	char arg[MAX_STRING_LENGTH];
 	OBJ_DATA *obj;
-	bool ch_comlink, victim_comlink;
+	BOOL ch_comlink, victim_comlink;
 
 	argument = one_argument( argument, arg );
 
@@ -522,8 +522,8 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
 	int position;
 	CLAN_DATA *clan = NULL;
 
-	bool  ch_comlink = FALSE;
-	bool  garble = FALSE;
+	BOOL  ch_comlink = FALSE;
+	BOOL  garble = FALSE;
 
 	if(ch->comfreq == NULL || !str_cmp(ch->comfreq, "(null)")
 			|| (strlen(ch->comfreq) != 7))
@@ -893,7 +893,7 @@ void talk_channel( CHAR_DATA *ch, char *argument, int channel, const char *verb 
 			{
 				SHIP_DATA *ship = ship_from_cockpit( ch->in_room->vnum );
 				SHIP_DATA *target;
-				bool commsys;
+				BOOL commsys;
 				int chance;
 				OBJ_DATA *obj;
 				commsys = FALSE;
@@ -1874,8 +1874,8 @@ void do_oldtell( CHAR_DATA *ch, char *argument )
 	CHAR_DATA *och;
 	int position;
 	CHAR_DATA *switched_victim;
-	bool ch_comlink;
-	bool victim_comlink;
+	BOOL ch_comlink;
+	BOOL victim_comlink;
 	OBJ_DATA *obj;
 
 	switched_victim = NULL;
@@ -2085,8 +2085,8 @@ void do_tell( CHAR_DATA *ch, char *argument )
 	CHAR_DATA *victim;
 	int position;
 	CHAR_DATA *switched_victim;
-	bool ch_comlink;
-	bool victim_comlink;
+	BOOL ch_comlink;
+	BOOL victim_comlink;
 	OBJ_DATA *obj;
 	CHAR_DATA *vict2;
 
@@ -2296,8 +2296,8 @@ void do_oldreply( CHAR_DATA *ch, char *argument )
 	CHAR_DATA *och;
 	CHAR_DATA *victim;
 	int position;
-	bool ch_comlink;
-	bool victim_comlink;
+	BOOL ch_comlink;
+	BOOL victim_comlink;
 	OBJ_DATA *obj;
 
 	if ( argument[0] == '\0')
@@ -2453,8 +2453,8 @@ void do_reply( CHAR_DATA *ch, char *argument )
 	char buf[MAX_STRING_LENGTH];
 	CHAR_DATA *victim;
 	int position;
-	bool ch_comlink;
-	bool victim_comlink;
+	BOOL ch_comlink;
+	BOOL victim_comlink;
 	OBJ_DATA *obj;
 
 	if ( argument[0] == '\0')
@@ -3231,7 +3231,7 @@ void do_save( CHAR_DATA *ch, char *argument )
  * follow in a loop through an exit leading back into the same room
  * (Which exists in many maze areas)			-Thoric
  */
-bool circle_follow( CHAR_DATA *ch, CHAR_DATA *victim )
+BOOL circle_follow( CHAR_DATA *ch, CHAR_DATA *victim )
 {
 	CHAR_DATA *tmp;
 
@@ -3370,8 +3370,8 @@ void do_order( CHAR_DATA *ch, char *argument )
 	CHAR_DATA *victim;
 	CHAR_DATA *och;
 	CHAR_DATA *och_next;
-	bool found;
-	bool fAll;
+	BOOL found;
+	BOOL fAll;
 
 	strcpy( argbuf, argument );
 	argument = one_argument( argument, arg );
@@ -3740,7 +3740,7 @@ void do_gtell( CHAR_DATA *ch, char *argument )
  * (2) if A ~ B then B ~ A
  * (3) if A ~ B  and B ~ C, then A ~ C
  */
-bool is_same_group( CHAR_DATA *ach, CHAR_DATA *bch )
+BOOL is_same_group( CHAR_DATA *ach, CHAR_DATA *bch )
 {
 	if ( ach->leader ) ach = ach->leader;
 	if ( bch->leader ) bch = bch->leader;
@@ -3773,7 +3773,7 @@ void talk_auction (char *argument)
  * Language support functions. -- Altrag
  * 07/01/96
  */
-bool knows_language( CHAR_DATA *ch, int language, CHAR_DATA *cch )
+BOOL knows_language( CHAR_DATA *ch, int language, CHAR_DATA *cch )
 {
 	sh_int sn;
 
@@ -3816,7 +3816,7 @@ bool knows_language( CHAR_DATA *ch, int language, CHAR_DATA *cch )
 	return FALSE;
 }
 
-bool can_learn_lang( CHAR_DATA *ch, int language )
+BOOL can_learn_lang( CHAR_DATA *ch, int language )
 {
 	if ( language & LANG_CLAN )
 		return FALSE;

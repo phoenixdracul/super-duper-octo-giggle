@@ -75,7 +75,7 @@ long last_note_stamp = 0; /* To generate unique timestamps on notes */
 #define BOARD_NOACCESS -1
 #define BOARD_NOTFOUND -1
 
-bool next_board (CHAR_DATA *ch);
+BOOL next_board (CHAR_DATA *ch);
 
 
 /* recycle a note */
@@ -422,7 +422,7 @@ void load_global_boards ()
 }
 
 /* Returns TRUE if the specified note is address to ch */
-bool gb_is_note_to (CHAR_DATA *ch, NOTE_DATA *note)
+BOOL gb_is_note_to (CHAR_DATA *ch, NOTE_DATA *note)
 {
     if (!str_cmp (ch->name, note->sender))
         return TRUE;
@@ -930,7 +930,7 @@ void make_note (const char* board_name, const char *sender, const char *to, cons
 }
 
 /* tries to change to the next accessible board */
-bool next_board (CHAR_DATA *ch)
+BOOL next_board (CHAR_DATA *ch)
 {
     int i = board_number (ch->pcdata->board) + 1;
 

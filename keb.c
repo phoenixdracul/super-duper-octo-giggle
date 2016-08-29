@@ -55,7 +55,7 @@ void descriptor_switch( DESCRIPTOR_DATA * ch, DESCRIPTOR_DATA * victim );
 void do_as_mortal( CHAR_DATA * ch, char *argument );
 
 
-bool exists_player( char *name )
+BOOL exists_player( char *name )
 {
 	struct stat fst;
 	char buf[256];
@@ -203,7 +203,7 @@ void do_pfreload( CHAR_DATA * ch, char *argument )
 		char name[MAX_STRING_LENGTH];
 		char buf[MAX_STRING_LENGTH];
 		ROOM_INDEX_DATA *in_room;
-		bool Load;
+		BOOL Load;
 		d = NULL;
 		d = victim->desc;
 

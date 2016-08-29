@@ -73,7 +73,7 @@ void fread_comment( CHAR_DATA *ch, FILE *fp );
 ACCOUNT_DATA *account_fread( char *name );
 void separate_obj(OBJ_DATA *obj);
 char *ext_flag_string( EXT_BV * bitvector, const char *const flagarray[] );
-bool ext_is_empty( EXT_BV * bits );
+BOOL ext_is_empty( EXT_BV * bits );
 int get_plrflag( char *flag );
 ACCOUNT_CHARACTER_DATA *account_get_character( ACCOUNT_DATA *account, char *name );
 
@@ -88,7 +88,7 @@ static	OBJ_DATA *	rgObjNest	[MAX_NEST];
  * Local functions.
  */
 void	fwrite_char	args( ( CHAR_DATA *ch, FILE *fp ) );
-void	fread_char	args( ( CHAR_DATA *ch, FILE *fp, bool preload, bool hotboot) );
+void	fread_char	args( ( CHAR_DATA *ch, FILE *fp, BOOL preload, BOOL hotboot) );
 void	write_corpses	args( ( CHAR_DATA *ch, char *name ) );
 void write_vendor_list	args(	( void ) 	);
 void load_vendor_file	args(( FILE *fp, ROOM_INDEX_DATA *room));
@@ -142,7 +142,7 @@ void load_home( CHAR_DATA * ch )
 	 if ( ( fph = fopen( filename, "r" ) ) != NULL )
 	 {
 	    int iNest;
-	    bool found;
+	    BOOL found;
 	    OBJ_DATA *tobj, *tobj_next;
 
 	    rset_supermob(storeroom);
@@ -342,7 +342,7 @@ void load_vendor_file( FILE *fp, ROOM_INDEX_DATA *room)
 
 
 	pShop = NULL;
-	bool isven = FALSE;
+	BOOL isven = FALSE;
 
 	for ( vendor = room->first_person;
 			vendor;
@@ -996,7 +996,7 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 /*
  * Write an object and its contents.
  */
-void fwrite_obj( CHAR_DATA *ch, OBJ_DATA *obj, FILE *fp, int iNest, short os_type, bool hotboot )
+void fwrite_obj( CHAR_DATA *ch, OBJ_DATA *obj, FILE *fp, int iNest, short os_type, BOOL hotboot )
 {
 	EXTRA_DESCR_DATA *ed;
 	AFFECT_DATA *paf;
@@ -1159,12 +1159,12 @@ void fwrite_obj( CHAR_DATA *ch, OBJ_DATA *obj, FILE *fp, int iNest, short os_typ
 /*
  * Load a char and inventory into a new ch structure.
  */
-bool load_char_obj( DESCRIPTOR_DATA * d, char *name, bool preload, bool hotboot )
+BOOL load_char_obj( DESCRIPTOR_DATA * d, char *name, BOOL preload, BOOL hotboot )
 {
 	char strsave[MAX_INPUT_LENGTH];
 	CHAR_DATA *ch;
 	FILE *fp;
-	bool found;
+	BOOL found;
 	struct stat fst;
 	int i, x;
 	char buf[MAX_INPUT_LENGTH];
@@ -1406,14 +1406,14 @@ bool load_char_obj( DESCRIPTOR_DATA * d, char *name, bool preload, bool hotboot 
 			break;				\
 		}
 
-void fread_char( CHAR_DATA *ch, FILE *fp, bool preload, bool hotboot )
+void fread_char( CHAR_DATA *ch, FILE *fp, BOOL preload, BOOL hotboot )
 {
 	char buf[MAX_STRING_LENGTH];
 	char *line;
 	char *word;
 	int x1, x2, x3, x4, x5, x6, x7, x8, x9, x0;
 	sh_int killcnt;
-	bool fMatch;
+	BOOL fMatch;
 	int max_colors = 0; /* Color code */
 	time_t lastplayed;
 	int sn, extra;
@@ -2326,9 +2326,9 @@ void fread_obj( CHAR_DATA *ch, FILE *fp, sh_int os_type )
 	OBJ_DATA *obj;
 	char *word;
 	int iNest;
-	bool fMatch;
-	bool fNest;
-	bool fVnum;
+	BOOL fMatch;
+	BOOL fNest;
+	BOOL fVnum;
 	ROOM_INDEX_DATA *room;
 
 	CREATE( obj, OBJ_DATA, 1 );
@@ -2482,7 +2482,7 @@ void fread_obj( CHAR_DATA *ch, FILE *fp, sh_int os_type )
 	                     else
 	                     {
 	                        OBJ_DATA *locker;
-	                        bool foot = FALSE;
+	                        BOOL foot = FALSE;
 
 	                        if( !IS_SET( ch->in_room->room_flags2, ROOM_LOCKER ) )
 	                        {
@@ -2526,7 +2526,7 @@ void fread_obj( CHAR_DATA *ch, FILE *fp, sh_int os_type )
 					else if ( iNest == 0 || rgObjNest[iNest] == NULL )
 					{
 						int slot;
-						bool reslot = FALSE;
+						BOOL reslot = FALSE;
 
 						if ( file_ver > 1
 								&&   wear_loc > -1
@@ -2904,9 +2904,9 @@ void save_profile( CHAR_DATA *ch )
 		char aimname[MAX_INPUT_LENGTH];
 		char desc[MAX_STRING_LENGTH];
 		char bio[MAX_STRING_LENGTH];
-		bool pageurl=TRUE;
-		bool emailurl=TRUE;
-		bool aimurl=TRUE;
+		BOOL pageurl=TRUE;
+		BOOL emailurl=TRUE;
+		BOOL aimurl=TRUE;
 
 		if(ch->pcdata->image && ch->pcdata->image[0] != '\0')
 			sprintf(image, "%s", show_tilde(ch->pcdata->image));

@@ -239,7 +239,7 @@ struct imc_command_table
    IMC_FUN *function;
    char *name;
    int level;
-   bool connected;
+   BOOL connected;
 };
 
 struct imc_help_table
@@ -312,8 +312,8 @@ struct imc_channel
    char *history[MAX_IMCHISTORY];
    long flags;
    short level;
-   bool open;
-   bool refreshed;
+   BOOL open;
+   BOOL refreshed;
 };
 
 struct imc_packet_data
@@ -354,9 +354,9 @@ struct imc_siteinfo
    int adminlevel;   /* Admin level */
    int implevel;  /* Implementor level */
    unsigned short rport;   /* remote port of server */
-   bool sha256;   /* Client will support SHA-256 authentication */
-   bool sha256pass;  /* Client is using SHA-256 authentication */
-   bool autoconnect; /* Do we autoconnect on bootup or not? - Samson */
+   BOOL sha256;   /* Client will support SHA-256 authentication */
+   BOOL sha256pass;  /* Client is using SHA-256 authentication */
+   BOOL autoconnect; /* Do we autoconnect on bootup or not? - Samson */
 
    /*
     * Conection parameters - These don't save in the config file 
@@ -382,7 +382,7 @@ struct imc_remoteinfo
    char *url;
    char *host;
    char *port;
-   bool expired;
+   BOOL expired;
 };
 
 /* A mudwide ban */
@@ -412,12 +412,12 @@ struct who_template
    char *master;
 };
 
-bool imc_command_hook( CHAR_DATA * ch, char *command, char *argument );
+BOOL imc_command_hook( CHAR_DATA * ch, char *command, char *argument );
 void imc_hotboot( void );
-void imc_startup( bool force, int desc, bool connected );
-void imc_shutdown( bool reconnect );
+void imc_startup( BOOL force, int desc, BOOL connected );
+void imc_shutdown( BOOL reconnect );
 void imc_initchar( CHAR_DATA * ch );
-bool imc_loadchar( CHAR_DATA * ch, FILE * fp, const char *word );
+BOOL imc_loadchar( CHAR_DATA * ch, FILE * fp, const char *word );
 void imc_savechar( CHAR_DATA * ch, FILE * fp );
 void imc_freechardata( CHAR_DATA * ch );
 void imc_loop( void );

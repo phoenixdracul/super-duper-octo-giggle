@@ -122,7 +122,7 @@ EXTRA_DESCR_DATA *get_roulette_extra( OBJ_DATA * roulette );
 EXTRA_DESCR_DATA *get_extra_from_list( EXTRA_DESCR_DATA * extra_list, char *name );
 void clean_bets( void );
 void resolve_bets( CHAR_DATA * croupier, int number );
-bool has_won( sh_int type, sh_int number );
+BOOL has_won( sh_int type, sh_int number );
 int calc_gain( sh_int type, int amount );
 char *get_bet_name( sh_int type );
 sh_int get_bet_type( char *str );
@@ -422,7 +422,7 @@ void resolve_bets( CHAR_DATA * croupier, int number )
 {
    BET_DATA *bet;
    int gain;
-   bool is_in_room;
+   BOOL is_in_room;
    CHAR_DATA *ch;
    int bet_count;
 
@@ -490,7 +490,7 @@ int calc_gain( sh_int type, int amount )
 }
 
 /* return true if the bet_type has won for that given number */
-bool has_won( sh_int type, sh_int number )
+BOOL has_won( sh_int type, sh_int number )
 {
    if( type > 0 && type < 37 )
    {

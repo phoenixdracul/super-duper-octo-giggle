@@ -84,12 +84,12 @@ void	show_char_to_char_1	args( ( CHAR_DATA *victim, CHAR_DATA *ch ) );
 void	show_char_to_char	args( ( CHAR_DATA *list, CHAR_DATA *ch ) );
 void	show_char_to_char	args( ( CHAR_DATA *list, CHAR_DATA *ch ) );
 void	show_ships_to_char	args( ( SHIP_DATA *ship, CHAR_DATA *ch ) );
-bool	check_blind		args( ( CHAR_DATA *ch ) );
+BOOL	check_blind		args( ( CHAR_DATA *ch ) );
 void    show_condition          args( ( CHAR_DATA *ch, CHAR_DATA *victim ) );
 
 char  * itoa           args( (int foo) );
 
-char *format_obj_to_char( OBJ_DATA *obj, CHAR_DATA *ch, bool fShort )
+char *format_obj_to_char( OBJ_DATA *obj, CHAR_DATA *ch, BOOL fShort )
 {
 	static char buf[MAX_STRING_LENGTH];
 
@@ -137,7 +137,7 @@ char *format_obj_to_char( OBJ_DATA *obj, CHAR_DATA *ch, bool fShort )
  * Some increasingly freaky halucinated objects		-Thoric
  * Update
  */
-char *halucinated_object( int ms, bool fShort )
+char *halucinated_object( int ms, BOOL fShort )
 {
 	int sms = URANGE( 1, (ms+10)/5, 20 );
 
@@ -196,7 +196,7 @@ char *halucinated_object( int ms, bool fShort )
  * Show a list to a character.
  * Can coalesce duplicated items.
  */
-void show_list_to_char( OBJ_DATA *list, CHAR_DATA *ch, bool fShort, bool fShowNothing )
+void show_list_to_char( OBJ_DATA *list, CHAR_DATA *ch, BOOL fShort, BOOL fShowNothing )
 {
 	char **prgpstrShow;
 	int *prgnShow;
@@ -206,7 +206,7 @@ void show_list_to_char( OBJ_DATA *list, CHAR_DATA *ch, bool fShort, bool fShowNo
 	int nShow;
 	int iShow;
 	int count, offcount, tmp, ms, cnt;
-	bool fCombine;
+	BOOL fCombine;
 
 	if ( !ch->desc )
 		return;
@@ -766,7 +766,7 @@ void show_char_to_char_1( CHAR_DATA *victim, CHAR_DATA *ch )
 {
 	OBJ_DATA *obj;
 	int iWear;
-	bool found;
+	BOOL found;
 
 	if ( can_see( victim, ch ) )
 	{
@@ -921,7 +921,7 @@ void show_ships_to_char( SHIP_DATA *ship, CHAR_DATA *ch )
 
 
 
-bool check_blind( CHAR_DATA *ch )
+BOOL check_blind( CHAR_DATA *ch )
 {
 	if ( !IS_NPC(ch) && xIS_SET(ch->act, PLR_HOLYLIGHT) )
 		return TRUE;
@@ -970,7 +970,7 @@ void do_look( CHAR_DATA *ch, char *argument )
 	OBJ_DATA *obj;
 	ROOM_INDEX_DATA *original;
 	char *pdesc;
-	bool doexaprog;
+	BOOL doexaprog;
 	sh_int door;
 	int number, cnt;
 
@@ -1819,9 +1819,9 @@ void do_exits( CHAR_DATA *ch, char *argument )
 {
 	char buf[MAX_STRING_LENGTH];
 	EXIT_DATA *pexit;
-	bool found;
-	bool fAuto;
-	bool scraft;
+	BOOL found;
+	BOOL fAuto;
+	BOOL scraft;
 
 	set_char_color( AT_EXITS, ch );
 	buf[0] = '\0';
@@ -2070,7 +2070,7 @@ void similar_help_files(CHAR_DATA *ch, char *argument)
 	char buf[MAX_STRING_LENGTH];
 	char *extension;
 	sh_int lvl=0;
-	bool single=FALSE;
+	BOOL single=FALSE;
 	// char *argnew;
 
 	/*
@@ -2229,7 +2229,7 @@ void do_hedit( CHAR_DATA *ch, char *argument )
 		HELP_DATA *tHelp;
 		char argnew[MAX_INPUT_LENGTH];
 		int lev;
-		bool new_help = TRUE;
+		BOOL new_help = TRUE;
 
 		for( tHelp = first_help; tHelp; tHelp = tHelp->next )
 			if( !str_cmp( argument, tHelp->keyword ) )
@@ -2377,7 +2377,7 @@ void do_hlist( CHAR_DATA *ch, char *argument )
 	int min, max, minlimit, maxlimit, cnt;
 	char arg[MAX_INPUT_LENGTH];
 	HELP_DATA *help;
-	bool minfound, maxfound;
+	BOOL minfound, maxfound;
 	char *idx;
 
 	maxlimit = get_trust(ch);
@@ -2518,10 +2518,10 @@ void do_who( CHAR_DATA *ch, char *argument )
 	int nNumber;
 	int nMatch;
 	int sMatch;
-	bool rgfRace[MAX_RACE];
-	bool fRaceRestrict;
-	bool fImmortalOnly;
-	bool fShowHomepage;
+	BOOL rgfRace[MAX_RACE];
+	BOOL fRaceRestrict;
+	BOOL fImmortalOnly;
+	BOOL fShowHomepage;
 	FILE *whoout;
 	char mudnamebuffer[MSL];
 
@@ -2868,7 +2868,7 @@ void do_setrank( CHAR_DATA *ch, char *argument )
 	CHAR_DATA *vict; 
 	char arg1[MAX_INPUT_LENGTH];
 	char buf[MAX_INPUT_LENGTH];
-	bool isleader=FALSE;
+	BOOL isleader=FALSE;
 
 	argument = one_argument(argument, arg1);
 
@@ -3056,7 +3056,7 @@ void do_where( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	CHAR_DATA *victim;
 	DESCRIPTOR_DATA *d;
-	bool found;
+	BOOL found;
 
 	if (get_trust(ch) < LEVEL_IMMORTAL)
 	{
@@ -3332,7 +3332,7 @@ void do_practice( CHAR_DATA *ch, char *argument )
 	{
 		CHAR_DATA *mob;
 //		int adept;
-		bool can_prac = TRUE;
+		BOOL can_prac = TRUE;
 
 		if ( !IS_AWAKE(ch) )
 		{
@@ -3803,7 +3803,7 @@ void do_socials( CHAR_DATA *ch, char *argument )
 void do_commands( CHAR_DATA *ch, char *argument )
 {
 	int col;
-	bool found;
+	BOOL found;
 	int hash;
 	CMDTYPE *command;
 
@@ -4016,8 +4016,8 @@ void do_channels( CHAR_DATA *ch, char *argument )
 	}
 	else
 	{
-		bool fClear;
-		bool ClearAll;
+		BOOL fClear;
+		BOOL ClearAll;
 		int bit;
 		int deaf_set = 1;
 
@@ -4316,7 +4316,7 @@ void do_config( CHAR_DATA *ch, char *argument )
 	}
 	else
 	{
-		bool fSet;
+		BOOL fSet;
 		int bit = 0;
 
 		if ( arg[0] == '+' ) fSet = TRUE;
@@ -4849,7 +4849,7 @@ void do_pager( CHAR_DATA *ch, char *argument )
 	return;
 }
 
-bool is_online( char * argument )
+BOOL is_online( char * argument )
 {
 	DESCRIPTOR_DATA *d;
 
@@ -5215,8 +5215,8 @@ void do_newexits( CHAR_DATA *ch, char *argument )
 	char line8[MAX_STRING_LENGTH];
 	char line9[MAX_STRING_LENGTH];
 	EXIT_DATA *pexit;
-	bool found, nfound, efound, sfound, wfound, ufound, dfound, nefound, nwfound, sefound, swfound;
-	bool fAuto;
+	BOOL found, nfound, efound, sfound, wfound, ufound, dfound, nefound, nwfound, sefound, swfound;
+	BOOL fAuto;
 	int count;
 
 	set_char_color( AT_EXITS, ch );

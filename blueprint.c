@@ -59,7 +59,7 @@ void do_makeblueprint(CHAR_DATA *ch, char *argument)
 	char arg0[MAX_STRING_LENGTH];
 	int print_type = 0;	// 1 = Ship; 2 = Structure
 
-	bool checkdatapad = FALSE;
+	BOOL checkdatapad = FALSE;
 
 	for( obj = ch->last_carrying; obj; obj = obj->prev_content )
 	{
@@ -267,7 +267,7 @@ void do_editblueprint(CHAR_DATA *ch, char *argument)
 		send_to_char("&RThat blueprint is blank! You'll need to &rmakeblueprint &Rfirst.\n\r", ch);
 		return;
 	}
-	bool checkdatapad = FALSE;
+	BOOL checkdatapad = FALSE;
 	for( obj = ch->last_carrying; obj; obj = obj->prev_content )
 		if (obj->item_type == ITEM_DATAPAD || obj->item_type == ITEM_PEN)
 			checkdatapad = TRUE;
@@ -280,7 +280,7 @@ void do_editblueprint(CHAR_DATA *ch, char *argument)
 }
 int find_blueprint_vnum_block(int num_needed)
 {
-	bool counting = FALSE;
+	BOOL counting = FALSE;
 	int count = 0;
 	AREA_DATA *tarea;
 	int lrange;

@@ -304,7 +304,7 @@ void delete_reset( RESET_DATA *pReset )
    return;
 }
 
-void instaroom( CHAR_DATA *ch, ROOM_INDEX_DATA *pRoom, bool dodoors )
+void instaroom( CHAR_DATA *ch, ROOM_INDEX_DATA *pRoom, BOOL dodoors )
 {
    CHAR_DATA *rch;
    OBJ_DATA *obj;
@@ -368,7 +368,7 @@ void wipe_resets( ROOM_INDEX_DATA *room )
 void wipe_area_resets( AREA_DATA *area )
 {
    ROOM_INDEX_DATA *room;
-   extern bool mud_down;
+   extern BOOL mud_down;
 
    if( !mud_down )
    {
@@ -381,7 +381,7 @@ void wipe_area_resets( AREA_DATA *area )
 /* Function modified from original form - Samson */
 void do_instaroom( CHAR_DATA *ch, char *argument )
 {
-   bool dodoors;
+   BOOL dodoors;
 
    if( IS_NPC( ch ) || get_trust( ch ) < LEVEL_SAVIOR || !ch->pcdata->area )
    {
@@ -412,7 +412,7 @@ void do_instazone( CHAR_DATA *ch, char *argument )
 {
    AREA_DATA *pArea;
    ROOM_INDEX_DATA *pRoom;
-   bool dodoors;
+   BOOL dodoors;
 
    if( IS_NPC( ch ) || get_trust( ch ) < LEVEL_SAVIOR || !ch->pcdata->area )
    {

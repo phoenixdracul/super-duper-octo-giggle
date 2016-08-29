@@ -81,7 +81,7 @@ struct global_board_data
     /* Non-constant data */
 
     NOTE_DATA *note_first; /* pointer to board's first note */
-    bool changed; /* currently unused */
+    BOOL changed; /* currently unused */
 
 };
 
@@ -99,7 +99,7 @@ void finish_note(GLOBAL_BOARD_DATA *board, NOTE_DATA *note); /* attach a note to
 void free_note  (NOTE_DATA *note); /* deallocate memory used by a note */
 void load_global_boards(void); /* load all boards */
 int board_lookup(const char *name); /* Find a board with that name */
-bool gb_is_note_to (CHAR_DATA *ch, NOTE_DATA *note); /* is tha note to ch? */
+BOOL gb_is_note_to (CHAR_DATA *ch, NOTE_DATA *note); /* is tha note to ch? */
 void personal_message (const char *sender, const char *to, const char *subject, const int expire_days, const char *text);
 void make_note(const char* board_name, const char *sender, const char *to, const char *subject, const int expire_days, const char *text);
 void save_notes (void);

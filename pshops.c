@@ -56,7 +56,7 @@ void do_closeshop(CHAR_DATA *ch, char *argument);		/* Allows the government of a
  * External functions
  */
 CHAR_DATA *find_keeper( CHAR_DATA *ch );
-void 	   instaroom( CHAR_DATA *ch, ROOM_INDEX_DATA *pRoom, bool dodoors );
+void 	   instaroom( CHAR_DATA *ch, ROOM_INDEX_DATA *pRoom, BOOL dodoors );
 void	   save_vendor(ROOM_INDEX_DATA *room);
 void       delete_reset(RESET_DATA * pReset);
 
@@ -102,7 +102,7 @@ void do_buyvendor(CHAR_DATA *ch, char *argument)
 void do_placevendor(CHAR_DATA *ch, char *argument)
 {
 	SHOP_DATA *shop;
-	bool place_clan = FALSE;
+	BOOL place_clan = FALSE;
 
 	if(argument[0] != '\0' && !str_cmp(argument, "clan"))
 		place_clan = TRUE;
@@ -272,7 +272,7 @@ void do_pricevendor(CHAR_DATA *ch, char *argument)
 	if ( !obj || arg1[0] == '#' )
 	{
 		int onum, oref;
-		bool ofound = FALSE;
+		BOOL ofound = FALSE;
 
 		onum =0;
 		oref = atoi(arg1+1);

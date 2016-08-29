@@ -438,7 +438,7 @@ void do_changes(CHAR_DATA *ch, char *argument)
 	char *test;
 	int   today;
 	int   i;
-	bool  fAll;
+	BOOL  fAll;
 
 	one_argument( argument, arg );
 

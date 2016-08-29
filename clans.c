@@ -58,9 +58,9 @@ GUARD_DATA * last_guard;
 
 /* local routines */
 void	fread_clan	args( ( CLAN_DATA *clan, FILE *fp ) );
-bool	load_clan_file	args( ( char *clanfile ) );
+BOOL	load_clan_file	args( ( char *clanfile ) );
 void	write_clan_list	args( ( void ) );
-bool	load_planet_file	args( ( char *planetfile ) );
+BOOL	load_planet_file	args( ( char *planetfile ) );
 
 /* Externals */
 ACCOUNT_CHARACTER_DATA *account_get_character( ACCOUNT_DATA *account, char *name );
@@ -228,7 +228,7 @@ void fread_clan( CLAN_DATA *clan, FILE *fp )
 {
 	char buf[MAX_STRING_LENGTH];
 	char *word;
-	bool fMatch;
+	BOOL fMatch;
 
 	for ( ; ; )
 	{
@@ -355,12 +355,12 @@ void fread_clan( CLAN_DATA *clan, FILE *fp )
  * Load a clan file
  */
 
-bool load_clan_file( char *clanfile )
+BOOL load_clan_file( char *clanfile )
 {
 	char filename[256];
 	CLAN_DATA *clan;
 	FILE *fp;
-	bool found;
+	BOOL found;
 
 	CREATE( clan, CLAN_DATA, 1 );
 	clan->next_subclan = NULL;
@@ -432,7 +432,7 @@ bool load_clan_file( char *clanfile )
 		if ( ( fp = fopen( filename, "r" ) ) != NULL )
 		{
 			int iNest;
-			bool found;
+			BOOL found;
 			OBJ_DATA *tobj, *tobj_next;
 
 			log_string( "Loading clan storage room" );
@@ -651,7 +651,7 @@ void do_induct( CHAR_DATA *ch, char *argument )
 }
 
 /* Can the character outcast the victim? */
-bool can_outcast( CLAN_DATA *clan, CHAR_DATA *ch, CHAR_DATA *victim )
+BOOL can_outcast( CLAN_DATA *clan, CHAR_DATA *ch, CHAR_DATA *victim )
 {
 	if( !clan || !ch || !victim )
 		return FALSE;
@@ -1295,7 +1295,7 @@ void do_makeclan( CHAR_DATA *ch, char *argument )
 {
 	char filename[256];
 	CLAN_DATA *clan;
-	bool found;
+	BOOL found;
 
 	if ( !argument || argument[0] == '\0' )
 	{
@@ -1580,7 +1580,7 @@ void do_shove( CHAR_DATA *ch, char *argument )
     int exit_dir;
     EXIT_DATA *pexit;
     CHAR_DATA *victim;
-    bool nogo;
+    BOOL nogo;
     ROOM_INDEX_DATA *to_room;    
     int chance;  
 
@@ -1703,7 +1703,7 @@ void do_drag( CHAR_DATA *ch, char *argument )
 	CHAR_DATA *victim;
 	EXIT_DATA *pexit;
 	ROOM_INDEX_DATA *to_room;
-	bool nogo;
+	BOOL nogo;
 	int chance;
 	sh_int temp;
 

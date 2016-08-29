@@ -55,7 +55,7 @@ GUARD_DATA * last_guard;
 
 /* local routines */
 void	fread_planet	args( ( PLANET_DATA *planet, FILE *fp ) );
-bool	load_planet_file	args( ( char *planetfile ) );
+BOOL	load_planet_file	args( ( char *planetfile ) );
 void	write_planet_list	args( ( void ) );
 
 #ifdef USECARGO
@@ -202,7 +202,7 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
     char *word;
     char *line;
     int x0,x1,x2,x3,x4,x5;
-    bool fMatch;
+    BOOL fMatch;
 
     for ( ; ; )
     {
@@ -374,12 +374,12 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
     }
 }
 
-bool load_planet_file( char *planetfile )
+BOOL load_planet_file( char *planetfile )
 {
     char filename[256];
     PLANET_DATA *planet;
     FILE *fp;
-    bool found;
+    BOOL found;
 
     CREATE( planet, PLANET_DATA, 1 );
     
@@ -869,7 +869,7 @@ void do_makeplanet( CHAR_DATA *ch, char *argument )
 {
     char filename[256];
     PLANET_DATA *planet;
-    bool found;
+    BOOL found;
 
     if ( !argument || argument[0] == '\0' )
     {

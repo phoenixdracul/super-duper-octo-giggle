@@ -45,7 +45,7 @@ void do_plantbug( CHAR_DATA *ch, char *argument )
 	BUG_DATA *bug;
 	BUG_DATA *cbug;
 	OBJ_DATA *obj;
-	bool checkbug = FALSE;
+	BOOL checkbug = FALSE;
 	int chance;
 
 	if(IS_NPC(ch)) return;
@@ -168,7 +168,7 @@ void do_bind( CHAR_DATA *ch, char *argument )
 	OBJ_DATA *tobj;
 	int chance;
 	CHAR_DATA *victim;
-	bool checkbinders=FALSE;
+	BOOL checkbinders=FALSE;
 
 	if (argument[0] == '\0')
 	{
@@ -247,7 +247,7 @@ void do_bind( CHAR_DATA *ch, char *argument )
 void do_unbind( CHAR_DATA *ch, char *argument )
 {
 	OBJ_DATA *obj;
-	bool checkbinders=FALSE;
+	BOOL checkbinders=FALSE;
 	char buf[MAX_STRING_LENGTH];
 	CHAR_DATA *victim;
 
@@ -737,7 +737,7 @@ void do_trespass(CHAR_DATA *ch, char *argument)
 		{
 			int attempt;
 			sh_int door;
-			bool f_exit_found = FALSE;
+			BOOL f_exit_found = FALSE;
 			ROOM_INDEX_DATA *was_in, *now_in;
 			EXIT_DATA *fexit;
 

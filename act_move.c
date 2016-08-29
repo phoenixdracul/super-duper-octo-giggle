@@ -76,7 +76,7 @@ ROOM_INDEX_DATA * vroom_hash [64];
 /*
  * Local functions.
  */
-bool	has_key		args( ( CHAR_DATA *ch, int key ) );
+BOOL	has_key		args( ( CHAR_DATA *ch, int key ) );
 void    do_build_walk( CHAR_DATA *ch, char *argument );
 
 
@@ -504,7 +504,7 @@ sh_int encumbrance( CHAR_DATA *ch, sh_int move )
 /*
  * Check to see if a character can fall down, checks for looping   -Thoric
  */
-bool will_fall( CHAR_DATA *ch, int fall )
+BOOL will_fall( CHAR_DATA *ch, int fall )
 {
 	if ( IS_SET( ch->in_room->room_flags, ROOM_NOFLOOR )
 			&&   CAN_GO(ch, DIR_DOWN)
@@ -542,7 +542,7 @@ ROOM_INDEX_DATA *generate_exit( ROOM_INDEX_DATA *in_room, EXIT_DATA **pexit )
 	int distance = -1;
 	int vdir = orig_exit->vdir;
 	sh_int hash;
-	bool found = FALSE;
+	BOOL found = FALSE;
 
 	if ( in_room->vnum > MAX_VNUMS )	/* room is virtual */
 	{
@@ -633,8 +633,8 @@ ch_ret move_char( CHAR_DATA *ch, EXIT_DATA *pexit, int fall )
 	char *dtxt;
 	ch_ret retcode;
 	sh_int door, distance;
-	bool drunk = FALSE;
-	bool brief = FALSE;
+	BOOL drunk = FALSE;
+	BOOL brief = FALSE;
 
 	if ( !IS_NPC( ch ) )
 		if ( IS_DRUNK( ch, 2 ) && ( ch->position != POS_SHOVE )
@@ -847,7 +847,7 @@ ch_ret move_char( CHAR_DATA *ch, EXIT_DATA *pexit, int fall )
 				||   to_room->sector_type == SECT_WATER_NOSWIM )
 		{
 			OBJ_DATA *obj;
-			bool found;
+			BOOL found;
 
 			found = FALSE;
 			if ( ch->mount )
@@ -887,7 +887,7 @@ ch_ret move_char( CHAR_DATA *ch, EXIT_DATA *pexit, int fall )
 
 		if ( IS_SET( pexit->exit_info, EX_CLIMB ) )
 		{
-			bool found;
+			BOOL found;
 
 			found = FALSE;
 			if ( ch->mount && IS_AFFECTED( ch->mount, AFF_FLYING ) )
@@ -1653,7 +1653,7 @@ void do_southwest( CHAR_DATA *ch, char *argument )
 	return;
 }
 
-EXIT_DATA *find_door( CHAR_DATA *ch, char *arg, bool quiet )
+EXIT_DATA *find_door( CHAR_DATA *ch, char *arg, BOOL quiet )
 {
 	EXIT_DATA *pexit;
 	int door;
@@ -1940,7 +1940,7 @@ void do_close( CHAR_DATA *ch, char *argument )
 }
 
 
-bool has_key( CHAR_DATA *ch, int key )
+BOOL has_key( CHAR_DATA *ch, int key )
 {
 	OBJ_DATA *obj;
 
@@ -3223,7 +3223,7 @@ void do_wake(CHAR_DATA * ch, char *argument)
 /*
  * teleport a character to another room
  */
-void teleportch( CHAR_DATA *ch, ROOM_INDEX_DATA *room, bool show )
+void teleportch( CHAR_DATA *ch, ROOM_INDEX_DATA *room, BOOL show )
 {
 	if ( room_is_private( ch, room ) )
 		return;
@@ -3239,7 +3239,7 @@ void teleport( CHAR_DATA *ch, int room, int flags )
 {
 	CHAR_DATA *nch, *nch_next;
 	ROOM_INDEX_DATA *pRoomIndex;
-	bool show;
+	BOOL show;
 
 	pRoomIndex = get_room_index( room );
 	if ( !pRoomIndex )
@@ -3270,7 +3270,7 @@ void teleport( CHAR_DATA *ch, int room, int flags )
 void do_climb( CHAR_DATA *ch, char *argument )
 {
 	EXIT_DATA *pexit;
-	bool found;
+	BOOL found;
 
 	found = FALSE;
 	if ( argument[0] == '\0' )
@@ -3301,7 +3301,7 @@ void do_climb( CHAR_DATA *ch, char *argument )
 void do_enter( CHAR_DATA *ch, char *argument )
 {
 	EXIT_DATA *pexit;
-	bool found;
+	BOOL found;
 
 	found = FALSE;
 	if ( argument[0] == '\0' )
@@ -3332,7 +3332,7 @@ void do_enter( CHAR_DATA *ch, char *argument )
 void do_leave( CHAR_DATA *ch, char *argument )
 {
 	EXIT_DATA *pexit;
-	bool found;
+	BOOL found;
 
 	found = FALSE;
 	if ( argument[0] == '\0' )

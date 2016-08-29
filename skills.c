@@ -65,13 +65,13 @@ char * const target_type[] =
 { "ignore", "offensive", "defensive", "self", "objinv"};
 
 
-bool    autofly(SHIP_DATA *ship);
+BOOL    autofly(SHIP_DATA *ship);
 void show_char_to_char( CHAR_DATA *list, CHAR_DATA *ch );
-void show_list_to_char( OBJ_DATA *list, CHAR_DATA *ch, bool fShort, 
-	bool fShowN );
+void show_list_to_char( OBJ_DATA *list, CHAR_DATA *ch, BOOL fShort, 
+	BOOL fShowN );
 
 int ris_save( CHAR_DATA *ch, int chance, int ris );
-bool check_illegal_psteal( CHAR_DATA *ch, CHAR_DATA *victim );
+BOOL check_illegal_psteal( CHAR_DATA *ch, CHAR_DATA *victim );
 
 /* from magic.c */
 void failed_casting( struct skill_type *skill, CHAR_DATA *ch,
@@ -161,7 +161,7 @@ int get_sclass( char *name )
     return -1;
 }
 
-bool is_legal_kill(CHAR_DATA *ch, CHAR_DATA *vch)
+BOOL is_legal_kill(CHAR_DATA *ch, CHAR_DATA *vch)
 {
   if ( IS_NPC(ch) || IS_NPC(vch) )
     return TRUE;
@@ -178,7 +178,7 @@ extern char *target_name;	/* from magic.c */
  * Each different section of the skill table is sorted alphabetically
  * Only match skills player knows				-Thoric
  */
-bool check_skill( CHAR_DATA *ch, char *command, char *argument )
+BOOL check_skill( CHAR_DATA *ch, char *command, char *argument )
 {
     int sn;
     int first = gsn_first_skill;
@@ -598,7 +598,7 @@ void do_sset( CHAR_DATA *ch, char *argument )
     CHAR_DATA *victim;
     int value;
     int sn;
-    bool fAll;
+    BOOL fAll;
 
     argument = one_argument( argument, arg1 );
     argument = one_argument( argument, arg2 );
@@ -1472,7 +1472,7 @@ void do_detrap( CHAR_DATA *ch, char *argument )
     OBJ_DATA *obj;
     OBJ_DATA *trap;
     int percent;
-    bool found;
+    BOOL found;
 
     switch( ch->substate )
     {
@@ -1592,7 +1592,7 @@ void do_dig( CHAR_DATA *ch, char *argument )
     char arg [MAX_INPUT_LENGTH];
     OBJ_DATA *obj;
     OBJ_DATA *startobj;
-    bool found, shovel;
+    BOOL found, shovel;
     EXIT_DATA *pexit;
    
     switch( ch->substate )
@@ -1747,7 +1747,7 @@ void do_search( CHAR_DATA *ch, char *argument )
     OBJ_DATA *container;
     OBJ_DATA *startobj;
     int percent, door;
-    bool found, room;
+    BOOL found, room;
 
     door = -1;
     switch( ch->substate )
@@ -2632,7 +2632,7 @@ void do_stun( CHAR_DATA *ch, char *argument )
     CHAR_DATA *victim;
     AFFECT_DATA af;
     int chance;
-    bool fail;
+    BOOL fail;
 
     if ( IS_NPC(ch) && IS_AFFECTED( ch, AFF_CHARM ) )
     {
@@ -3438,7 +3438,7 @@ void do_dismount( CHAR_DATA *ch, char *argument )
 /*
  * Check for parry.
  */
-bool check_parry( CHAR_DATA *ch, CHAR_DATA *victim )
+BOOL check_parry( CHAR_DATA *ch, CHAR_DATA *victim )
 {
     int chances;
     OBJ_DATA *wield;
@@ -3500,7 +3500,7 @@ bool check_parry( CHAR_DATA *ch, CHAR_DATA *victim )
 /*
  * Check for dodge.
  */
-bool check_dodge( CHAR_DATA *ch, CHAR_DATA *victim )
+BOOL check_dodge( CHAR_DATA *ch, CHAR_DATA *victim )
 {
     int chances;
 
@@ -3692,7 +3692,7 @@ void do_brew( CHAR_DATA *ch, char *argument )
 {
 }
 
-bool check_grip( CHAR_DATA *ch, CHAR_DATA *victim )
+BOOL check_grip( CHAR_DATA *ch, CHAR_DATA *victim )
 {
     int chance;
 
@@ -3912,7 +3912,7 @@ void do_hitall( CHAR_DATA *ch, char *argument )
     
   
 
-bool check_illegal_psteal( CHAR_DATA *ch, CHAR_DATA *victim )
+BOOL check_illegal_psteal( CHAR_DATA *ch, CHAR_DATA *victim )
 {
     return FALSE;
 }

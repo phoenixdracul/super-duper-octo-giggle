@@ -44,7 +44,7 @@
 char title[MAX_INPUT_LENGTH];
 char disable[MAX_INPUT_LENGTH]; /*stores what portion of the ship will be disabled.*/
                                 /*Used in void do_disable*/
-bool    autofly(SHIP_DATA *ship);
+BOOL    autofly(SHIP_DATA *ship);
 
 /*
  * Slicers.c Containing skills created by Ackbar, Eleven, and Tawnos. *plug*
@@ -585,7 +585,7 @@ char *acctname (CHAR_DATA *ch) {
 void do_inquire(CHAR_DATA *ch, char *argument )
 {
   DESCRIPTOR_DATA *d;
-  bool checkdata;
+  BOOL checkdata;
   OBJ_DATA *obj;
   int  x;
   long xpgain;
@@ -696,7 +696,7 @@ void do_makecommsystem ( CHAR_DATA *ch, char *argument )
     char arg[MAX_INPUT_LENGTH];
     char buf[MAX_STRING_LENGTH];
     int level,chance;
-    bool checktool, checkdura,checkbattery,checkcrystal,checkcircuit;
+    BOOL checktool, checkdura,checkbattery,checkcrystal,checkcircuit;
     OBJ_DATA *obj;
     OBJ_INDEX_DATA *pObjIndex;
     int vnum;
@@ -908,7 +908,7 @@ void do_makedatapad ( CHAR_DATA *ch, char *argument )
     char arg[MAX_INPUT_LENGTH];
     char buf[MAX_STRING_LENGTH];
     int level,chance;
-    bool checktool, checklens, checkdura,checkbattery,checksuper,checkcircuit;
+    BOOL checktool, checklens, checkdura,checkbattery,checksuper,checkcircuit;
     OBJ_DATA *obj;
     OBJ_INDEX_DATA *pObjIndex;
     int vnum;
@@ -1131,7 +1131,7 @@ void do_codecrack( CHAR_DATA *ch, char *argument )
 {
   SHIP_DATA *ship;
   CHAR_DATA *victim;
-  bool checkdata;
+  BOOL checkdata;
   OBJ_DATA *obj;
   int  x;
   char arg[MAX_INPUT_LENGTH];
@@ -1300,7 +1300,7 @@ void do_disableship ( CHAR_DATA *ch, char *argument )
   SHIP_DATA *ship2;
   SHIP_DATA *ship;
   int chance,x;
-  bool checkcomm,checkdata;
+  BOOL checkcomm,checkdata;
   char arg1[MAX_INPUT_LENGTH];
   char arg2[MAX_INPUT_LENGTH];
   OBJ_DATA *obj;
@@ -1542,7 +1542,7 @@ void do_assignpilot ( CHAR_DATA *ch, char *argument )
   SHIP_DATA *ship;
   int chance;
   long xpgain;
-  bool checkdata;
+  BOOL checkdata;
   char arg1[MAX_INPUT_LENGTH];
   char arg2[MAX_INPUT_LENGTH];
   OBJ_DATA *obj;
@@ -1684,7 +1684,7 @@ void do_assignpilot ( CHAR_DATA *ch, char *argument )
 void do_slicebank(CHAR_DATA *ch, char *argument )
 {
   DESCRIPTOR_DATA *d;
-  bool checkdata;
+  BOOL checkdata;
   OBJ_DATA *obj;
   long xpgain;
   char arg[MAX_INPUT_LENGTH];
@@ -1692,7 +1692,7 @@ void do_slicebank(CHAR_DATA *ch, char *argument )
   char buf[MAX_INPUT_LENGTH];
   long steal;
   int  chance;
-  bool found;
+  BOOL found;
 
   if (IS_NPC(ch) || ch->pcdata->learned[gsn_slicebank] < 1)
   {
@@ -1901,8 +1901,8 @@ void do_slicebank(CHAR_DATA *ch, char *argument )
 
 void do_checkprints(CHAR_DATA *ch, char *argument )
 {
-  bool checkdata;
-  bool checkcomm;
+  BOOL checkdata;
+  BOOL checkcomm;
   OBJ_DATA *obj;
   int  x;
   long xpgain;

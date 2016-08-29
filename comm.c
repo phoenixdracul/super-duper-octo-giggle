@@ -99,7 +99,7 @@ DESCRIPTOR_DATA *   last_descriptor;	/* Last descriptor		*/
 DESCRIPTOR_DATA *   d_next;		/* Next descriptor in loop	*/
 int		    num_descriptors;
 FILE *		    fpReserve;		/* Reserved file handle		*/
-bool		    mud_down;		/* Shutdown			*/
+BOOL		    mud_down;		/* Shutdown			*/
 time_t              boot_time;
 HOUR_MIN_SEC  	    set_boot_time_struct;
 HOUR_MIN_SEC *      set_boot_time;
@@ -116,7 +116,7 @@ fd_set		    in_set;		/* Set of desc's for reading	*/
 fd_set		    out_set;		/* Set of desc's for writing	*/
 fd_set		    exc_set;		/* Set of desc's with errors	*/
 int 		    maxdesc;
-bool                emergency_copy;
+BOOL                emergency_copy;
 
 /*
  * OS-dependent local functions.
@@ -124,21 +124,21 @@ bool                emergency_copy;
 void	game_loop		args( ( ) );
 int	init_socket		args( ( int port ) );
 void	new_descriptor		args( ( int new_desc ) );
-bool	read_from_descriptor	args( ( DESCRIPTOR_DATA *d ) );
-bool	write_to_descriptor	args( ( int desc, char *txt, int length ) );
+BOOL	read_from_descriptor	args( ( DESCRIPTOR_DATA *d ) );
+BOOL	write_to_descriptor	args( ( int desc, char *txt, int length ) );
 
 
 /*
  * Other local functions (OS-independent).
  */
-bool	check_parse_name	args( ( char *name ) );
-bool	check_reconnect		args( ( DESCRIPTOR_DATA *d, char *name,
-		bool fConn ) );
-bool	check_playing		args( ( DESCRIPTOR_DATA *d, char *name, bool kick ) );
-bool	check_multi		args( ( DESCRIPTOR_DATA *d, char *name ) );
+BOOL	check_parse_name	args( ( char *name ) );
+BOOL	check_reconnect		args( ( DESCRIPTOR_DATA *d, char *name,
+		BOOL fConn ) );
+BOOL	check_playing		args( ( DESCRIPTOR_DATA *d, char *name, BOOL kick ) );
+BOOL	check_multi		args( ( DESCRIPTOR_DATA *d, char *name ) );
 int	main			args( ( int argc, char **argv ) );
 void	nanny			args( ( DESCRIPTOR_DATA *d, char *argument ) );
-bool	flush_buffer		args( ( DESCRIPTOR_DATA *d, bool fPrompt ) );
+BOOL	flush_buffer		args( ( DESCRIPTOR_DATA *d, BOOL fPrompt ) );
 void	read_from_buffer	args( ( DESCRIPTOR_DATA *d ) );
 void	stop_idling		args( ( CHAR_DATA *ch ) );
 void	free_desc		args( ( DESCRIPTOR_DATA *d ) );
@@ -149,7 +149,7 @@ int	make_color_sequence_desc args( ( const char *col, char *buf,
 		DESCRIPTOR_DATA *d ) );
 void	set_pager_input		args( ( DESCRIPTOR_DATA *d,
 		char *argument ) );
-bool	pager_output		args( ( DESCRIPTOR_DATA *d ) );
+BOOL	pager_output		args( ( DESCRIPTOR_DATA *d ) );
 
 static void SegVio (int signum);
 
@@ -157,14 +157,14 @@ void	mail_count		args( ( CHAR_DATA *ch ) );
 void account_dispose args( ( ACCOUNT_DATA *account ) );
 void account_nanny args( ( DESCRIPTOR_DATA *d, char *argument ) );
 void account_save args( ( ACCOUNT_DATA *account ) );
-bool account_add_character args ( ( ACCOUNT_DATA *account, char *name, bool pending, bool newcharacter ) );
+BOOL account_add_character args ( ( ACCOUNT_DATA *account, char *name, BOOL pending, BOOL newcharacter ) );
 
 struct sigaction sigsegv;
 
 int main( int argc, char **argv )
 {
 	struct timeval now_time;
-	bool fCopyOver = !TRUE;
+	BOOL fCopyOver = !TRUE;
 
 #ifdef IMC
 	int imcsocket = -1;
@@ -383,7 +383,7 @@ int init_socket( int port )
 	sp = getservbyname( "service", "mud" );
 	memset(&sa, '\0', sizeof(sa));
 	sa.sin_family   = AF_INET; /* hp->h_addrtype; */
-	inet_pton(AF_INET, "0.0.0.0", &(sa.sin_addr));
+//	inet_pton(AF_INET, "0.0.0.0", &(sa.sin_addr));
 	sa.sin_port	    = htons( port );
 
 	if ( bind( fd, (struct sockaddr *) &sa, sizeof(sa) ) == -1 )
@@ -425,7 +425,7 @@ static void caught_alarm()
 	exit( 0 );
 }
 
-bool check_bad_desc( int desc )
+BOOL check_bad_desc( int desc )
 {
 	if ( FD_ISSET( desc, &exc_set ) )
 	{
@@ -1173,11 +1173,11 @@ void free_desc( DESCRIPTOR_DATA *d )
 	return;
 }
 
-void close_socket( DESCRIPTOR_DATA *dclose, bool force )
+void close_socket( DESCRIPTOR_DATA *dclose, BOOL force )
 {
 	CHAR_DATA *ch;
 	DESCRIPTOR_DATA *d;
-	bool DoNotUnlink = FALSE;
+	BOOL DoNotUnlink = FALSE;
 
 	/* flush outbuf */
 	if ( !force && dclose->outtop > 0 )
@@ -1306,7 +1306,7 @@ void close_socket( DESCRIPTOR_DATA *dclose, bool force )
 }
 
 
-bool read_from_descriptor( DESCRIPTOR_DATA * d )
+BOOL read_from_descriptor( DESCRIPTOR_DATA * d )
 {
 	unsigned int iStart, iErr;
 
@@ -1477,10 +1477,10 @@ void read_from_buffer( DESCRIPTOR_DATA *d )
 /*
  * Low level output function.
  */
-bool flush_buffer( DESCRIPTOR_DATA *d, bool fPrompt )
+BOOL flush_buffer( DESCRIPTOR_DATA *d, BOOL fPrompt )
 {
 	char buf[MAX_INPUT_LENGTH];
-	extern bool mud_down;
+	extern BOOL mud_down;
 	CHAR_DATA *ch;
 
 	ch = d->original ? d->original : d->character;
@@ -1652,7 +1652,7 @@ void write_to_buffer( DESCRIPTOR_DATA *d, const char *txt, int length )
  * Added block checking to prevent random booting of the descriptor. Thanks go
  * out to Rustry for his suggestions. -Orion
  */
-bool write_to_descriptor( int desc, char *txt, int length )
+BOOL write_to_descriptor( int desc, char *txt, int length )
 {
 	int iStart = 0;
 	int nWrite = 0;
@@ -1773,7 +1773,7 @@ void nanny( DESCRIPTOR_DATA *d, char *argument )
 	int iRace, iClass, iDroid;
 	BAN_DATA *pban;
 	/*    int iLang;*/
-	bool fOld, chk;
+	BOOL fOld, chk;
 	if( d->connected != CON_NOTE_TEXT )
 	{
 		while ( isspace(*argument) )
@@ -2939,7 +2939,7 @@ case CON_GET_MSP:
 						if ( ( fph = fopen( filename, "r" ) ) != NULL )
 						{
 							int iNest;
-							bool found;
+							BOOL found;
 							OBJ_DATA *tobj, *tobj_next;
 
 							rset_supermob(storeroom);
@@ -3058,7 +3058,7 @@ case CON_GET_MSP:
 /*
  * Parse a name for acceptability.
  */
-bool check_parse_name( char *name )
+BOOL check_parse_name( char *name )
 {
 	/*
 	 * Reserved words.
@@ -3081,7 +3081,7 @@ bool check_parse_name( char *name )
 	 */
 	{
 		char *pc;
-		bool fIll;
+		BOOL fIll;
 
 		fIll = TRUE;
 		for ( pc = name; *pc != '\0'; pc++ )
@@ -3110,7 +3110,7 @@ bool check_parse_name( char *name )
 /*
  * Look for link-dead player to reconnect.
  */
-bool check_reconnect( DESCRIPTOR_DATA *d, char *name, bool fConn )
+BOOL check_reconnect( DESCRIPTOR_DATA *d, char *name, BOOL fConn )
 {
 	CHAR_DATA *ch;
         char buf[MAX_STRING_LENGTH];
@@ -3177,7 +3177,7 @@ bool check_reconnect( DESCRIPTOR_DATA *d, char *name, bool fConn )
  * Check if already playing.
  */
 
-bool check_multi( DESCRIPTOR_DATA *d , char *name )
+BOOL check_multi( DESCRIPTOR_DATA *d , char *name )
 {
 	DESCRIPTOR_DATA *dold;
 	int numCharsAllowed = 2; // Number of characters a player is allowed to play at once
@@ -3228,7 +3228,7 @@ bool check_multi( DESCRIPTOR_DATA *d , char *name )
 
 }
 
-bool check_playing( DESCRIPTOR_DATA *d, char *name, bool kick )
+BOOL check_playing( DESCRIPTOR_DATA *d, char *name, BOOL kick )
 {
 	CHAR_DATA *ch;
 
@@ -3816,7 +3816,7 @@ void display_prompt( DESCRIPTOR_DATA *d )
 {
 	CHAR_DATA *ch = d->character;
 	CHAR_DATA *och = (d->original ? d->original : d->character);
-	bool ansi = (((!IS_NPC(och)) || och->desc) && xIS_SET(och->act, PLR_ANSI));
+	BOOL ansi = (((!IS_NPC(och)) || och->desc) && xIS_SET(och->act, PLR_ANSI));
 	const char *prompt;
 	char buf[MAX_STRING_LENGTH];
 	char *pbuf = buf;
@@ -4091,13 +4091,13 @@ void set_pager_input( DESCRIPTOR_DATA *d, char *argument )
 	return;
 }
 
-bool pager_output( DESCRIPTOR_DATA *d )
+BOOL pager_output( DESCRIPTOR_DATA *d )
 {
 	register char *last;
 	CHAR_DATA *ch;
 	int pclines;
 	register int lines;
-	bool ret;
+	BOOL ret;
 
 	if ( !d || !d->pagepoint || d->pagecmd == -1 )
 		return TRUE;

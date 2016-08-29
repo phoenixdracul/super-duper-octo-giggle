@@ -51,7 +51,7 @@ MISSILE_DATA * last_missile;
 SPACE_DATA * first_starsystem;
 SPACE_DATA * last_starsystem;
 
-void explode_emissile   args( ( CHAR_DATA *ch, ROOM_INDEX_DATA *proom, int mindam, int maxdam, bool incendiary) );
+void explode_emissile   args( ( CHAR_DATA *ch, ROOM_INDEX_DATA *proom, int mindam, int maxdam, BOOL incendiary) );
 void do_makegoggles		args( ( CHAR_DATA *ch, char *argument ) );
 extern int top_affect;
 void do_makemissile		args( ( CHAR_DATA *ch, char *argument ) );
@@ -367,7 +367,7 @@ char *tertiary_beam_name(SHIP_DATA *ship)
 		return "None.";
 }
 
-void explode_emissile(CHAR_DATA *ch, ROOM_INDEX_DATA *proom, int mindam, int maxdam, bool incendiary)
+void explode_emissile(CHAR_DATA *ch, ROOM_INDEX_DATA *proom, int mindam, int maxdam, BOOL incendiary)
 {
 	CHAR_DATA *rch;
 	OBJ_INDEX_DATA *objindex;
@@ -414,7 +414,7 @@ void do_makegoggles( CHAR_DATA *ch, char *argument )
 	char arg2[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int level, chance;
-	bool checktool, checkduraplast, checkcirc, checkbatt, checklens;
+	BOOL checktool, checkduraplast, checkcirc, checkbatt, checklens;
 	OBJ_DATA *obj;
 	AFFECT_DATA *aff;
 
@@ -507,9 +507,9 @@ void do_makegoggles( CHAR_DATA *ch, char *argument )
 			return;
 		if ( !ch->dest_buf_2 )
 			return;
-		strcpy(arg, ch->dest_buf);
+		strcpy(arg, CAST(const char*)(ch->dest_buf));
 		DISPOSE( ch->dest_buf);
-		strcpy(arg2, ch->dest_buf_2);
+		strcpy(arg2, CAST(const char*)(ch->dest_buf_2));
 		DISPOSE( ch->dest_buf_2);
 		break;
 
@@ -643,7 +643,7 @@ void do_makemissile(CHAR_DATA *ch, char *argument)
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	int level, chance;
-	bool checktool, checkdura, checkbatt, checkcirc;
+	BOOL checktool, checkdura, checkbatt, checkcirc;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum,chemNum;
@@ -732,7 +732,7 @@ void do_makemissile(CHAR_DATA *ch, char *argument)
 	case 1:
 		if ( !ch->dest_buf )
 			return;
-		strcpy(arg, ch->dest_buf);
+		strcpy(arg, CAST(const char *)(ch->dest_buf));
 		DISPOSE( ch->dest_buf);
 		break;
 
@@ -885,15 +885,15 @@ void do_launch2( CHAR_DATA *ch, char *argument )
 	OBJ_DATA        * wield;
 	char              arg[MAX_INPUT_LENGTH];
 	char              arg2[MAX_INPUT_LENGTH];
-	char				 *dtxt;
-	char				 *ftxt;
+	const char			 *dtxt;
+	const char			 *ftxt;
 	sh_int            dir,dist = 0,max_dist;
 	EXIT_DATA       * pexit;
 	ROOM_INDEX_DATA * proom;
 	int               chance, missroom;
 	char              buf[MAX_STRING_LENGTH];
-	bool              exfound;
-	bool				 msgsent;
+	BOOL              exfound;
+	BOOL				 msgsent;
 
 	argument = one_argument( argument, arg );
 	argument = one_argument( argument, arg2 );

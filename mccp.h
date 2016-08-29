@@ -23,8 +23,8 @@
 extern char will_compress2_str[];
 extern char start_compress2_str[];
 
-bool compressStart( DESCRIPTOR_DATA * d );
-bool compressEnd( DESCRIPTOR_DATA * d );
+BOOL compressStart( DESCRIPTOR_DATA * d );
+BOOL compressEnd( DESCRIPTOR_DATA * d );
 
 typedef struct mccp_data MCCP;
 

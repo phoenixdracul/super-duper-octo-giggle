@@ -123,26 +123,26 @@ int get_shipflag( char *flag )
 
 /* local routines */
 void	fread_ship	args( ( SHIP_DATA *ship, FILE *fp ) );
-bool	load_ship_file	args( ( char *shipfile ) );
+BOOL	load_ship_file	args( ( char *shipfile ) );
 void	write_ship_list	args( ( void ) );
 void    fread_starsystem      args( ( SPACE_DATA *starsystem, FILE *fp ) );
-bool    load_starsystem  args( ( char *starsystemfile ) );
+BOOL    load_starsystem  args( ( char *starsystemfile ) );
 void    write_starsystem_list args( ( void ) );
 void    resetship args( ( SHIP_DATA *ship ) );
 void    landship args( ( SHIP_DATA *ship, char *arg ) );
 void    launchship args( ( SHIP_DATA *ship ) );
-bool    land_bus args( ( SHIP_DATA *ship, int destination ) );
+BOOL    land_bus args( ( SHIP_DATA *ship, int destination ) );
 void    launch_bus args( ( SHIP_DATA *ship ) );
 void    echo_to_room_dnr args( ( int ecolor , ROOM_INDEX_DATA *room ,  char *argument ) );
 ch_ret drive_ship( CHAR_DATA *ch, SHIP_DATA *ship, EXIT_DATA  *exit , int fall );
-bool    autofly(SHIP_DATA *ship);
-bool is_facing( SHIP_DATA *ship , SHIP_DATA *target );
-bool check_grav_positions( SHIP_DATA * ship, bool Out );
+BOOL    autofly(SHIP_DATA *ship);
+BOOL is_facing( SHIP_DATA *ship , SHIP_DATA *target );
+BOOL check_grav_positions( SHIP_DATA * ship, BOOL Out );
 void sound_to_ship( SHIP_DATA *ship , char *argument );
 int	get_shipflag(char *flag );
 
 /* from comm.c */
-bool    write_to_descriptor     args( ( int desc, char *txt, int length ) );
+BOOL    write_to_descriptor     args( ( int desc, char *txt, int length ) );
 
 ROOM_INDEX_DATA *generate_exit( ROOM_INDEX_DATA *in_room, EXIT_DATA **pexit );
 
@@ -177,7 +177,7 @@ void echo_to_room_prox( sh_int AT_COLOR, ROOM_INDEX_DATA *room, char *argument )
 }
 
 
-bool  land_bus( SHIP_DATA *ship, int destination )
+BOOL  land_bus( SHIP_DATA *ship, int destination )
 {
 	char buf[MAX_STRING_LENGTH];
 
@@ -503,7 +503,7 @@ void move_ships( )
 	float dx, dy, dz, change;
 	char buf[MAX_STRING_LENGTH];
 	CHAR_DATA *ch;
-	bool ch_found = FALSE;
+	BOOL ch_found = FALSE;
 
 	for ( missile = first_missile; missile; missile = m_next )
 	{
@@ -1693,7 +1693,7 @@ void fread_starsystem( SPACE_DATA *starsystem, FILE *fp )
 {
 	char buf[MAX_STRING_LENGTH];
 	char *word;
-	bool fMatch;
+	BOOL fMatch;
 
 
 	for ( ; ; )
@@ -1831,12 +1831,12 @@ void fread_starsystem( SPACE_DATA *starsystem, FILE *fp )
  * Load a starsystem file
  */
 
-bool load_starsystem( char *starsystemfile )
+BOOL load_starsystem( char *starsystemfile )
 {
 	char filename[256];
 	SPACE_DATA *starsystem;
 	FILE *fp;
-	bool found;
+	BOOL found;
 
 	CREATE( starsystem, SPACE_DATA, 1 );
 
@@ -2250,7 +2250,7 @@ void do_setstarsystem( CHAR_DATA *ch, char *argument )
 	if( !str_cmp( arg2, "planet1" ) || !str_cmp( arg2, "planet2" ) || !str_cmp( arg2, "planet3" ) )
 	{
 		PLANET_DATA *tplanet;
-		bool pFound = FALSE;
+		BOOL pFound = FALSE;
 
 		for( tplanet = first_planet; tplanet; tplanet = tplanet->next)
 		{
@@ -2567,7 +2567,7 @@ void echo_to_system( int color , SHIP_DATA *ship , char *argument , SHIP_DATA *i
 
 }
 
-bool is_facing( SHIP_DATA *ship , SHIP_DATA *target )
+BOOL is_facing( SHIP_DATA *ship , SHIP_DATA *target )
 {
 	float dy, dx, dz, hx, hy, hz;
 	float cosofa;
@@ -2993,7 +2993,7 @@ void fread_ship( SHIP_DATA *ship, FILE *fp )
 {
 	char buf[MAX_STRING_LENGTH];
 	char *word;
-	bool fMatch;
+	BOOL fMatch;
 	int dummy_number;
 	int x1, x2;
 	char *line;
@@ -3269,12 +3269,12 @@ void fread_ship( SHIP_DATA *ship, FILE *fp )
  * Load a ship file
  */
 
-bool load_ship_file( char *shipfile )
+BOOL load_ship_file( char *shipfile )
 {
 	char filename[256];
 	SHIP_DATA *ship;
 	FILE *fp;
-	bool found;
+	BOOL found;
 	ROOM_INDEX_DATA *pRoomIndex;
 	CLAN_DATA *clan;
 	
@@ -5689,7 +5689,7 @@ void extract_missile( MISSILE_DATA *missile )
 
 }
 
-bool is_rental( CHAR_DATA *ch , SHIP_DATA *ship )
+BOOL is_rental( CHAR_DATA *ch , SHIP_DATA *ship )
 {
 	if ( !str_cmp("Public",ship->owner) )
 		return TRUE;
@@ -5697,7 +5697,7 @@ bool is_rental( CHAR_DATA *ch , SHIP_DATA *ship )
 	return FALSE;
 }
 
-bool check_pilot( CHAR_DATA *ch , SHIP_DATA *ship )
+BOOL check_pilot( CHAR_DATA *ch , SHIP_DATA *ship )
 {
 	if ( !str_cmp(ch->name,ship->owner) || !str_cmp(ch->name,ship->pilot)
 			|| !str_cmp(ch->name,ship->copilot) || !str_cmp("Public",ship->owner) )
@@ -5721,7 +5721,7 @@ bool check_pilot( CHAR_DATA *ch , SHIP_DATA *ship )
 	return FALSE;
 }
 
-bool extract_ship( SHIP_DATA *ship )
+BOOL extract_ship( SHIP_DATA *ship )
 {
 	ROOM_INDEX_DATA *room;
 
@@ -6351,7 +6351,7 @@ void destroy_ship( SHIP_DATA *ship , CHAR_DATA *ch, char *reason )
 }
 
 
-bool ship_to_room(SHIP_DATA *ship , int vnum )
+BOOL ship_to_room(SHIP_DATA *ship , int vnum )
 {
 	ROOM_INDEX_DATA *shipto;
 
@@ -6452,7 +6452,7 @@ void do_board( CHAR_DATA *ch, char *argument )
 		send_to_char("That ship has no entrance!\n\r", ch);
 }
 
-bool rent_ship( CHAR_DATA *ch , SHIP_DATA *ship )
+BOOL rent_ship( CHAR_DATA *ch , SHIP_DATA *ship )
 {
 
 	long price;
@@ -6991,9 +6991,9 @@ void do_land( CHAR_DATA *ch, char *argument )
    SHIP_DATA *ship;
    SHIP_DATA *target;
    PLANET_DATA *planet;
-   bool pfound = FALSE;
+   BOOL pfound = FALSE;
    ROOM_INDEX_DATA *room;
-   bool rfound = FALSE;
+   BOOL rfound = FALSE;
    int vnum;
 
    strcpy( arg, argument );
@@ -7499,7 +7499,7 @@ void do_accelerate( CHAR_DATA *ch, char *argument )
 void do_trajectory( CHAR_DATA *ch, char *argument )
 {
 	PLANET_DATA *planet;
-	bool foundplanet=FALSE;
+	BOOL foundplanet=FALSE;
 	char  buf[MAX_STRING_LENGTH];
 	char  arg2[MAX_INPUT_LENGTH];
 	char  arg3[MAX_INPUT_LENGTH];
@@ -13884,7 +13884,7 @@ void do_reload( CHAR_DATA *ch, char *argument )
 	char arg1[MAX_STRING_LENGTH];
 	char arg2[MAX_STRING_LENGTH];
 	int number;
-	//bool full = FALSE;
+	//BOOL full = FALSE;
 
 	argument = one_argument(argument, arg1);
 	argument = one_argument(argument, arg2);
@@ -14435,7 +14435,7 @@ void do_tractorbeam( CHAR_DATA *ch, char *argument )
 
 void do_pluogus( CHAR_DATA *ch, char *argument )
 {
-	bool ch_comlink = FALSE;
+	BOOL ch_comlink = FALSE;
 	OBJ_DATA *obj;
 	int next_planet, itt;
 
@@ -14579,7 +14579,7 @@ ch_ret drive_ship( CHAR_DATA *ch, SHIP_DATA *ship, EXIT_DATA  *pexit , int fall 
 	char *dtxt;
 	ch_ret retcode;
 	sh_int door, distance;
-	bool drunk = FALSE;
+	BOOL drunk = FALSE;
 	CHAR_DATA * rch;
 	CHAR_DATA * next_rch;
 
@@ -14865,7 +14865,7 @@ void do_bomb( CHAR_DATA *ch, char *argument )
 	ROOM_INDEX_DATA *room;
 	PLANET_DATA *planet;
 	int bombs;
-	bool foundplanet=FALSE;
+	BOOL foundplanet=FALSE;
 	char buf[MAX_STRING_LENGTH];
 	int chance;
 
@@ -15054,7 +15054,7 @@ void do_chaff( CHAR_DATA *ch, char *argument )
 
 }
 
-bool autofly( SHIP_DATA *ship )
+BOOL autofly( SHIP_DATA *ship )
 {
 
 	if (!ship)
@@ -15379,7 +15379,7 @@ void do_request(CHAR_DATA *ch, char *argument)
 	char arg1[MAX_INPUT_LENGTH];
 	char arg2[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
-	bool open;
+	BOOL open;
 
 	open = FALSE;
 	argument = one_argument(argument, arg1);
@@ -15629,7 +15629,7 @@ void do_makeshipbomb(CHAR_DATA *ch, char *argument)
 	char arg[MAX_INPUT_LENGTH];
 	char buf[MAX_INPUT_LENGTH];
 	int level, chance, strength, weight;
-	bool checktool, checkdrink, checkbatt, checkchem1, checkchem2, checkchem3, checkcirc1, checkcirc2;
+	BOOL checktool, checkdrink, checkbatt, checkchem1, checkchem2, checkchem3, checkcirc1, checkcirc2;
 	OBJ_DATA *obj;
 	OBJ_INDEX_DATA *pObjIndex;
 	int vnum;
@@ -16446,7 +16446,7 @@ void do_transmit_pass( CHAR_DATA *ch, char *argument)
 	char buf[MAX_STRING_LENGTH];
 	char arg1[MAX_STRING_LENGTH];
 	char arg2[MAX_STRING_LENGTH];
-	bool ch_comlink;
+	BOOL ch_comlink;
 	OBJ_DATA *obj;
 
 	argument = one_argument(argument, arg1);
@@ -16531,7 +16531,7 @@ void do_transmit_call( CHAR_DATA *ch, char *argument)
 	char buf2[MAX_STRING_LENGTH];
 	int roomloc;
 	int hprspd = 0;
-	bool ch_comlink;
+	BOOL ch_comlink;
 	OBJ_DATA *obj;
 
 	switch( ch->substate )
@@ -16693,7 +16693,7 @@ void do_transmit_status( CHAR_DATA *ch, char *argument)
 {
 	SHIP_DATA *ship;
 	int x;
-	bool ch_comlink;
+	BOOL ch_comlink;
 	OBJ_DATA *obj;
 
 	if ( argument[0] == '\0' )
@@ -16858,7 +16858,7 @@ void do_transmit_broadcast( CHAR_DATA *ch, char *argument)
 	CHAR_DATA *wch;
 	char arg1[MAX_STRING_LENGTH];
 	char arg2[MAX_STRING_LENGTH];
-	bool ch_comlink;
+	BOOL ch_comlink;
 	OBJ_DATA *obj;
 
 	argument = one_argument(argument, arg1);
@@ -17091,7 +17091,7 @@ void do_split_s(CHAR_DATA *ch, char *argument)
 	return;
 }
 
-bool check_grav_positions( SHIP_DATA * ship, bool Out )
+BOOL check_grav_positions( SHIP_DATA * ship, BOOL Out )
 {
     SHIP_DATA *well;
     char buf[MAX_STRING_LENGTH];
