@@ -51,8 +51,6 @@
 #include <stdarg.h>
 #include "mud.h"
 
-extern FILE *	fpArea;
-
 /*
  * Globals
  */
@@ -66,35 +64,35 @@ int    num_changes    args( ( void ) );
 int      maxIdeas;
 int		 maxID;
 #define  NULLSTR( str )  ( str == NULL || str[0] == '\0' )
-IDEAS_DATA * ideas_table;
+IDEA_DATA * ideas_table;
 
 void load_ideas( )
 {
 	FILE *fp;
 	int i;
 
-	if ( !(fpArea = fopen( IDEA_FILE, "r")) )
+	if ( !(fp = fopen( IDEA_FILE, "r")) )
 	{
 		bug( "Could not open Idea File for reading.", 0 );
 		return;
 	}
 
-	fscanf( fpArea, "%d\n", &maxIdeas );
-	fscanf( fpArea, "%d\n", &maxID );
+	fscanf( fp, "%d\n", &maxIdeas );
+	fscanf( fp, "%d\n", &maxID );
 	/* Use malloc so we can realloc later on */
-	ideas_table = malloc( sizeof( IDEAS_DATA) * (maxIdeas+1) );
+	ideas_table = malloc( sizeof( IDEA_DATA) * (maxIdeas+1) );
 	for( i = 0; i < maxIdeas; i++ )
 	{
-		ideas_table[i].id = fread_number( fpArea );
-		ideas_table[i].poster = fread_string( fpArea );
-		ideas_table[i].description = fread_string( fpArea );
-		ideas_table[i].players_yes = fread_string_nohash( fpArea );
-		ideas_table[i].players_no = fread_string_nohash( fpArea );
-		ideas_table[i].mudtime = fread_number( fpArea );
-		ideas_table[i].votes = fread_number( fpArea );
+		ideas_table[i].id = fread_number( fp );
+		ideas_table[i].poster = fread_string( fp );
+		ideas_table[i].description = fread_string( fp );
+		ideas_table[i].players_yes = fread_string_nohash( fp );
+		ideas_table[i].players_no = fread_string_nohash( fp );
+		ideas_table[i].mudtime = fread_number( fp );
+		ideas_table[i].votes = fread_number( fp );
 	}
-	ideas_table[maxChanges].poster = str_dup("");
-	fclose(fpArea);
+	ideas_table[maxIdeas].poster = str_dup("");
+	fclose(fp);
 	return; /* just return */
 }
 
@@ -129,8 +127,8 @@ void save_ideas(void)
 
 void add_idea( CHAR_DATA *ch, char *description )
 {
-	IDEAS_DATA * new_table;
-	new_table = realloc(ideas_table, sizeof( IDEAS_DATA ) * (maxIdeas+2));
+	IDEA_DATA * new_table;
+	new_table = realloc(ideas_table, sizeof( IDEA_DATA ) * (maxIdeas+1));
 	
 	if (!new_table) /* realloc failed */
 	{
@@ -157,9 +155,9 @@ void add_idea( CHAR_DATA *ch, char *description )
 void delete_idea(int iIdea)
 {
 	int i,j;
-	IDEAS_DATA * new_table;
+	IDEA_DATA * new_table;
 
-	new_table = malloc( sizeof( IDEAS_DATA ) * maxIdeas );
+	new_table = malloc( sizeof( IDEA_DATA ) * maxIdeas );
 
 	if( !new_table )
 	{

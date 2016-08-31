@@ -3255,9 +3255,9 @@ void do_installmodule( CHAR_DATA *ch, char *argument )
 	return;
       }
 
-     chance = IS_NPC(ch) ? ch->top_level
+     chance = IS_NPC(ch) ? ch->top_level*20
         : (int) (ch->pcdata->learned[gsn_installmodule]);
-     if ( number_percent( ) < chance )
+     if ( number_percent( ) < (ch->pcdata->learned[gsn_makemodule] * 5) )
       {
   	ch->dest_buf   = str_dup(arg);
        	send_to_char( "&GYou begin the long process of installing a new module.\n\r", ch);
@@ -3305,7 +3305,7 @@ void do_installmodule( CHAR_DATA *ch, char *argument )
       return;
     }
 
-    if ( number_percent( ) > chance*2 )
+    if ( number_percent( ) > (ch->pcdata->learned[gsn_makemodule] * 5) )
      {
        send_to_char("&RYou finish installing the new module and everything's looking good...\n\r", ch);
        send_to_char("&RThen it turns bright red and melts!\n\r", ch);

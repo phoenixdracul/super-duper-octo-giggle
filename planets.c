@@ -61,9 +61,10 @@ void	write_planet_list	args( ( void ) );
 #ifdef USECARGO
 const char * const cargo_names[CARGO_MAX] =
 {
-  "None", "Lommite","Meleenium","Neutronium","Zersium",
-  "Steel", "Rhyll","Alazhi", "Carbonite", "Titanium",
-  "Silk", "Cotton", "Water", "Wool", "Dolovite", "Hydrogen"
+  "None", "Electronics","Heavy Machinery","Shipyard Supplies","Medical Supplies",
+  "Durasteel", "Alcohol", "Foodstuffs", "Munitions", "Raw Materials",
+  "Rare Fabrics", "Common Fabrics", "Unrefined Fuel", "Refined Fuel", "Luxury Goods", 
+  "Tibanna Gas"
 };
 #endif
 
@@ -335,7 +336,7 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
                 }
                 fMatch = TRUE;
 	    }
-	    break;
+            break;
 		KEY( "ShipCapacity", planet->shipcap, fread_number( fp ) ) ;
             if( !str_cmp( word, "Starsystem" ) )
             {
@@ -936,7 +937,7 @@ void do_planets( CHAR_DATA *ch, char *argument )
                    planet->name , "", 
                    planet->governed_by ? planet->governed_by->name : "" );
         ch_printf( ch, "%.1f\n\r", 
-			!str_cmp(planet->governed_by->name, "Neutral") ? 100.0 : planet->pop_support );
+			(!planet->governed_by || !str_cmp(planet->governed_by->name, "Neutral")) ? 100.0 : planet->pop_support );
         if ( IS_IMMORTAL(ch) && !planet->area )
         {
           ch_printf( ch, "&RWarning - this planet is not attached to an area!&G");
@@ -1095,10 +1096,10 @@ void do_imports( CHAR_DATA *ch, char *argument )
       return;
    }
    ch_printf(ch,"&BImport and Export data for %s:\r\n", planet->name);
-   ch_printf(ch,"&GResource    &CImport     &YExport    &PProduces    &RConsumes         &GAmount\r\n");
-   ch_printf(ch, "&G----------   ------     ------    --------    --------          ------\r\n");
+   ch_printf(ch,"&GResource         &CImport     &YExport    &PProduces    &RConsumes         &GAmount\r\n");
+   ch_printf(ch, "&G---------------   ------     ------    --------    --------          ------\r\n");
    for (i = 1; i < CARGO_MAX; i++)
-   ch_printf(ch,"&G%-10.10s    &C%5d/ton  &Y%5d/ton &P%6d tons  &R%6d tons  &G%9d\r\n",
+   ch_printf(ch,"&G%-15.15s    &C%5d/ton  &Y%5d/ton &P%6d tons  &R%6d tons  &G%9d\r\n",
              cargo_names[i], planet->import[i], planet->export[i],
              planet->produces[i], planet->consumes[i], planet->resource[i]);
    return;

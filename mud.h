@@ -167,7 +167,7 @@ typedef	struct	social_type		SOCIALTYPE;
 typedef	struct	cmd_type		CMDTYPE;
 typedef	struct	killed_data		KILLED_DATA;
 typedef struct  changes_data            CHANGE_DATA;
-typedef struct  ideas_data      IDEAS_DATA;	// Added by Boran
+typedef struct  ideas_data      IDEA_DATA;	// Added by Boran
 typedef struct	wizent			WIZENT;
 typedef struct	member_data		MEMBER_DATA; /* Individual member data */
 typedef struct	member_list		MEMBER_LIST; /* List of members in clan */
@@ -1015,21 +1015,21 @@ typedef enum {CONCUSSION_MISSILE, PROTON_TORPEDO, HEAVY_ROCKET, HEAVY_BOMB} miss
 
 #ifdef USECARGO
 #define CARGO_NONE              0
-#define CARGO_LOMMITE           1
-#define CARGO_MELEEN            2
-#define CARGO_NEUTRON           3
-#define CARGO_ZERSIUM           4
-#define CARGO_STEEL             5
-#define CARGO_RYLL              6
-#define CARGO_ALAZHI            7
-#define CARGO_CARBONITE			8
-#define CARGO_TITANIUM			9
-#define CARGO_SILK				10
-#define CARGO_COTTON			11
-#define CARGO_WATER				12
-#define CARGO_WOOL				13
-#define CARGO_DOLOVITE			14
-#define CARGO_HYDROGEN			15
+#define CARGO_ELECTRONICS           1
+#define CARGO_HEAVY_MACHINERY            2
+#define CARGO_SHIPYARD_SUPPLIES           3
+#define CARGO_MEDICAL_SUPPLIES           4
+#define CARGO_DURASTEEL             5
+#define CARGO_ALCOHOL              6
+#define CARGO_FOODSTUFFS            7
+#define CARGO_MUNITIONS			8
+#define CARGO_RAW_MATERIALS			9
+#define CARGO_RARE_FABRICS				10
+#define CARGO_COMMON_FABRICS		11
+#define CARGO_UNREFINED_FUEL				12
+#define CARGO_REFINED_FUEL				13
+#define CARGO_LUXURY_GOODS			14
+#define CARGO_TIBANNA_GAS			15
 #define CARGO_MAX               16
 #endif
 
@@ -4238,7 +4238,7 @@ extern	int	top_herb;
 
 extern  int               maxChanges;
 extern  CHANGE_DATA       * changes_table;
-extern  IDEAS_DATA		  * ideas_table;
+extern  IDEA_DATA		  * ideas_table;
 extern		CMDTYPE		  *	command_hash	[126];
 
 extern		SKILLTYPE	  *	skill_table	[MAX_SKILL];

@@ -1399,8 +1399,8 @@ int get_armor_penalty(CHAR_DATA * ch)
 // HA! You call that RIS, Thoric? I'll give you RIS! -- Kasji
 int get_res( CHAR_DATA * ch, int dam, OBJ_DATA * wield)
 {
-    float min, max, actual, p = 1.0;
-    int i, j, r;
+    float min, max, actual, j, p = 1.0;
+    int i, r;
     AFFECT_DATA * af;
 
     if (wield != NULL)
@@ -1423,9 +1423,9 @@ int get_res( CHAR_DATA * ch, int dam, OBJ_DATA * wield)
     }
 
 
-    j = number_range(0, 100);
+    j = (float)number_range(0, 100);
 
-    actual = (min + ((max - min) * (float)j) / 100.0) * p;
+    actual = (min + ((max - min) * j) / 100.0) * p;
 
     i = dam * (1.0 - actual);
 
@@ -1434,8 +1434,8 @@ int get_res( CHAR_DATA * ch, int dam, OBJ_DATA * wield)
 
 int get_res2( CHAR_DATA * ch, int dam, short type)
 {
-    float min, max, actual;
-    int i, j, r;
+    float min, max, actual, j;
+    int i, r;
     AFFECT_DATA * af;
 
 //    if (wield != NULL)
@@ -1447,9 +1447,9 @@ int get_res2( CHAR_DATA * ch, int dam, short type)
     min = calc_res_min(ch, r);
     max = calc_res(ch, r);
 
-    j = number_range(0, 100);
+    j = (float)number_range(0, 100);
 
-    actual = (min + ((max - min) * (float)j) / 100.0);
+    actual = (min + ((max - min) * j) / 100.0);
 
     i = dam * (1.0 - actual);
 

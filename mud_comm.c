@@ -1093,8 +1093,10 @@ void do_mp_damage( CHAR_DATA *ch, char *argument )
 {
     char arg1[ MAX_INPUT_LENGTH ];
     char arg2[ MAX_INPUT_LENGTH ];
+	char arg3[ MAX_INPUT_LENGTH ];
     CHAR_DATA *victim;
     int dam;
+	int dt;
 
     if ( IS_AFFECTED( ch, AFF_CHARM ) )
       return;
@@ -1106,6 +1108,7 @@ void do_mp_damage( CHAR_DATA *ch, char *argument )
     }
     argument = one_argument( argument, arg1 );  
     argument = one_argument( argument, arg2 );  
+    argument = one_argument( argument, arg3 );  
 
     if ( arg1[0] == '\0' )
     {
@@ -1118,6 +1121,13 @@ void do_mp_damage( CHAR_DATA *ch, char *argument )
     {
        send_to_char( "mpdamage inflict how many hps?\n\r", ch );
        progbug( "Mpdamage: invalid argument2", ch );
+       return;
+    }
+	
+	    if ( arg3[0] == '\0' )
+    {
+       send_to_char( "mpdamage What type of damage?\n\r", ch );
+       progbug( "Mpdamage: invalid argument3", ch );
        return;
     }
 
@@ -1143,7 +1153,110 @@ void do_mp_damage( CHAR_DATA *ch, char *argument )
        progbug( "Mpdamage: invalid (nonexistent?) argument", ch );
        return;
     }
+	
+// Damage type specification added by Michael Dracul with help from Kasji~
+	dt = atoi(arg3);
+	
+	    if ( dam )
+    {
+	if ( !str_cmp( arg3, "plasma" ) )
+        {
+          dam = get_res2(victim, dam, RES_PLASMA);
+          dam = UMAX(1, dam);
+          dam = ris_damage(victim, dam, RIS_NONMAGIC);
+        }
+	else
+        if ( !str_cmp( arg3, "lightsaber" ) )
+        {
+          dam = get_res2(victim, dam, RES_LIGHTSABER);
+          dam = UMAX(1, dam);
+          dam = ris_damage(victim, dam, RIS_NONMAGIC);
+        }
+	else
+	if ( !str_cmp( arg3, "electric" ) )
+        {
+          dam = get_res2(victim, dam, RES_ELECTRIC);
+          dam = UMAX(1, dam);
+          dam = ris_damage(victim, dam, RIS_NONMAGIC);
+        }
+	else
+	if ( !str_cmp( arg3, "fire" ) )
+        {
+          dam = get_res2(victim, dam, RES_FIRE);
+          dam = UMAX(1, dam);
+          dam = ris_damage(victim, dam, RIS_NONMAGIC);
+        }
+	else
+	if ( !str_cmp( arg3, "cold" ) )
+        {
+          dam = get_res2(victim, dam, RES_COLD);
+          dam = UMAX(1, dam);
+          dam = ris_damage(victim, dam, RIS_NONMAGIC);
+        }
+	else
+	if ( !str_cmp( arg3, "blunt" ) )
+        {
+          dam = get_res2(victim, dam, RES_BLUNT);
+          dam = UMAX(1, dam);
+          dam = ris_damage(victim, dam, RIS_NONMAGIC);
+        }
+	else
+	if ( !str_cmp( arg3, "pierce" ) )
+        {
+          dam = get_res2(victim, dam, RES_PIERCE);
+          dam = UMAX(1, dam);
+          dam = ris_damage(victim, dam, RIS_NONMAGIC);
+        }
+	else
+	if ( !str_cmp( arg3, "slash" ) )
+        {
+          dam = get_res2(victim, dam, RES_SLASH);
+          dam = UMAX(1, dam);
+          dam = ris_damage(victim, dam, RIS_NONMAGIC);
+        }
+	else
+	if ( !str_cmp( arg3, "explosive" ) )
+        {
+          dam = get_res2(victim, dam, RES_EXPLOSIVE);
+          dam = UMAX(1, dam);
+          dam = ris_damage(victim, dam, RIS_NONMAGIC);
+        }
+	else
+	if ( !str_cmp( arg3, "acid" ) )
+        {
+          dam = get_res2(victim, dam, RES_ACID);
+          dam = UMAX(1, dam);
+          dam = ris_damage(victim, dam, RIS_NONMAGIC);
+        }
+	else
+	if ( !str_cmp( arg3, "poison" ) )
+        {
+          dam = get_res2(victim, dam, RES_POISON);
+          dam = UMAX(1, dam);
+          dam = ris_damage(victim, dam, RIS_NONMAGIC);
+        }
+	else
+	if ( !str_cmp( arg3, "force" ) )
+        {
+          dam = get_res2(victim, dam, RES_FORCE);
+          dam = UMAX(1, dam);
+          dam = ris_damage(victim, dam, RIS_NONMAGIC);
+        }
+	else
+	if ( !str_cmp( arg3, "disruptor" ) )
+        {
+          dam = get_res2(victim, dam, RES_DISRUPTOR);
+          dam = UMAX(1, dam);
+          dam = ris_damage(victim, dam, RIS_NONMAGIC);
+        }
+else
+{
+progbug( "Mpdamage: invalid (nonexistent?) damage type", ch );
+}
+    }
 
+
+	
    /* this is kinda begging for trouble        */
    /*
     * Note from Thoric to whoever put this in...

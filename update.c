@@ -289,11 +289,12 @@ void advance_level( CHAR_DATA *ch , int ability)
 	set_char_color( AT_WHITE + AT_BLINK, ch );
 	if ( ch->pcdata )
 	{
-		skill = URANGE(1, (ch->skill_level[ability] + 10) / 20, 4);
+/*		skill = URANGE(1, (ch->skill_level[ability] + 10) / 20, 4);
 		if (ch->skill_level[ability] > 15)
 			skill += (ch->perm_wis - 12) / 4;
 		else if (ch->skill_level[ability] % (0 - (ch->perm_wis - 17)) == 0)
-			skill += 1;
+			skill += 1;*/
+		skill = ((ch->skill_level[ability])+((ch->perm_int)*4))/10;
 		if ( ch->main_ability == ability && (ch->skill_level[ability] % 10) == 0 )
 			feat = 1;
 		else if ( ch->secondary_ability == ability && (ch->skill_level[ability] % 20) == 0 )

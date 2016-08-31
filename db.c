@@ -579,7 +579,7 @@ void boot_db( bool fCopyOver )
 	load_changes();
 
 	log_string("Loading Idea Log");
-//	load_ideas();
+	load_ideas();
 	
 	load_force_skills();
 	load_force_help();
@@ -3124,7 +3124,7 @@ OBJ_DATA *create_object( OBJ_INDEX_DATA *pObjIndex, int level )
 
 	obj->pIndexData	= pObjIndex;
 	obj->in_room	= NULL;
-	obj->level		= level;
+	obj->level		= 1;
 	obj->wear_loc	= -1;
 	obj->count		= 1;
 	cur_obj_serial = UMAX((cur_obj_serial + 1 ) & (BV30-1), 1);
@@ -6258,6 +6258,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 		 pObjIndex->value[5]  		= 0;
 		 pObjIndex->weight		= 1;
 		 pObjIndex->cost		= 0;
+		 pObjIndex->level               = 1;
 	 }
 	 else
 	 {
@@ -6279,6 +6280,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 		 pObjIndex->value[5]		= cObjIndex->value[5];
 		 pObjIndex->weight		= cObjIndex->weight;
 		 pObjIndex->cost		= cObjIndex->cost;
+		 pObjIndex->level                = cObjIndex->level;
 		 for ( ced = cObjIndex->first_extradesc; ced; ced = ced->next )
 		 {
 			 CREATE( ed, EXTRA_DESCR_DATA, 1 );

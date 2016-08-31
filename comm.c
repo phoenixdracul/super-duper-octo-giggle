@@ -2706,10 +2706,11 @@ case CON_GET_MSP:
 						int iLang;
 
 						ch->pcdata->clan	  = NULL;
-						ch->pcdata->learned[gsn_smallspace] = 1;
-						ch->pcdata->learned[gsn_shipsystems] = 1;
-						ch->pcdata->learned[gsn_navigation] = 1;
-//						ch->pcdata->learned[gsn_scan] = 25;
+//						ch->pcdata->learned[gsn_smallspace] = 2;
+//						ch->pcdata->learned[gsn_shipsystems] = 2;
+//						ch->pcdata->learned[gsn_navigation] = 2;
+//						ch->pcdata->learned[gsn_scan] = 2;
+						ch->pcdata->skill_points = 15;
 
 						ch->perm_lck = number_range(6, 18);
 						ch->perm_frc = number_range(-1000, 20);

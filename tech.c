@@ -128,7 +128,7 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
 
     	        chance = IS_NPC(ch) ? ch->top_level
 	                 : (int) (ch->pcdata->learned[gsn_makemodule]);
-                if ( number_percent( ) < chance )
+                if ( number_percent( ) < (ch->pcdata->learned[gsn_makemodule] * 5) )
     		{
     		   send_to_char( "&GYou begin the long process of creating a module.\n\r", ch);
     		   act( AT_PLAIN, "$n takes $s tools and begins to work.", ch,
@@ -205,7 +205,7 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
     }                            
     
     chance = IS_NPC(ch) ? ch->top_level
-                : (int) (ch->pcdata->learned[gsn_makemodule]) ;            
+                : (int) (ch->pcdata->learned[gsn_makemodule] * 4 ) ;            
                 
     if ( number_percent( ) > chance*2  || ( !checklens ) || ( !checktool ) || ( !checkbat ) || ( !checksuper ) || ( !checkcircuit ) )
     {
@@ -231,7 +231,7 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
     if(!str_cmp(arg, "slave"))
     {
       affecttype = AFFECT_SLAVE;
-      affectammount = (level / 4);
+      affectammount = ((level * 5) / 4);
       strcpy(name, "A Slave Module");
     }
 
@@ -244,7 +244,7 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
 
     if(!str_cmp(arg, "missile")){
       affecttype = AFFECT_MISSILE;
-      affectammount = (level / 20);
+      affectammount = (level);
       strcpy(name, "A Missile Module");
     }
 
@@ -256,24 +256,24 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
 
     if(!str_cmp(arg, "torpedo")){
       affecttype = AFFECT_TORPEDO;
-      affectammount = (level / 20);
+      affectammount = (level);
       strcpy(name, "A Torpedo Module");
     }
 
     if(!str_cmp(arg, "hull")){
       affecttype = AFFECT_HULL;
-      affectammount = (level / 2);
+      affectammount = (level * 2.5);
       strcpy(name, "A Hull Module");
     }
 
     if(!str_cmp(arg, "shield")){
       affecttype = AFFECT_SHIELD;
-      affectammount = (level/5);
+      affectammount = (level);
       strcpy(name, "A Shield Module");
     }
     if(!str_cmp(arg, "speed")){
       affecttype = AFFECT_SPEED;
-      affectammount = (level / 10);
+      affectammount = (level / 2);
       strcpy(name, "A Speed Module");
     }
     if(!str_cmp(arg, "hyperspeed")){
@@ -283,12 +283,12 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
     }
     if(!str_cmp(arg, "energy")){
       affecttype = AFFECT_ENERGY;
-      affectammount = (level * 5);
+      affectammount = (level * 25);
       strcpy(name, "An Energy Module");
     }
     if(!str_cmp(arg, "maneuver")){
       affecttype = AFFECT_MANUEVER;
-      affectammount = (level / 10);
+      affectammount = (level / 2);
       strcpy(name, "A Maneuver Module");
     }
     if(!str_cmp(arg, "alarm"))
@@ -300,7 +300,7 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
     if(!str_cmp(arg, "countermeasures"))
     {
       affecttype = AFFECT_COUNTERMEASURES;
-      affectammount = URANGE(1,(level / 33), 3);
+      affectammount = URANGE(1,(level / 5), 3);
       strcpy(name, "A Countermeasure Module");
     }
 
@@ -321,7 +321,7 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
     if(!str_cmp(arg, "cargo"))
     {
       affecttype = AFFECT_CARGO;
-      affectammount = (level / 4);
+      affectammount = (level);
       strcpy(name, "A Cargo canister Module");
     }
 
@@ -367,17 +367,15 @@ void do_showmodules( CHAR_DATA *ch, char *argument ){
   char str[MAX_STRING_LENGTH];
   int i;
   long xpgain;
-  int chance;
   
-  chance = IS_NPC(ch) ? ch->top_level
-     : (int) (ch->pcdata->learned[gsn_showmodules]);
-    
+  if(IS_NPC(ch) ) return;
   if((ship = ship_from_engine(ch->in_room->vnum)) == NULL){
   	send_to_char("You must be in the engine room of a ship.\n\r", ch);
   	return;
   }
   
-  if ( number_percent( ) > chance ){
+  if ( number_percent( ) > (ch->pcdata->learned[gsn_showmodules] * 20 + 5))
+  {
   	send_to_char("&RYou fail to find the module control panel.\n\r", ch);
   	learn_from_failure(ch, gsn_showmodules);
   	return;
@@ -491,7 +489,7 @@ void do_removemodule( CHAR_DATA *ch, char *argument )
      }
            
      chance = IS_NPC(ch) ? ch->top_level
-        : (int) (ch->pcdata->learned[gsn_removemodule]);
+        : (int) (ch->pcdata->learned[gsn_removemodule] * 5);
      if ( number_percent( ) < chance )
       {
       	strcpy(arg, argument);
@@ -538,7 +536,7 @@ void do_removemodule( CHAR_DATA *ch, char *argument )
       return;
     }
 
-    if ( number_percent( ) > chance*2 )
+    if ( number_percent( ) > (ch->pcdata->learned[gsn_makemodule] * 5) )
      {
        send_to_char("&RYou finish removing the module and everything's looking good...\n\r", ch);
        send_to_char("&RThen you realize you removed the hyperdrive energy core. OOPS!\n\r", ch);
