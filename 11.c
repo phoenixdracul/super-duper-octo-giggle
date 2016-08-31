@@ -413,7 +413,8 @@ void do_makegoggles( CHAR_DATA *ch, char *argument )
 	char arg[MAX_INPUT_LENGTH];
 	char arg2[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
-	int level, chance;
+	int level, chance, value;
+	float f;
 	bool checktool, checkduraplast, checkcirc, checkbatt, checklens;
 	OBJ_DATA *obj;
 	AFFECT_DATA *aff;
@@ -484,7 +485,8 @@ void do_makegoggles( CHAR_DATA *ch, char *argument )
 		}
 
 		chance = IS_NPC(ch) ? ch->top_level
-				: (int) (ch->pcdata->learned[gsn_makegoggles]);
+				: (int) (ch->pcdata->learned[gsn_makegoggles] * 110 / (ch->pcdata->learned[gsn_makegoggles]+2));
+		chance = UMIN(chance, 99); // max 99% success rate
 		if ( number_percent( ) < chance )
 		{
 			if(!str_cmp(arg, "infrared"))
@@ -523,7 +525,7 @@ void do_makegoggles( CHAR_DATA *ch, char *argument )
 
 	ch->substate = SUB_NONE;
 
-	level = IS_NPC(ch) ? ch->top_level : (int) (ch->pcdata->learned[gsn_makegoggles]);
+	level = IS_NPC(ch) ? ch->top_level/40 : (int) (ch->pcdata->learned[gsn_makegoggles]);
 
 	checktool = FALSE;
 	checklens = FALSE;
@@ -562,9 +564,10 @@ void do_makegoggles( CHAR_DATA *ch, char *argument )
 	}
 
 	chance = IS_NPC(ch) ? ch->top_level
-			: (int) (ch->pcdata->learned[gsn_makegoggles]) ;
+			: (int) (ch->pcdata->learned[gsn_makegoggles] * 110 / (ch->pcdata->learned[gsn_makegoggles] + 2)) ;
+	chance = UMIN(chance, 99);
 
-	if ( number_percent( ) > chance*2  || ( !checkcirc ) || ( !checkbatt ) || (!checkduraplast) || (!checklens) )
+	if ( number_percent( ) > chance  || ( !checkcirc ) || ( !checkbatt ) || (!checkduraplast) || (!checklens) )
 	{
 		send_to_char( "&RYou turn the goggles on, but the lens shatters!\n\r", ch);
 		learn_from_failure( ch, gsn_makegoggles );
@@ -590,12 +593,18 @@ void do_makegoggles( CHAR_DATA *ch, char *argument )
 	obj->description = STRALLOC( buf );
 	obj->value[0] = ch->top_level;
 	obj->value[1] = 0;
-	obj->value[2] = 0;
+
+	f = ch->pcdata->learned[gsn_makegoggles] * ((50 * number_range(50, 150)) / 100);
+	f = (f < 0 ? 0 : f);
+	f = f / (f + 100);
+	value = f * 1000;
+	obj->value[2] = value;
+
 	obj->value[3] = 0;
 	if(!str_cmp(arg, "magnifying"))
 	{
 		if(!IS_NPC(ch))
-			obj->value[4] = ch->pcdata->learned[gsn_makegoggles]/10;
+			obj->value[4] = ch->pcdata->learned[gsn_makegoggles] * obj->value[2] / 1000;
 		else
 			obj->value[4] = number_range(2, 5);
 	}
@@ -616,7 +625,7 @@ void do_makegoggles( CHAR_DATA *ch, char *argument )
 		++top_affect;
 	}
 
-	obj->cost = number_range(2500, 3500);
+	obj->cost = (ch->pcdata->learned[gsn_makegoggles] * obj->value[2]) / 5;
 
 	obj = obj_to_char( obj, ch );
 
@@ -625,13 +634,37 @@ void do_makegoggles( CHAR_DATA *ch, char *argument )
 	else
 		send_to_char( "&GYou finish making a pair of magnifying goggles.&w\n\r", ch);
 
+        char * word;
+        if (value >= 950)
+                word = "masterful";
+        else if (value >= 850)
+                word = "exceptional";
+        else if (value >= 750)
+                word = "great";
+        else if (value >= 650)
+                word = "decent";
+        else if (value >= 550)
+                word = "fair";
+        else if (value >= 450)
+                word = "mediocre";
+        else if (value >= 350)
+                word = "poor";
+        else if (value >= 100)
+                word = "shabby";
+        else
+                word = "horrible";
+
+        ch_printf(ch, "&WYour goggles are of &R%s &wquality.\n\r", word);
+
+
 	act( AT_PLAIN, "$n finishes contstructing a pair of goggles.", ch,
 			NULL, argument , TO_ROOM );
 
 	{
 		long xpgain;
 
-		xpgain = UMIN( obj->cost*100 ,( exp_level(ch->skill_level[ENGINEERING_ABILITY]+1) - exp_level(ch->skill_level[ENGINEERING_ABILITY]) ) );
+//		xpgain = UMIN( obj->cost*100 ,( exp_level(ch->skill_level[ENGINEERING_ABILITY]+1) - exp_level(ch->skill_level[ENGINEERING_ABILITY]) ) );
+		xpgain = UMIN( obj->cost*10 ,( exp_gain(ch->skill_level[ENGINEERING_ABILITY], gsn_makegoggles) ) );
 		gain_exp(ch, xpgain, ENGINEERING_ABILITY);
 		ch_printf( ch , "You gain %d engineering experience.\n\r", xpgain );
 	}
@@ -871,7 +904,8 @@ void do_makemissile(CHAR_DATA *ch, char *argument)
 	{
 		long xpgain;
 
-		xpgain = UMIN( obj->cost*50 ,( exp_level(ch->skill_level[ENGINEERING_ABILITY]+1) - exp_level(ch->skill_level[ENGINEERING_ABILITY]) ) );
+//		xpgain = UMIN( obj->cost*50 ,( exp_level(ch->skill_level[ENGINEERING_ABILITY]+1) - exp_level(ch->skill_level[ENGINEERING_ABILITY]) ) );
+		xpgain = UMIN( obj->cost*50 ,( exp_gain(ch->skill_level[ENGINEERING_ABILITY], gsn_makemissile) ) );
 		gain_exp(ch, xpgain, ENGINEERING_ABILITY);
 		ch_printf( ch , "You gain %d engineering experience.", xpgain );
 	}

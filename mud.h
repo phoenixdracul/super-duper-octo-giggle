@@ -4997,6 +4997,7 @@ void    explode         args( ( OBJ_DATA *obj ) );
 int	get_exp		args( ( CHAR_DATA *ch , int ability ) );
 int	get_exp_worth	args( ( CHAR_DATA *ch ) );
 int	exp_level	args( ( int level ) );
+int	exp_gain	args( ( int level, int gsn ) );
 sh_int	get_trust	args( ( CHAR_DATA *ch ) );
 sh_int	get_age		args( ( CHAR_DATA *ch ) );
 sh_int	get_curr_str	args( ( CHAR_DATA *ch ) );

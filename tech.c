@@ -1171,9 +1171,8 @@ void do_makejetpack( CHAR_DATA *ch, char *argument )
     {
          long xpgain;
 
-         xpgain = UMIN( obj->cost*100 ,
-            ( exp_level(ch->skill_level[ENGINEERING_ABILITY]+1) -
-              exp_level(ch->skill_level[ENGINEERING_ABILITY]) ) );
+//         xpgain = UMIN( obj->cost*100, ( exp_level(ch->skill_level[ENGINEERING_ABILITY]+1) - exp_level(ch->skill_level[ENGINEERING_ABILITY]) ) );
+         xpgain = UMIN( obj->cost*100, ( exp_gain(ch->skill_level[ENGINEERING_ABILITY], gsn_makejetpack) ) );
          gain_exp(ch, xpgain, ENGINEERING_ABILITY);
          ch_printf( ch , "You gain %d engineering experience.", xpgain );
     }

@@ -894,7 +894,8 @@ void do_makecommsystem ( CHAR_DATA *ch, char *argument )
     {
          long xpgain;
 
-         xpgain = UMIN( obj->cost*10 ,( exp_level(ch->skill_level[SLICER_ABILITY]+1) - exp_level(ch->skill_level[SLICER_ABILITY]) )
+//         xpgain = UMIN( obj->cost*10 ,( exp_level(ch->skill_level[SLICER_ABILITY]+1) - exp_level(ch->skill_level[SLICER_ABILITY]) )
+         xpgain = UMIN( obj->cost*10 ,( exp_gain(ch->skill_level[SLICER_ABILITY], gsn_makecommsystem) )
 );
          gain_exp(ch, xpgain, SLICER_ABILITY);
          ch_printf( ch , "You gain %d experience as for being a Slicer.", xpgain );
@@ -1118,7 +1119,8 @@ void do_makedatapad ( CHAR_DATA *ch, char *argument )
     {
          long xpgain;
 
-         xpgain = UMIN( obj->cost*10 ,( exp_level(ch->skill_level[SLICER_ABILITY]+1) - exp_level(ch->skill_level[SLICER_ABILITY]) )
+//         xpgain = UMIN( obj->cost*10 ,( exp_level(ch->skill_level[SLICER_ABILITY]+1) - exp_level(ch->skill_level[SLICER_ABILITY]) )
+         xpgain = UMIN( obj->cost*10 ,( exp_gain(ch->skill_level[SLICER_ABILITY], gsn_makedatapad) )
 );
          gain_exp(ch, xpgain, SLICER_ABILITY);
          ch_printf( ch , "You gain %d experience as for being a Slicer.", xpgain );
@@ -1283,7 +1285,8 @@ void do_codecrack( CHAR_DATA *ch, char *argument )
         ch_printf(ch,"&B[&r^O Ship Password   &W^O: %-7d                        &B^x]&W^x\r\n",pssword);
         ch_printf(ch,"&B[+-----+-----+-----+-----+-----+-----+-----+-----+-]&W\r\n");
       //xpgain = UMIN( obj->cost*10 ,( exp_level(ch->skill_level[SLICER_ABILITY]+1) - exp_level(ch->skill_level[SLICER_ABILITY]) ) );
-      xpgain = 3000;
+//      xpgain = 3000;
+      xpgain = UMIN( 10000 ,( exp_gain(ch->skill_level[SLICER_ABILITY], gsn_codecrack) ) );
       ch->pcdata->is_hacking = FALSE;
       gain_exp(ch, xpgain, SLICER_ABILITY);
       ch_printf( ch , " You gain %d experience as for being a Slicer.\n\r", xpgain );
@@ -1526,7 +1529,8 @@ void do_disableship ( CHAR_DATA *ch, char *argument )
         ch_printf(ch,"&B[^O &rShip %-8.8s   &W: Disabled                       &B^x]&W^x\r\n",disable);
         ch_printf(ch,"&B[+-----+-----+-----+-----+-----+-----+-----+-----+-]&W\r\n");
       //xpgain = UMIN( obj->cost*10 ,( exp_level(ch->skill_level[SLICER_ABILITY]+1) - exp_level(ch->skill_level[SLICER_ABILITY]) ) );
-      xpgain = 3000;
+//      xpgain = 3000;
+      xpgain = UMIN( obj->cost*10 ,( exp_gain(ch->skill_level[SLICER_ABILITY], gsn_disable) ) );
       learn_from_success( ch, gsn_disable ) ;
       gain_exp(ch, xpgain, SLICER_ABILITY);
       ch_printf( ch , " You gain %d experience as for being a Slicer.\n\r", xpgain );
@@ -1672,7 +1676,8 @@ void do_assignpilot ( CHAR_DATA *ch, char *argument )
         ch_printf(ch,"&B[&r^O Ship Pilot Added&W^O: %-10.10s                     &B^x]&W^x\r\n", arg1);
         ch_printf(ch,"&B[+-----+-----+-----+-----+-----+-----+-----+-----+-]&W\r\n");
       //xpgain = UMIN( obj->cost*10 ,( exp_level(ch->skill_level[SLICER_ABILITY]+1) - exp_level(ch->skill_level[SLICER_ABILITY]) ) );
-      xpgain = 3000;
+//      xpgain = 3000;
+      xpgain = UMIN( obj->cost*10 ,( exp_gain(ch->skill_level[SLICER_ABILITY], gsn_assignpilot) ) );
       learn_from_success( ch, gsn_assignpilot ) ;
       gain_exp(ch, xpgain, SLICER_ABILITY);
       ch_printf( ch , " You gain %d experience as for being a Slicer.\n\r", xpgain );
@@ -1891,7 +1896,8 @@ void do_slicebank(CHAR_DATA *ch, char *argument )
         ch->pcdata->bank+=steal;
         d->character->pcdata->bank-=steal;
       //xpgain = UMIN( obj->cost*10 ,( exp_level(ch->skill_level[SLICER_ABILITY]+1) - exp_level(ch->skill_level[SLICER_ABILITY]) ) );
-      xpgain = 3000;
+//      xpgain = 3000;
+      xpgain = UMIN( obj->cost*10 ,( exp_gain(ch->skill_level[SLICER_ABILITY], gsn_slicebank) ) );
       gain_exp(ch, xpgain, SLICER_ABILITY);
       ch_printf( ch , " You gain %d experience points for being a Slicer.\n\r", xpgain );
       learn_from_success( ch, gsn_slicebank);
@@ -2054,7 +2060,8 @@ void do_checkprints(CHAR_DATA *ch, char *argument )
         ch_printf(ch,"&B[^O &rPrint match     &W: %-15.15s                &B^x]&W^x\r\n", obj->killer ? obj->killer : "Error, Show imm");
         ch_printf(ch,"&B[+-----+-----+-----+-----+-----+-----+-----+-----+-]&W\r\n");
       //xpgain = UMIN( obj->cost*10 ,( exp_level(ch->skill_level[SLICER_ABILITY]+1) - exp_level(ch->skill_level[SLICER_ABILITY]) ) );
-      xpgain = 3000;
+//      xpgain = 3000;
+      xpgain = UMIN( obj->cost*10 ,( exp_gain(ch->skill_level[SLICER_ABILITY], gsn_checkprints) ) );
       gain_exp(ch, xpgain, SLICER_ABILITY);
       ch_printf( ch , " You gain %d experience points for being a Slicer.\n\r", xpgain );
       learn_from_success( ch, gsn_checkprints) ;

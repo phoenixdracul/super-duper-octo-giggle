@@ -7248,7 +7248,9 @@ void do_land( CHAR_DATA *ch, char *argument )
 
 		if ( get_room_index(ship->lastdoc)&& starsystem_from_room(get_room_index(ship->lastdoc)) != ship->starsystem )
 		{
-			int xp =  (exp_level( ch->skill_level[PILOTING_ABILITY]+1) - exp_level( ch->skill_level[PILOTING_ABILITY])) ;
+			int gsn = ship->class > SHIP_BOMBER ? gsn_mediumspace : gsn_smallspace;
+//			int xp =  (exp_level( ch->skill_level[PILOTING_ABILITY]+1) - exp_level( ch->skill_level[PILOTING_ABILITY])) ;
+			int xp =  (exp_gain( ch->skill_level[PILOTING_ABILITY], gsn)) ;
 			xp = UMIN( get_ship_value( ship ) , xp );
 			gain_exp( ch , xp , PILOTING_ABILITY );
 			ch_printf( ch, "&WYou gain %ld points of flight experience!\n\r", UMIN( get_ship_value( ship ) , xp ) );
@@ -15890,7 +15892,8 @@ void do_makeshipbomb(CHAR_DATA *ch, char *argument)
 	{
 		long xpgain;
 
-		xpgain = UMIN( obj->cost*50 ,( exp_level(ch->skill_level[ENGINEERING_ABILITY]+1) - exp_level(ch->skill_level[ENGINEERING_ABILITY]) ) );
+//		xpgain = UMIN( obj->cost*50 ,( exp_level(ch->skill_level[ENGINEERING_ABILITY]+1) - exp_level(ch->skill_level[ENGINEERING_ABILITY]) ) );
+		xpgain = UMIN( obj->cost*50 ,( exp_gain(ch->skill_level[ENGINEERING_ABILITY], gsn_makeshipbomb) ) );
 		gain_exp(ch, xpgain, ENGINEERING_ABILITY);
 		ch_printf( ch , "You gain %d engineering experience.", xpgain );
 	}

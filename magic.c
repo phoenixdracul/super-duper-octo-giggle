@@ -1328,7 +1328,8 @@ void do_cast( CHAR_DATA *ch, char *argument )
     {
         int force_exp;
         
-        force_exp = skill->min_level*skill->min_level*10;
+//        force_exp = skill->min_level*skill->min_level*10;
+        force_exp = exp_gain(ch->skill_level[FORCE_ABILITY], sn);
         force_exp = URANGE( 0 , force_exp, ( exp_level(ch->skill_level[FORCE_ABILITY]+1 )-exp_level(ch->skill_level[FORCE_ABILITY] ) )/35 );
 	if( !ch->fighting  )
 	  ch_printf( ch, "You gain %d force experience.\n\r" , force_exp );

@@ -1985,7 +1985,7 @@ void do_steal( CHAR_DATA *ch, char *argument )
 
 	return;
     }
-    
+
     if ( IS_NPC(victim) )
        add_kill( ch, victim );  /* makes it harder to steal from same char */
 
@@ -2009,11 +2009,12 @@ void do_steal( CHAR_DATA *ch, char *argument )
         sprintf(logbuf, "%s stole %d credits from %s.\n\r", ch->name, amount, IS_NPC(victim) ? victim->short_descr : victim->name);
         log_string(logbuf);
 	learn_from_success( ch, gsn_steal );
-	if ( IS_NPC( victim ) );
+//	if ( IS_NPC( victim ) );
         {
-          xp = UMIN( amount*10 , ( exp_level( ch->skill_level[SMUGGLING_ABILITY]+1 ) - exp_level( ch->skill_level[SMUGGLING_ABILITY])  ) / 35  );    
+//          xp = UMIN( amount*10 , ( exp_level( ch->skill_level[SMUGGLING_ABILITY]+1 ) - exp_level( ch->skill_level[SMUGGLING_ABILITY])  ) / 35  );
+          xp = UMIN( amount*10 , ( exp_gain( ch->skill_level[SMUGGLING_ABILITY], gsn_steal)  ) / 5  );
           xp = UMIN( xp , xp_compute( ch, victim ) );
-          gain_exp( ch, xp , SMUGGLING_ABILITY);  
+          gain_exp( ch, xp , SMUGGLING_ABILITY);
           ch_printf( ch, "&WYou gain %ld smuggling experience!\n\r", xp );
         }
 	return;
@@ -2022,13 +2023,13 @@ void do_steal( CHAR_DATA *ch, char *argument )
     if ( ( obj = get_obj_carry( victim, arg1 ) ) == NULL )
     {
         if ( victim->position <= POS_SLEEPING )
-        {   
-           if ( ( obj = get_obj_wear( victim, arg1 ) ) != NULL ) 
+        {
+           if ( ( obj = get_obj_wear( victim, arg1 ) ) != NULL )
            {
              if ( (obj_next=get_eq_char(victim, obj->wear_loc)) != obj )
              {
 	       ch_printf( ch, "They are wearing %s on top of %s.\n\r", obj_next->short_descr, obj->short_descr);
-	       send_to_char( "You'll have to steal that first.\n\r", ch );	
+	       send_to_char( "You'll have to steal that first.\n\r", ch );
 	       learn_from_failure( ch, gsn_steal );
 	       return;
              }
@@ -2036,7 +2037,7 @@ void do_steal( CHAR_DATA *ch, char *argument )
                unequip_char( victim, obj );
            }
         }
-           
+
 	send_to_char( "You can't seem to find it.\n\r", ch );
 	learn_from_failure( ch, gsn_steal );
 	return;
@@ -2083,17 +2084,18 @@ void do_steal( CHAR_DATA *ch, char *argument )
     learn_from_success( ch, gsn_steal );
     sprintf(logbuf, "%s stole %s from %s.\n\r", ch->name, obj->name, IS_NPC(victim) ? victim->short_descr : victim->name );
     log_string(logbuf);
-    if ( IS_NPC( victim ) );
+//    if ( IS_NPC( victim ) );
     {
-      xp = UMIN( obj->cost*10 , ( exp_level( ch->skill_level[SMUGGLING_ABILITY]+1) - exp_level( ch->skill_level[SMUGGLING_ABILITY])  ) / 10  );    
+//      xp = UMIN( obj->cost*10 , ( exp_level( ch->skill_level[SMUGGLING_ABILITY]+1) - exp_level( ch->skill_level[SMUGGLING_ABILITY])  ) / 10  );
+      xp = UMIN( obj->cost*10 , ( exp_gain( ch->skill_level[SMUGGLING_ABILITY], gsn_steal)  ) / 2  );
       xp = UMIN( xp , xp_compute( ch, victim ) );
-      gain_exp( ch, xp, SMUGGLING_ABILITY );  
+      gain_exp( ch, xp, SMUGGLING_ABILITY );
       ch_printf( ch, "&WYou gain %ld smuggling experience!\n\r", xp );
     }
     separate_obj( obj );
     obj_from_char( obj );
     obj_to_char( obj, ch );
-     
+
     return;
 }
 
@@ -2345,8 +2347,8 @@ void do_rescue( CHAR_DATA *ch, char *argument )
 
     ch->alignment = ch->alignment + 5;
     ch->alignment = URANGE( -1000, ch->alignment, 1000 );
-    
-    percent = number_percent( ) - (get_curr_lck(ch) - 14) 
+
+    percent = number_percent( ) - (get_curr_lck(ch) - 14)
 	      - (get_curr_lck(victim) - 16);
 
     WAIT_STATE( ch, skill_table[gsn_rescue]->beats );
@@ -2362,10 +2364,13 @@ void do_rescue( CHAR_DATA *ch, char *argument )
     act( AT_SKILL, "You rescue $N!",  ch, NULL, victim, TO_CHAR    );
     act( AT_SKILL, "$n rescues you!", ch, NULL, victim, TO_VICT    );
     act( AT_SKILL, "$n moves in front of $N!",  ch, NULL, victim, TO_NOTVICT );
-    
-    ch->alignment = ch->alignment + 50;
+
+    if (victim->alignment >= -50)
+        ch->alignment = ch->alignment + 50;
+    else // Rescuing a bad guy shouldn't give you an increase in alignment -- Kasji
+        ch->alignment = ch->alignment - 50;
     ch->alignment = URANGE( -1000, ch->alignment, 1000 );
-    
+
     learn_from_success( ch, gsn_rescue );
     stop_fighting( fch, FALSE );
     stop_fighting( victim, FALSE );

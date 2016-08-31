@@ -269,6 +269,15 @@ int exp_level( int level)
 	return ( lvl * lvl * 500 );
 }
 
+int exp_gain( int level, int gsn )
+{
+	int slevel = level - skill_table[gsn]->min_level + 1;
+	if (slevel < 1)
+		return exp_level(level+1) - exp_level(level);
+
+	return (exp_level(level+1) - exp_level(level)) / slevel;
+}
+
 /*
  * Get what level ch is based on exp
  */
