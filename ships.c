@@ -1045,7 +1045,7 @@ void do_listmobships(CHAR_DATA *ch, char *argument)
 			if(!ship->in_room && ship->shipstate != SHIP_HYPERSPACE)
 			{
 				room_found = TRUE;
-				sprintf(location, "%s System", ship->starsystem->name);
+				sprintf(location, "%s System", ship->starsystem ? ship->starsystem->name : "(null)");
 			}
 			if(ship->shipstate == SHIP_HYPERSPACE)
 			{
