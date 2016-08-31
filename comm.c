@@ -901,7 +901,7 @@ void game_loop( )
 
 				stall_time.tv_usec = usecDelta;
 				stall_time.tv_sec  = secDelta;
-				if (select( 0, NULL, NULL, NULL, &stall_time ) < 0 )
+				if (select( 0, NULL, NULL, NULL, &stall_time ) < 0 && errno != EINTR)
 				{
 					/* If this is on, we can safely assume that it's the compiler causing it... */
 					if(compilelock)
@@ -3581,11 +3581,8 @@ void act( sh_int AType, const char *format, CHAR_DATA *ch, const void *arg1, con
       to = NULL;
     else if ( type == TO_CHAR )
       to = ch;
-<<<<<<< HEAD
-=======
     else if (type == TO_MUD)
       to = first_char;
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
     else
       to = ch->in_room->first_person;
 
@@ -3628,51 +3625,28 @@ void act( sh_int AType, const char *format, CHAR_DATA *ch, const void *arg1, con
 
     /* Anyone feel like telling me the point of looping through the whole
        room when we're only sending to one char anyways..? -- Alty */
-<<<<<<< HEAD
-    for ( ; to; to = (type == TO_CHAR || type == TO_VICT)
-                     ? NULL : to->next_in_room )
-    {
-	if ((!to->desc 
-	&& (  IS_NPC(to) && !HAS_PROG(to->pIndexData, ACT_PROG) ))
-	||   !IS_AWAKE(to) )
-	    continue;
-
-	if ( type == TO_CHAR && to != ch )
-	    continue;
-	if ( type == TO_VICT && ( to != vch || to == ch ) )
-	    continue;
-	if ( type == TO_ROOM && to == ch )
-	    continue;
-	if ( type == TO_NOTVICT && (to == ch || to == vch) )
-	    continue;
-	if ( type == TO_CANSEE && ( to == ch || 
-	    (!IS_NPC(ch) && (xIS_SET(ch->act, PLR_WIZINVIS) 
-	    && (get_trust(to) < (ch->pcdata ? ch->pcdata->wizinvis : 0) ) ) ) ) )
-	    continue;
-=======
     for ( ; to ; to = (type == TO_CHAR || type == TO_VICT)
                      ? NULL : (type == TO_MUD ? to->next : to->next_in_room) )
     {
     	if (type == TO_MUD && IS_NPC(to))
     		continue;
-		if ((!to->desc 
-			&& (  IS_NPC(to) && !HAS_PROG(to->pIndexData, ACT_PROG) ))
-			||   !IS_AWAKE(to) )
+	if ((!to->desc 
+		&& (  IS_NPC(to) && !HAS_PROG(to->pIndexData, ACT_PROG) ))
+		||   !IS_AWAKE(to) )
 	    	continue;
 
-		if ( type == TO_CHAR && to != ch )
+	if ( type == TO_CHAR && to != ch )
 	    	continue;
-		if ( type == TO_VICT && ( to != vch || to == ch ) )
-		    continue;
-		if ( type == TO_ROOM && to == ch )
-		    continue;
-		if ( (type == TO_NOTVICT || type == TO_MUD) && (to == ch || to == vch) )
-		    continue;
-		if ( type == TO_CANSEE && ( to == ch || 
-		    (!IS_NPC(ch) && (xIS_SET(ch->act, PLR_WIZINVIS) 
-		    && (get_trust(to) < (ch->pcdata ? ch->pcdata->wizinvis : 0) ) ) ) ) )
-		    continue;
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
+	if ( type == TO_VICT && ( to != vch || to == ch ) )
+		continue;
+	if ( type == TO_ROOM && to == ch )
+		continue;
+	if ( (type == TO_NOTVICT || type == TO_MUD) && (to == ch || to == vch) )
+		continue;
+	if ( type == TO_CANSEE && ( to == ch || 
+		(!IS_NPC(ch) && (xIS_SET(ch->act, PLR_WIZINVIS) 
+		&& (get_trust(to) < (ch->pcdata ? ch->pcdata->wizinvis : 0) ) ) ) ) )
+		continue;
 
 //        if ( IS_IMMORTAL(to) )
 //            txt = act_string (format, to, ch, arg1, arg2, STRING_IMM);

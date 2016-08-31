@@ -334,16 +334,12 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
                 if (planet->starsystem)
                 {
                      SPACE_DATA *starsystem = planet->starsystem;
-                     
                      LINK( planet , starsystem->first_planet, starsystem->last_planet, next_in_system, prev_in_system );
                 }
                 fMatch = TRUE;
 	    }
-<<<<<<< HEAD
-            break;
-=======
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
-		KEY( "ShipCapacity", planet->shipcap, fread_number( fp ) ) ;
+	    KEY( "ShipCapacity", planet->shipcap, fread_number( fp ) ) ;
+	    break;
             if( !str_cmp( word, "Starsystem" ) )
             {
                planet->starsystem = starsystem_from_name( fread_flagstring( fp ) );
@@ -370,7 +366,7 @@ void fread_planet( PLANET_DATA *planet, FILE *fp )
 	case 'Z':
 	    KEY( "Z",	planet->z,		fread_number( fp ) );
 	    break;
-    
+
 	}
 	
 	if ( !fMatch )
@@ -909,13 +905,13 @@ void do_planets( CHAR_DATA *ch, char *argument )
     PLANET_DATA *planet;
     int count = 0;
     SPACE_DATA *starsystem;
-    
+
     set_char_color( AT_WHITE, ch );
     send_to_char( "&c+------------------------------------------------------------------+&z\n\r" , ch );
     send_to_char( "&c|                        &WPlanet Datasheet&x                          |&z\n\r" , ch );
     send_to_char( "&c+------------------------------------------------------------------+&z\n\r" , ch );
-    
-    for ( starsystem = first_starsystem ; starsystem; starsystem = starsystem->next )    
+
+    for ( starsystem = first_starsystem ; starsystem; starsystem = starsystem->next )
      for ( planet = starsystem->first_planet; planet; planet = planet->next_in_system )
      {
 	if(planet->controls != 0) continue;
@@ -929,35 +925,27 @@ void do_planets( CHAR_DATA *ch, char *argument )
         {
           ch_printf( ch, "&RWarning - this planet is not attached to an area!&G");
           ch_printf( ch, "\n\r" );
-        }         
-        
+        }
+
         count++;
      }
-            
+
     for ( planet = first_planet; planet; planet = planet->next )
     {
         if ( planet->starsystem )
            continue;
-<<<<<<< HEAD
-           
-=======
 
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
-        ch_printf( ch, "&G%-15s %-12s  %-25s    ", 
-                   planet->name , "", 
+        ch_printf( ch, "&G%-15s %-12s  %-25s    ",
+                   planet->name , "",
                    planet->governed_by ? planet->governed_by->name : "" );
-        ch_printf( ch, "%.1f\n\r", 
+        ch_printf( ch, "%.1f\n\r",
 			(!planet->governed_by || !str_cmp(planet->governed_by->name, "Neutral")) ? 100.0 : planet->pop_support );
         if ( IS_IMMORTAL(ch) && !planet->area )
         {
           ch_printf( ch, "&RWarning - this planet is not attached to an area!&G");
           ch_printf( ch, "\n\r" );
-        }         
-<<<<<<< HEAD
-        
-=======
+        }
 
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
         count++;
     }
 
@@ -967,7 +955,7 @@ void do_planets( CHAR_DATA *ch, char *argument )
         send_to_char( "There are no planets currently formed.\n\r", ch );
     }
     send_to_char( "&WUse SHOWPLANET for more information.\n\r", ch );
-    
+
 }
 
 void do_capture ( CHAR_DATA *ch , char *argument )
@@ -976,32 +964,32 @@ void do_capture ( CHAR_DATA *ch , char *argument )
    PLANET_DATA *planet;
    PLANET_DATA *cPlanet;
    float support = 0.0;
-   int pCount = 0;   
+   int pCount = 0;
    char buf[MAX_STRING_LENGTH];
-   
+
    if ( !ch->in_room || !ch->in_room->area)
-      return;   
+      return;
 
    if ( IS_NPC(ch) || !ch->pcdata )
    {
        send_to_char ( "huh?\n\r" , ch );
        return;
    }
-   
+
    if ( !ch->pcdata->clan )
    {
        send_to_char ( "You need to be a member of an organization to do that!\n\r" , ch );
        return;
    }
-   
+
    clan = ch->pcdata->clan;
-      
+
    if ( ( planet = ch->in_room->area->planet ) == NULL )
    {
        send_to_char ( "You must be on a planet to capture it.\n\r" , ch );
        return;
-   }   
-   
+   }
+
    if ( clan == planet->governed_by )
    {
        send_to_char ( "Your organization already controls this planet.\n\r" , ch );
@@ -1110,17 +1098,10 @@ void do_imports( CHAR_DATA *ch, char *argument )
       return;
    }
    ch_printf(ch,"&BImport and Export data for %s:\r\n", planet->name);
-<<<<<<< HEAD
    ch_printf(ch,"&GResource         &CImport     &YExport    &PProduces    &RConsumes         &GAmount\r\n");
    ch_printf(ch, "&G---------------   ------     ------    --------    --------          ------\r\n");
    for (i = 1; i < CARGO_MAX; i++)
    ch_printf(ch,"&G%-15.15s    &C%5d/ton  &Y%5d/ton &P%6d tons  &R%6d tons  &G%9d\r\n",
-=======
-   ch_printf(ch,"&GResource    &CImport     &YExport    &PProduces    &RConsumes         &GAmount\r\n");
-   ch_printf(ch, "&G----------   ------     ------    --------    --------          ------\r\n");
-   for (i = 1; i < CARGO_MAX; i++)
-   ch_printf(ch,"&G%-10.10s    &C%5d/ton  &Y%5d/ton &P%6d tons  &R%6d tons  &G%9d\r\n",
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
              cargo_names[i], planet->import[i], planet->export[i],
              planet->produces[i], planet->consumes[i], planet->resource[i]);
    return;

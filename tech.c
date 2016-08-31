@@ -157,7 +157,7 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
     
     ch->substate = SUB_NONE;
     
-    level = IS_NPC(ch) ? ch->top_level : (int) (ch->pcdata->learned[gsn_makemodule]);
+    level = IS_NPC(ch) ? ch->top_level : (int) (ch->pcdata->learned[gsn_makemodule] * 5);
 
 
 
@@ -201,16 +201,12 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
           separate_obj( obj );
           obj_from_char( obj );
        }
-       
-    }                            
-    
+
+    }
+
     chance = IS_NPC(ch) ? ch->top_level
-<<<<<<< HEAD
-                : (int) (ch->pcdata->learned[gsn_makemodule] * 4 ) ;            
-=======
-                : (int) (ch->pcdata->learned[gsn_makemodule]) ;            
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
-                
+                : (int) (ch->pcdata->learned[gsn_makemodule] * 4 ) ;
+
     if ( number_percent( ) > chance*2  || ( !checklens ) || ( !checktool ) || ( !checkbat ) || ( !checksuper ) || ( !checkcircuit ) )
     {
        send_to_char( "&RYou hold up your newly created module.\n\r", ch);
@@ -235,11 +231,7 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
     if(!str_cmp(arg, "slave"))
     {
       affecttype = AFFECT_SLAVE;
-<<<<<<< HEAD
-      affectammount = ((level * 5) / 4);
-=======
       affectammount = (level / 4);
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
       strcpy(name, "A Slave Module");
     }
 
@@ -252,11 +244,7 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
 
     if(!str_cmp(arg, "missile")){
       affecttype = AFFECT_MISSILE;
-<<<<<<< HEAD
-      affectammount = (level);
-=======
       affectammount = (level / 20);
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
       strcpy(name, "A Missile Module");
     }
 
@@ -268,40 +256,24 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
 
     if(!str_cmp(arg, "torpedo")){
       affecttype = AFFECT_TORPEDO;
-<<<<<<< HEAD
-      affectammount = (level);
-=======
       affectammount = (level / 20);
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
       strcpy(name, "A Torpedo Module");
     }
 
     if(!str_cmp(arg, "hull")){
       affecttype = AFFECT_HULL;
-<<<<<<< HEAD
-      affectammount = (level * 2.5);
-=======
       affectammount = (level / 2);
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
       strcpy(name, "A Hull Module");
     }
 
     if(!str_cmp(arg, "shield")){
       affecttype = AFFECT_SHIELD;
-<<<<<<< HEAD
-      affectammount = (level);
-=======
       affectammount = (level/5);
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
       strcpy(name, "A Shield Module");
     }
     if(!str_cmp(arg, "speed")){
       affecttype = AFFECT_SPEED;
-<<<<<<< HEAD
-      affectammount = (level / 2);
-=======
       affectammount = (level / 10);
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
       strcpy(name, "A Speed Module");
     }
     if(!str_cmp(arg, "hyperspeed")){
@@ -311,20 +283,12 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
     }
     if(!str_cmp(arg, "energy")){
       affecttype = AFFECT_ENERGY;
-<<<<<<< HEAD
-      affectammount = (level * 25);
-=======
       affectammount = (level * 5);
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
       strcpy(name, "An Energy Module");
     }
     if(!str_cmp(arg, "maneuver")){
       affecttype = AFFECT_MANUEVER;
-<<<<<<< HEAD
-      affectammount = (level / 2);
-=======
       affectammount = (level / 10);
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
       strcpy(name, "A Maneuver Module");
     }
     if(!str_cmp(arg, "alarm"))
@@ -336,11 +300,7 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
     if(!str_cmp(arg, "countermeasures"))
     {
       affecttype = AFFECT_COUNTERMEASURES;
-<<<<<<< HEAD
-      affectammount = URANGE(1,(level / 5), 3);
-=======
       affectammount = URANGE(1,(level / 33), 3);
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
       strcpy(name, "A Countermeasure Module");
     }
 
@@ -361,11 +321,7 @@ void do_makemodule( CHAR_DATA *ch, char *argument )
     if(!str_cmp(arg, "cargo"))
     {
       affecttype = AFFECT_CARGO;
-<<<<<<< HEAD
-      affectammount = (level);
-=======
       affectammount = (level / 4);
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
       strcpy(name, "A Cargo canister Module");
     }
 
@@ -418,11 +374,7 @@ void do_showmodules( CHAR_DATA *ch, char *argument ){
   	return;
   }
   
-<<<<<<< HEAD
   if ( number_percent( ) > (ch->pcdata->learned[gsn_showmodules] * 20 + 5))
-=======
-  if ( number_percent( ) > ch->pcdata->learned[gsn_showmodules] * 100 / (ch->pcdata->learned[gsn_showmodules] + 2))
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
   {
   	send_to_char("&RYou fail to find the module control panel.\n\r", ch);
   	learn_from_failure(ch, gsn_showmodules);
@@ -537,11 +489,7 @@ void do_removemodule( CHAR_DATA *ch, char *argument )
      }
            
      chance = IS_NPC(ch) ? ch->top_level
-<<<<<<< HEAD
         : (int) (ch->pcdata->learned[gsn_removemodule] * 5);
-=======
-        : (int) (ch->pcdata->learned[gsn_removemodule]);
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
      if ( number_percent( ) < chance )
       {
       	strcpy(arg, argument);
@@ -580,7 +528,7 @@ void do_removemodule( CHAR_DATA *ch, char *argument )
            
       }
     chance = IS_NPC(ch) ? ch->top_level
-               : (int) (ch->pcdata->learned[gsn_removemodule]);
+               : (int) (ch->pcdata->learned[gsn_removemodule] * 5);
 
     ship = ship_from_engine(ch->in_room->vnum);
     if (!ship){
@@ -588,11 +536,7 @@ void do_removemodule( CHAR_DATA *ch, char *argument )
       return;
     }
 
-<<<<<<< HEAD
-    if ( number_percent( ) > (ch->pcdata->learned[gsn_makemodule] * 5) )
-=======
     if ( number_percent( ) > chance*2 )
->>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
      {
        send_to_char("&RYou finish removing the module and everything's looking good...\n\r", ch);
        send_to_char("&RThen you realize you removed the hyperdrive energy core. OOPS!\n\r", ch);

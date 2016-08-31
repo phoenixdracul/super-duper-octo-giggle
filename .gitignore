@@ -9,3 +9,4 @@ DEADJOE
 nohup.out
 startup
 *.o
+*.log

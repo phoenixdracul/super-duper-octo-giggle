@@ -1758,7 +1758,7 @@ void do_mstat( CHAR_DATA *ch, char *argument )
 
 	ch_printf( ch, "&W&z| &GResistance &z| &GBase Res &z| &GApplied Res                                          &z|\n\r" );
 	for (x = 0; x < RES_MAX; x++)
-		ch_printf( ch, "&z| &W%10s &z| &W%-2.1f%% &z| &W%-2.1f%%                                       &z|\n\r", dam_type_table[x], victim->base_res[x], calc_res(victim, x));
+		ch_printf( ch, "&z| &W%10s &z| &W%-2.1f%% &z| &W%-2.1f%%                                       &z|\n\r", dam_type_table[x], victim->base_res[x]*100.0f, calc_res(victim, x)*100.0f);
 	ch_printf( ch, "&W&z+------------------------------------------------------------------------------+\n\r");
 
 	if(IS_NPC(victim))
