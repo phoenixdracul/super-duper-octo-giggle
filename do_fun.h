@@ -254,6 +254,7 @@ DECLARE_DO_FUN( do_gatherclans );
 DECLARE_DO_FUN( do_gemcutting );
 DECLARE_DO_FUN( do_generate_market );
 DECLARE_DO_FUN( do_get		);
+DECLARE_DO_FUN( do_git		);
 DECLARE_DO_FUN( do_give		);
 DECLARE_DO_FUN( do_giveship	);
 DECLARE_DO_FUN( do_giveslug	);

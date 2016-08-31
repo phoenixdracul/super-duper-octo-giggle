@@ -158,7 +158,6 @@ void do_mudexec( CHAR_DATA * ch, char *argument )
 #ifdef DEBUGGLOB
       int argc = 0;
 #endif
-
       flags = fcntl( desc, F_GETFL, 0 );
       flags &= ~FNDELAY;
       fcntl( desc, F_SETFL, flags );
@@ -183,29 +182,39 @@ void do_mudexec( CHAR_DATA * ch, char *argument )
       setenv( "LINES", "24", 1 );
 
 #ifdef USEGLOB
+      g.gl_pathc = 0;
+      g.gl_pathv = NULL;
       g.gl_offs = 1;
       strtok( argument, " " );
 
       if( ( p = strtok( NULL, " " ) ) != NULL )
+      {
          glob( p, GLOB_DOOFFS | GLOB_NOCHECK, NULL, &g );
 
-      if( !g.gl_pathv[g.gl_pathc - 1] )
-         g.gl_pathv[g.gl_pathc - 1] = p;
-
-      while( ( p = strtok( NULL, " " ) ) != NULL )
-      {
-         glob( p, GLOB_DOOFFS | GLOB_NOCHECK | GLOB_APPEND, NULL, &g );
          if( !g.gl_pathv[g.gl_pathc - 1] )
             g.gl_pathv[g.gl_pathc - 1] = p;
+
+         while( ( p = strtok( NULL, " " ) ) != NULL )
+         {
+            glob( p, GLOB_DOOFFS | GLOB_NOCHECK | GLOB_APPEND, NULL, &g );
+            if( !g.gl_pathv[g.gl_pathc - 1] )
+               g.gl_pathv[g.gl_pathc - 1] = p;
+         }
       }
+      else
+      {
+         g.gl_pathc = 2;
+         g.gl_pathv = (char**) malloc(sizeof(char*)*2);
+         g.gl_pathv[1] = NULL;
+      }
+
       g.gl_pathv[0] = argument;
 
 #ifdef DEBUGGLOB
-      for( argc = 0; argc < g.gl_pathc; argc++ )
-         printf( "arg %d: %s\r\n", argc, g.gl_pathv[argc] );
-      fflush( stdout );
+         for( argc = 0; argc < g.gl_pathc; argc++ )
+            printf( "arg %d: %s\r\n", argc, g.gl_pathv[argc] );
+         fflush( stdout );
 #endif
-
       execvp( g.gl_pathv[0], g.gl_pathv );
 #else
       while( *p )
@@ -923,4 +932,19 @@ void do_grep( CHAR_DATA * ch, char *argument )
    command_pipe( ch, buf );
 #endif
    return;
+}
+
+void do_git( CHAR_DATA * ch, char * argument )
+{
+	char buf[MSL];
+
+	snprintf(buf, MSL, "../src/git_script %s", argument);
+
+#ifdef USEGLOB
+	do_mudexec(ch, buf);
+#else
+	command_pipe(ch, buf);
+#endif
+
+	return;
 }
