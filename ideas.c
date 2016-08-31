@@ -129,14 +129,14 @@ void add_idea( CHAR_DATA *ch, char *description )
 {
 	IDEA_DATA * new_table;
 	new_table = realloc(ideas_table, sizeof( IDEA_DATA ) * (maxIdeas+1));
-	
+
 	if (!new_table) /* realloc failed */
 	{
 		send_to_char ("Memory allocation failed. Brace for impact.\n\r",ch);
 		return;
 	}
 	ideas_table = new_table;
-	
+
 	ideas_table[maxIdeas].id = maxID + 1;
 	ideas_table[maxIdeas].poster = STRALLOC(ch->name);
 	ideas_table[maxIdeas].description = STRALLOC( description );
@@ -144,10 +144,10 @@ void add_idea( CHAR_DATA *ch, char *description )
 	ideas_table[maxIdeas].players_no = str_dup("");
 	ideas_table[maxIdeas].mudtime = current_time;
 	ideas_table[maxIdeas].votes = 0;
-	
+
 	maxIdeas += 1;
 	maxID += 1;
-	
+
 	save_ideas();
 	return;
 }
@@ -157,7 +157,7 @@ void delete_idea(int iIdea)
 	int i,j;
 	IDEA_DATA * new_table;
 
-	new_table = malloc( sizeof( IDEA_DATA ) * maxIdeas );
+	new_table = malloc( sizeof( IDEA_DATA ) * (maxIdeas-1) );
 
 	if( !new_table )
 	{
