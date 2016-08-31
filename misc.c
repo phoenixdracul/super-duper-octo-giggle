@@ -2701,7 +2701,8 @@ void do_hail( CHAR_DATA *ch , char *argument )
 	char_from_room( ch );
 	char_to_room( ch, room );
 
-	send_to_char( "A speederbike picks you up and drives you to a safe location.\n\rYou pay the driver 20 credits.\n\r\n\n" , ch );
+//	send_to_char( "A speederbike picks you up and drives you to a safe location.\n\rYou pay the driver 20 credits.\n\r\n\n" , ch );
+	ch_printf(ch, "A speederbike picks you up and drives you to a safe location.\n\rYou pay the driver %s credits.\n\r\n\n" , ch->top_level-9 );
 	act( AT_ACTION, "$n $T", ch, NULL, "arrives on a speederbike, gets off and pays the driver before it leaves.",  TO_ROOM );
 
 	do_look( ch, "auto" );
