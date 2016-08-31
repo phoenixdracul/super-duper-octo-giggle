@@ -1030,6 +1030,21 @@ typedef enum {CONCUSSION_MISSILE, PROTON_TORPEDO, HEAVY_ROCKET, HEAVY_BOMB} miss
 #define CARGO_REFINED_FUEL				13
 #define CARGO_LUXURY_GOODS			14
 #define CARGO_TIBANNA_GAS			15
+/*#define CARGO_LOMMITE           1
+#define CARGO_MELEEN            2
+#define CARGO_NEUTRON           3
+#define CARGO_ZERSIUM           4
+#define CARGO_STEEL             5
+#define CARGO_RYLL              6
+#define CARGO_ALAZHI            7
+#define CARGO_CARBONITE			8
+#define CARGO_TITANIUM			9
+#define CARGO_SILK				10
+#define CARGO_COTTON			11
+#define CARGO_WATER				12
+#define CARGO_WOOL				13
+#define CARGO_DOLOVITE			14
+#define CARGO_HYDROGEN			15 */
 #define CARGO_MAX               16
 #endif
 

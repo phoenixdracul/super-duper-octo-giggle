@@ -31,7 +31,7 @@ C_FILES =  11.c       account.c     act_comm.c    act_info.c   act_move.c    act
      mud_prog.c      newarena.c       pfiles.c     planets.c     player.c     pshops.c	  renumber.c   reset.c  roulette.c 	 \
          save.c         shell.c	       ships.c       shops.c     skills.c       slay.c     slicers.c       slotm.c 		 \
         space.c       special.c     swskills.c      tables.c       tech.c      track.c      update.c	      mentor.c 		 \
-    act_comm2.c          dice.c     color256.c      ext_bv.c  variables.c							 \
+    act_comm2.c          dice.c     color256.c      ext_bv.c  variables.c     db_tga.c						 \
     mod/misc/gauge.c
 
 

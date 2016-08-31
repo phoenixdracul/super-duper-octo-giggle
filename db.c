@@ -410,16 +410,23 @@ void	load_area		args( ( FILE *fp ) );
 void    load_author     args( ( AREA_DATA *tarea, FILE *fp ) );
 void    load_economy    args( ( AREA_DATA *tarea, FILE *fp ) );
 void	load_resetmsg	args( ( AREA_DATA *tarea, FILE *fp ) ); /* Rennard */
+void	load_tga_continent( AREA_DATA * tarea, FILE * fp );
 void    load_flags      args( ( AREA_DATA *tarea, FILE *fp ) );
+void	load_tga_flags( AREA_DATA * tarea, FILE * fp );
 void	load_helps		args( ( AREA_DATA *tarea, FILE *fp ) );
 void	load_mobiles	args( ( AREA_DATA *tarea, FILE *fp ) );
 void	load_mobiles2	args( ( AREA_DATA *tarea, FILE *fp ) );
+void	load_tga_mobiles( AREA_DATA * tarea, FILE * fp );
 void	load_objects	args( ( AREA_DATA *tarea, FILE *fp ) );
 void	load_objects2	args( ( AREA_DATA *tarea, FILE *fp ) );
+void	load_tga_objects( AREA_DATA * tarea, FILE * fp, bool stockfote );
 void 	load_projects   args( ( void ) );
 void	load_resets		args( ( AREA_DATA *tarea, FILE *fp ) );
+void	load_tga_resets( AREA_DATA * tarea, FILE * fp );
 void	load_rooms		args( ( AREA_DATA *tarea, FILE *fp ) );
+void	load_tga_rooms( AREA_DATA * tarea, FILE * fp, bool stockfote );
 void	load_shops		args( ( AREA_DATA *tarea, FILE *fp ) );
+void	load_tga_shops(AREA_DATA *tarea, FILE *fp);
 void 	load_repairs	args( ( AREA_DATA *tarea, FILE *fp ) );
 void	load_specials	args( ( AREA_DATA *tarea, FILE *fp ) );
 void    load_ranges		args( ( AREA_DATA *tarea, FILE *fp ) );
@@ -2565,7 +2572,14 @@ void load_shops( AREA_DATA *tarea, FILE *fp )
 		CREATE( pShop, SHOP_DATA, 1 );
 		pShop->keeper		= fread_number( fp );
 		if ( pShop->keeper == 0 )
+<<<<<<< HEAD
 			break;
+=======
+		{
+			DISPOSE(pShop);
+			break;
+		}
+>>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
 		for ( iTrade = 0; iTrade < MAX_TRADE; iTrade++ )
 			pShop->buy_type[iTrade]	= fread_number( fp );
 		pShop->profit_buy	= fread_number( fp );
@@ -6595,7 +6609,20 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 		 }
 		 else if ( !str_cmp( word, "VERSION"  ) ) version = fread_number(fpArea);
 		 else if ( !str_cmp( word, "AUTHOR"   ) ) load_author  (tarea, fpArea);
+<<<<<<< HEAD
 		 else if ( !str_cmp( word, "FLAGS"    ) ) load_flags   (tarea, fpArea);
+=======
+		 else if ( !str_cmp( word, "FLAGS"    ) )
+		 {
+		 	if (version == 2)
+		 		load_flags   (tarea, fpArea);
+		 	else if (version == 4)					// TGA Area File
+		 		load_tga_flags(tarea, fpArea);
+		 	else
+		 		load_flags(tarea, fpArea);
+		 }
+		 else if ( !str_cmp( word, "CONTINENT") ) load_tga_continent(tarea, fpArea); // TGA Area File
+>>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
 		 else if ( !str_cmp( word, "RANGES"   ) ) load_ranges  (tarea, fpArea);
 		 else if ( !str_cmp( word, "ECONOMY"  ) ) load_economy (tarea, fpArea);
 		 else if ( !str_cmp( word, "RESETMSG" ) ) load_resetmsg(tarea, fpArea);
@@ -6605,6 +6632,11 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 		 {
 			if (version == 2)
 				load_mobiles2 (tarea, fpArea);
+<<<<<<< HEAD
+=======
+			else if (version == 4)					// TGA Area File
+				load_tga_mobiles(tarea, fpArea);
+>>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
 			else
 				load_mobiles2 (tarea, fpArea);
 		 }
@@ -6613,13 +6645,48 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 		 {
 			if (version == 2)
 				load_objects2 (tarea, fpArea);
+<<<<<<< HEAD
+=======
+			else if (version == 4)					// TGA Area File
+				load_tga_objects(tarea, fpArea, FALSE);
+>>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
 			else
 				load_objects2 (tarea, fpArea);
 		 }
 		 else if ( !str_cmp( word, "OBJPROGS" ) ) load_objprogs(tarea, fpArea);
+<<<<<<< HEAD
 		 else if ( !str_cmp( word, "RESETS"   ) ) load_resets  (tarea, fpArea);
 		 else if ( !str_cmp( word, "ROOMS"    ) ) load_rooms   (tarea, fpArea);
 		 else if ( !str_cmp( word, "SHOPS"    ) ) load_shops   (tarea, fpArea);
+=======
+		 else if ( !str_cmp( word, "RESETS"   ) )
+		 {
+		 	if (version == 2)
+		 		load_resets  (tarea, fpArea);
+		 	else if (version == 4)					// TGA Area File
+		 		load_tga_resets(tarea, fpArea);
+		 	else
+		 		load_resets(tarea, fpArea);
+		 }
+		 else if ( !str_cmp( word, "ROOMS"    ) )
+		 {
+		 	if (version == 2)
+		 		load_rooms   (tarea, fpArea);
+		 	else if (version == 4)
+		 		load_tga_rooms(tarea, fpArea, FALSE);
+		 	else
+		 		load_rooms(tarea, fpArea);
+		 }
+		 else if ( !str_cmp( word, "SHOPS"    ) )
+		 {
+		 	if (version == 2)
+		 		load_shops   (tarea, fpArea);
+		 	else if (version == 4)					// TGA Area File
+		 		load_tga_shops(tarea, fpArea);
+		 	else
+		 		load_shops(tarea, fpArea);
+		 }
+>>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed
 		 else if ( !str_cmp( word, "REPAIRS"  ) ) load_repairs (tarea, fpArea);
 		 else if ( !str_cmp( word, "SPECIALS" ) ) load_specials(tarea, fpArea);
 		 else
@@ -7914,4 +7981,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 
 	 return number;
  }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8d1f692a74fe1e69a7790b37d0ccac7ab75539ed

@@ -1175,6 +1175,7 @@ ch_ret one_hit( CHAR_DATA *ch, CHAR_DATA *victim, int dt )
 			&& wield && wield->item_type == ITEM_WEAPON
 	)
 	{
+		dam += str_app[get_curr_str(ch)].todam; // Testing bonus str damage -- Kasji
 		if ( wield->value[4] < 1  )
 		{
 			act( AT_YELLOW, "Your vibro-blade needs recharging ...", ch, NULL, victim, TO_CHAR    );

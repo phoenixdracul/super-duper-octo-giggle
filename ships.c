@@ -3294,7 +3294,7 @@ void do_installmodule( CHAR_DATA *ch, char *argument )
            checkmod = TRUE;
            modobj = obj;
          }
-           
+
       }
     chance = IS_NPC(ch) ? ch->top_level
                : (int) (ch->pcdata->learned[gsn_installmodule]);

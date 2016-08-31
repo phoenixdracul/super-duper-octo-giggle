@@ -2613,7 +2613,8 @@ void do_who( CHAR_DATA *ch, char *argument )
 		char const *race;
 
 		if ( (d->connected != CON_PLAYING && d->connected != CON_EDITING)
-				|| ( !can_see( ch, d->character ) && IS_IMMORTAL( d->character ) )
+//				|| ( !can_see( ch, d->character ) && IS_IMMORTAL( d->character ) )
+				|| (xIS_SET(d->character->act, PLR_WIZINVIS) && (get_trust(ch) < d->character->pcdata->wizinvis))
 				|| d->original )
 			continue;
 		wch   = d->original ? d->original : d->character;

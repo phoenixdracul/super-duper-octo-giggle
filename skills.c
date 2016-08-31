@@ -2395,11 +2395,16 @@ void do_kick( CHAR_DATA *ch, char *argument )
     }
 
     WAIT_STATE( ch, skill_table[gsn_kick]->beats );
-    if ( IS_NPC(ch) || number_percent( ) < ch->pcdata->learned[gsn_kick] )
+    if ( IS_NPC(ch) )
+    {
+    	global_retcode = damage( ch, victim, number_range( 10,
+                       ((10+ch->top_level*2)+str_app[get_curr_str(ch)].todam) ), gsn_punch );
+    }
+    else if ( number_percent( ) < ch->pcdata->learned[gsn_kick] * 20 )
     {
 	learn_from_success( ch, gsn_kick );
 	global_retcode = damage( ch, victim, number_range( 10, 
-              ((10+ch->skill_level[COMBAT_ABILITY])*2) ), gsn_kick );
+              ((10+ch->skill_level[COMBAT_ABILITY])*2+str_app[get_curr_str(ch)].todam+ch->pcdata->learned[gsn_kick]) ), gsn_kick );
     }
     else
     {
@@ -2437,13 +2442,13 @@ void do_punch( CHAR_DATA *ch, char *argument )
     if ( IS_NPC(ch) )
     {
 	global_retcode = damage( ch, victim, number_range( 5,
-                       ((5+ch->top_level/4)) ), gsn_punch );
+                       ((5+ch->top_level/4)+str_app[get_curr_str(ch)].todam) ), gsn_punch );
     }
     else if ( number_percent( ) < ch->pcdata->learned[gsn_punch] * 20 )
     {
 	learn_from_success( ch, gsn_punch );
 	global_retcode = damage( ch, victim, number_range( 5,
-                       ((5+ch->skill_level[COMBAT_ABILITY]/4)) ), gsn_punch );
+                       ((5+ch->skill_level[COMBAT_ABILITY]/4)+str_app[get_curr_str(ch)].todam+ch->pcdata->learned[gsn_punch]) ), gsn_punch );
     }
     else
     {
