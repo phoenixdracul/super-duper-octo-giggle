@@ -6932,12 +6932,11 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 			 pArea->next_sort->low_o_vnum - pArea->hi_o_vnum > 1 ||
 			 pArea->next_sort->low_m_vnum - pArea->hi_m_vnum > 1))
 			 pager_printf(ch, "&z%-15s&B| &GRooms: &z%5d &G- &z%-5d"
-					 " &GObjs: &z%5d &G- &z%-5d &GMobs: &z%5d &G- &z%-5d%s\n\r",
+					 " &GObjs: &z%5d &G- &z%-5d &GMobs: &z%5d &G- &z%-5d\n\r",
 					 " <<<GAP>>>",
 					 pArea->hi_r_vnum+1, pArea->next_sort->low_r_vnum-1,
 					 pArea->hi_o_vnum+1, pArea->next_sort->low_o_vnum-1,
-					 pArea->hi_m_vnum+1, pArea->next_sort->low_m_vnum-1,
-					 IS_SET(pArea->status, AREA_LOADED) ? loadst : notloadst );
+					 pArea->hi_m_vnum+1, pArea->next_sort->low_m_vnum-1);
 		 count++;
 	 }
 	 pager_printf( ch, "&GAreas listed: &W%d  &GLoaded: &W%d\n\r", count, loaded );
