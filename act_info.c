@@ -3528,8 +3528,8 @@ void do_viewskills( CHAR_DATA *ch, char *argument )
 			continue;
 
 		++cnt;
-		pager_printf( ch, "&R[&W%3d%%&R] %s%-18.18s ",
-				victim->pcdata->learned[sn],skill_table[sn]->alignment == 0 ? "&G" : skill_table[sn]->alignment == -1001 ? "&R" : "&B",skill_table[sn]->name );
+		pager_printf( ch, "&R[&W%2d/%-2d&R] %s%-18.18s ",
+				victim->pcdata->learned[sn], skill_table[sn]->max_level,skill_table[sn]->alignment == 0 ? "&G" : skill_table[sn]->alignment == -1001 ? "&R" : "&B",skill_table[sn]->name );
 		if ( ++col % 3 == 0 )
 			send_to_pager( "\n\r", ch );
 	}

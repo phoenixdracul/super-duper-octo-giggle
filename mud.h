@@ -1424,7 +1424,10 @@ struct ship_data
     sh_int	maxmod;
     sh_int      tractorbeam;
     sh_int      manuever;
-    bool        bayopen;
+    bool        bayopen1;
+    bool        bayopen2;
+    bool        bayopen3;
+    bool        bayopen4;
     bool        hatchopen;
     bool 	autorecharge;
     bool        autotrack;

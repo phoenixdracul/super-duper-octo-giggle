@@ -3080,7 +3080,10 @@ void fread_ship( SHIP_DATA *ship, FILE *fp )
 					ship->shipyard = ROOM_LIMBO_SHIPYARD;
 				if (ship->lastdoc <= 0)
 					ship->lastdoc = ship->shipyard;
-				ship->bayopen     = FALSE;
+				ship->bayopen1     = FALSE;
+				ship->bayopen2     = FALSE;
+				ship->bayopen3     = FALSE;
+				ship->bayopen4     = FALSE;
 				if(ship->class >= SHIP_LFRIGATE)
 					ship->autopilot   = TRUE;
 				else
@@ -3459,8 +3462,10 @@ bool load_ship_file( char *shipfile )
 			ship->target2=NULL;
 
 			ship->hatchopen = FALSE;
-			ship->bayopen = FALSE;
-			ship->bayopen = FALSE;
+			ship->bayopen1 = FALSE;
+			ship->bayopen2 = FALSE;
+			ship->bayopen3 = FALSE;
+			ship->bayopen4 = FALSE;
 
 			ship->missiles = ship->maxmissiles;
 			ship->torpedos = ship->maxtorpedos;
@@ -3958,7 +3963,10 @@ void resetship( SHIP_DATA *ship )
 	ship->target2=NULL;
 
 	ship->hatchopen = FALSE;
-	ship->bayopen = FALSE;
+	ship->bayopen1 = FALSE;
+	ship->bayopen2 = FALSE;
+	ship->bayopen3 = FALSE;
+	ship->bayopen4 = FALSE;
 
 	ship->missiles = ship->maxmissiles;
 	ship->torpedos = ship->maxtorpedos;
@@ -5042,11 +5050,14 @@ void do_showship( CHAR_DATA *ch, char *argument )
 	ch_printf( ch, "Firstroom: %d   Lastroom: %d ",
 			ship->firstroom,
 			ship->lastroom);
-	ch_printf( ch, "Cockpit: %d   Entrance: %d\n\rEngineroom: %d       Bay Doors: %s\n\r",
+	ch_printf( ch, "Cockpit: %d   Entrance: %d\n\rEngineroom: %d       Bay Doors: %s %s %s %s\n\r",
 			ship->cockpit,
 			ship->entrance,
 			ship->engineroom,
-			ship->bayopen == TRUE ? "Open" : "Closed");
+			ship->bayopen1 == TRUE ? "Open" : "Closed",
+			ship->bayopen2 == TRUE ? "Open" : "Closed",
+			ship->bayopen3 == TRUE ? "Open" : "Closed",
+			ship->bayopen4 == TRUE ? "Open" : "Closed");
 	ch_printf(ch, "Hanger1: %d   Hanger2: %d   Hanger3: %d  Hanger4: %d\n\r",
 			ship->hangar1,
 			ship->hangar2,
@@ -6239,7 +6250,10 @@ void destroy_ship( SHIP_DATA *ship , CHAR_DATA *ch, char *reason )
 			ship->target2=NULL;
 
 			ship->hatchopen = FALSE;
-			ship->bayopen = FALSE;
+			ship->bayopen1 = FALSE;
+			ship->bayopen2 = FALSE;
+			ship->bayopen3 = FALSE;
+			ship->bayopen4 = FALSE;
 
 			ship->missiles = ship->maxmissiles;
 			ship->torpedos = ship->maxtorpedos;
@@ -6582,7 +6596,11 @@ void do_launch( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if ((ship2 = ship_from_room (ship->location)) && !ship2->bayopen)
+	ship2 = ship_from_room(ship->location);
+	if (ship2 && ((ship->location == ship2->hangar1 && !ship2->bayopen1) ||
+		     (ship->location == ship2->hangar2 && !ship2->bayopen2) ||
+		     (ship->location == ship2->hangar3 && !ship2->bayopen3) ||
+		     (ship->location == ship2->hangar4 && !ship2->bayopen4)))
 	{
 		send_to_char ("&RThe bay doors are closed.\n\r", ch);
 		return;
@@ -7176,7 +7194,8 @@ void do_land( CHAR_DATA *ch, char *argument )
 
    if( !pfound )
    {
-      target = get_ship_here( arg, ship->starsystem );
+      int i = -1;
+      target = get_ship_here( arg1, ship->starsystem );
 
       if( target != NULL )
       {
@@ -7190,33 +7209,44 @@ void do_land( CHAR_DATA *ch, char *argument )
              ( target->vy > ship->vy + 200 ) || ( target->vy < ship->vy - 200 ) ||
              ( target->vz > ship->vz + 200 ) || ( target->vz < ship->vz - 200 ) )
          {
-            send_to_char( "&R That ship is too far away! You'll have to fly a little closer.\r\n", ch );
+            send_to_char( "&RThat ship is too far away! You'll have to fly a closer.\r\n", ch );
             return;
          }
 
-
-         if( target->bayopen == FALSE )
+         if (!target->hangar1 && !target->hangar2 && !target->hangar3 && !target->hangar4)
          {
-            send_to_char( "&RThe bay doors on that ship are closed.\r\n", ch );
-            return;
+                 send_to_char("&RThat ship doesn't have a hangar!", ch);
+                 return;
          }
 
+         i = atoi(argument);
 
-        
-         if( !target->hangar1 || ((target->hangar1space - get_ship_count( target->hangar1 ) ) <= get_ship_size( ship ) ) )
-          {
-             if( !target->hangar2 || ((target->hangar2space - get_ship_count( target->hangar2 ) ) <= get_ship_size( ship ) ) )
-              {
-                 if( !target->hangar3 || ((target->hangar3space - get_ship_count( target->hangar3 ) ) <= get_ship_size( ship ) ) )
-                  {
-                      if( !target->hangar4 || ((target->hangar4space - get_ship_count( target->hangar4 ) ) <= get_ship_size( ship ) ) )
-                      {
-                          send_to_char("That ship does not have a hangar with enough room to land in!\r\n", ch );
-                          return;
-                      }
-                  }
-              }
-          }
+	 if ((i == 1 && !target->hangar1) ||
+	     (i == 2 && !target->hangar2) ||
+             (i == 3 && !target->hangar3) ||
+             (i == 4 && !target->hangar4))
+         {
+                 send_to_char("&RThat's not a valid hangar!\n\r", ch);
+                 return;
+         }
+
+	 if ((i == 1 && !target->bayopen1) ||
+	     (i == 2 && !target->bayopen2) ||
+             (i == 3 && !target->bayopen3) ||
+             (i == 4 && !target->bayopen4))
+         {
+                 send_to_char("&RThe bay doors are closed!!\n\r", ch);
+                 return;
+         }
+
+         if ((i == 1 && ((target->hangar1space - get_ship_count(target->hangar1)) <= get_ship_size(ship))) ||
+             (i == 2 && ((target->hangar2space - get_ship_count(target->hangar2)) <= get_ship_size(ship))) ||
+             (i == 3 && ((target->hangar3space - get_ship_count(target->hangar3)) <= get_ship_size(ship))) ||
+             (i == 4 && ((target->hangar4space - get_ship_count(target->hangar4)) <= get_ship_size(ship))))
+         {
+                send_to_char("&RThat hangar doesn't have enough space to land in!\n\r", ch);
+                return;
+         }
 
       }
       else
@@ -7340,9 +7370,15 @@ void landship( SHIP_DATA * ship, char *argument )
    else
    {
 //      ROOM_INDEX_DATA *room=NULL;
-      target = get_ship_here( arg, ship->starsystem );
+      int i = -1;
+      target = get_ship_here( arg1, ship->starsystem );
 
-      if( target->bayopen == FALSE )
+      i = atoi(argument);
+
+      if ((i == 1 && !target->bayopen1) ||
+          (i == 2 && !target->bayopen2) ||
+          (i == 3 && !target->bayopen3) ||
+          (i == 4 && !target->bayopen4))
       {
          echo_to_room( AT_YELLOW, get_room_index( ship->pilotseat ),
                        "The target ship's bay is now closed! Landing aborted." );
@@ -7352,13 +7388,13 @@ void landship( SHIP_DATA * ship, char *argument )
          return;
       }
 
-         if( target->hangar1 && ((target->hangar1space - get_ship_count( target->hangar1 ) ) >= get_ship_size( ship ) ) )
+         if( i == 1 && target->hangar1 && ((target->hangar1space - get_ship_count( target->hangar1 ) ) >= get_ship_size( ship ) ) )
              room = get_room_index( target->hangar1 );
-         else if( target->hangar2 && ((target->hangar2space - get_ship_count( target->hangar2 ) ) >= get_ship_size( ship ) ) )
+         else if( i == 2 && target->hangar2 && ((target->hangar2space - get_ship_count( target->hangar2 ) ) >= get_ship_size( ship ) ) )
              room = get_room_index( target->hangar2 );
-         else if( target->hangar3 && ((target->hangar3space - get_ship_count( target->hangar3 ) ) >= get_ship_size( ship ) ) )
+         else if( i == 3 && target->hangar3 && ((target->hangar3space - get_ship_count( target->hangar3 ) ) >= get_ship_size( ship ) ) )
              room = get_room_index( target->hangar3 );
-         else if( target->hangar4 && ((target->hangar4space - get_ship_count( target->hangar4 ) ) >= get_ship_size( ship ) ) )
+         else if( i == 4 && target->hangar4 && ((target->hangar4space - get_ship_count( target->hangar4 ) ) >= get_ship_size( ship ) ) )
              room = get_room_index( target->hangar4 );
 
 
@@ -8305,11 +8341,17 @@ void do_status(CHAR_DATA *ch, char *argument )
 	ch_printf( ch, "&zCurrent Coordinates:&w %.0f %.0f %.0f   &zCurrent Heading:&w %.0f %.0f %.0f\n\r",
 			target->vx, target->vy, target->vz,
 			target->hx, target->hy, target->hz );
-	ch_printf( ch, "&zSpeed:&w %d&W/%d   &zHyperdrive: &wClass %d   %s %s\n\r",
+	ch_printf( ch, "&zSpeed:&w %d&W/%d   &zHyperdrive: &wClass %d   %s %s %s %s %s\n\r",
 			target->currspeed , target->realspeed, target->hyperspeed,
 			target->class >= SHIP_LFRIGATE ? "&zBay doors:" : "",
-					(target->class >= SHIP_LFRIGATE && target->bayopen == TRUE) ? "&wOpen" :
-							(target->class>= SHIP_LFRIGATE && target->bayopen == FALSE) ? "&wClosed" : "" );
+					(target->class >= SHIP_LFRIGATE && target->bayopen1 == TRUE && target->hangar1) ? "&wOpen" :
+							(target->class>= SHIP_LFRIGATE && target->bayopen1 == FALSE && target->hangar1) ? "&wClosed" : "",
+					(target->class >= SHIP_LFRIGATE && target->bayopen2 == TRUE && target->hangar2) ? "&wOpen" :
+							(target->class>= SHIP_LFRIGATE && target->bayopen2 == FALSE && target->hangar2) ? "&wClosed" : "",
+					(target->class >= SHIP_LFRIGATE && target->bayopen3 == TRUE && target->hangar3) ? "&wOpen" :
+							(target->class>= SHIP_LFRIGATE && target->bayopen3 == FALSE && target->hangar3) ? "&wClosed" : "",
+					(target->class >= SHIP_LFRIGATE && target->bayopen4 == TRUE && target->hangar4) ? "&wOpen" :
+							(target->class>= SHIP_LFRIGATE && target->bayopen4 == FALSE && target->hangar4) ? "&wClosed" : "" );
 
 	ch_printf( ch, "&zHull:&w %d&W/%d   &zShields:&w %d&W/%d   &zFuel:&w %d&W/%d\n\r",
 			target->hull, target->maxhull, target->shield, target->maxshield,
@@ -14104,6 +14146,7 @@ void do_openbay( CHAR_DATA *ch, char *argument )
 {
 	SHIP_DATA *ship;
 	char buf[MAX_STRING_LENGTH];
+	int i = 0;
 
 	if( (ship = ship_from_pilotseat(ch->in_room->vnum)) == NULL )
 	{
@@ -14111,7 +14154,148 @@ void do_openbay( CHAR_DATA *ch, char *argument )
 		return;
 	}
 
-	if(ship->bayopen == FALSE)
+	if (!ship->hangar1 && !ship->hangar2 && !ship->hangar3 && !ship->hangar4)
+	{
+		send_to_char("This ship does not have a hangar.\n\r", ch);
+		return;
+	}
+
+	argument = one_argument(argument, buf);
+	i = atoi(buf);
+
+	if ((i < 1 || i > 4) && str_cmp(buf, "all"))
+	{
+		send_to_char("That's not a valid hangar.\n\r", ch);
+		send_to_char(" Syntax: openbay <1-4>\n\r", ch);
+		send_to_char(" Syntax: openbay all\n\r", ch);
+		return;
+	}
+
+	switch (i)
+	{
+		default:
+		case 0:
+		case 1:
+			if (ship->hangar1)
+			{
+				if (!ship->bayopen1)
+				{
+					echo_to_room(AT_WHITE, get_room_index(ship->pilotseat), "&G[&gShip Computer&G] &wOpening bay doors.");
+					sprintf( buf ,"The bay doors on %s slowly slide open." , ship->name  );
+					echo_to_system( AT_YELLOW, ship, buf , NULL );
+					echo_to_room(AT_WHITE, get_room_index(ship->hangar1), "&R&YThe bay doors slowly slide open.");
+
+					ship->bayopen1 = TRUE;
+				}
+				else
+				{
+					echo_to_room(AT_WHITE, get_room_index(ship->pilotseat), "&G[&gShip Computer&G] &wClosing bay doors.");
+					sprintf( buf ,"The bay doors on %s slowly slide closed." , ship->name  );
+					echo_to_system( AT_YELLOW, ship, buf , NULL );
+					echo_to_room(AT_WHITE, get_room_index(ship->hangar1), "&R&YThe bay doors slowly slide closed.");
+
+					ship->bayopen1 = FALSE;
+				}
+			}
+			else if (i == 1)
+			{
+				send_to_char("Invalid/non-existant hangar number.\n\r", ch);
+				return;
+			}
+			if (i == 1)
+				break;
+		case 2:
+			if (ship->hangar2)
+			{
+				if (!ship->bayopen2)
+				{
+					echo_to_room(AT_WHITE, get_room_index(ship->pilotseat), "&G[&gShip Computer&G] &wOpening bay doors.");
+					sprintf( buf ,"The bay doors on %s slowly slide open." , ship->name  );
+					echo_to_system( AT_YELLOW, ship, buf , NULL );
+					echo_to_room(AT_WHITE, get_room_index(ship->hangar2), "&R&YThe bay doors slowly slide open.");
+
+					ship->bayopen2 = TRUE;
+				}
+				else
+				{
+					echo_to_room(AT_WHITE, get_room_index(ship->pilotseat), "&G[&gShip Computer&G] &wClosing bay doors.");
+					sprintf( buf ,"The bay doors on %s slowly slide closed." , ship->name  );
+					echo_to_system( AT_YELLOW, ship, buf , NULL );
+					echo_to_room(AT_WHITE, get_room_index(ship->hangar2), "&R&YThe bay doors slowly slide closed.");
+
+					ship->bayopen2 = FALSE;
+				}
+			}
+			else if (i == 2)
+			{
+				send_to_char("Invalid/non-existant hangar number.\n\r", ch);
+				return;
+			}
+			if (i == 2)
+				break;
+		case 3:
+			if (ship->hangar3)
+			{
+				if (!ship->bayopen3)
+				{
+					echo_to_room(AT_WHITE, get_room_index(ship->pilotseat), "&G[&gShip Computer&G] &wOpening bay doors.");
+					sprintf( buf ,"The bay doors on %s slowly slide open." , ship->name  );
+					echo_to_system( AT_YELLOW, ship, buf , NULL );
+					echo_to_room(AT_WHITE, get_room_index(ship->hangar3), "&R&YThe bay doors slowly slide open.");
+
+					ship->bayopen3 = TRUE;
+				}
+				else
+				{
+					echo_to_room(AT_WHITE, get_room_index(ship->pilotseat), "&G[&gShip Computer&G] &wClosing bay doors.");
+					sprintf( buf ,"The bay doors on %s slowly slide closed." , ship->name  );
+					echo_to_system( AT_YELLOW, ship, buf , NULL );
+					echo_to_room(AT_WHITE, get_room_index(ship->hangar3), "&R&YThe bay doors slowly slide closed.");
+
+					ship->bayopen3 = FALSE;
+				}
+			}
+			else if (i == 3)
+			{
+				send_to_char("Invalid/non-existant hangar number.\n\r", ch);
+				return;
+			}
+			if (i == 3)
+				break;
+		case 4:
+			if (ship->hangar4)
+			{
+				if (!ship->bayopen4)
+				{
+					echo_to_room(AT_WHITE, get_room_index(ship->pilotseat), "&G[&gShip Computer&G] &wOpening bay doors.");
+					sprintf( buf ,"The bay doors on %s slowly slide open." , ship->name  );
+					echo_to_system( AT_YELLOW, ship, buf , NULL );
+					echo_to_room(AT_WHITE, get_room_index(ship->hangar4), "&R&YThe bay doors slowly slide open.");
+
+					ship->bayopen4 = TRUE;
+				}
+				else
+				{
+					echo_to_room(AT_WHITE, get_room_index(ship->pilotseat), "&G[&gShip Computer&G] &wClosing bay doors.");
+					sprintf( buf ,"The bay doors on %s slowly slide closed." , ship->name  );
+					echo_to_system( AT_YELLOW, ship, buf , NULL );
+					echo_to_room(AT_WHITE, get_room_index(ship->hangar4), "&R&YThe bay doors slowly slide closed.");
+
+					ship->bayopen4 = FALSE;
+				}
+			}
+			else if (i == 4)
+			{
+				send_to_char("Invalid/non-existant hangar number.\n\r", ch);
+				return;
+			}
+			if (i == 4)
+				break;
+	}
+
+	return;
+
+/*	if(ship->bayopen == FALSE)
 	{
 		echo_to_room(AT_WHITE, get_room_index(ship->pilotseat), "&G[&gShip Computer&G] &wOpening bay doors.");
 		sprintf( buf ,"The bay doors on %s slowly slide open." , ship->name  );
@@ -14144,7 +14328,7 @@ void do_openbay( CHAR_DATA *ch, char *argument )
 
 		ship->bayopen = FALSE;
 		return;
-	}
+	} */
 }
 
 void do_tractorbeam( CHAR_DATA *ch, char *argument )
@@ -14153,13 +14337,17 @@ void do_tractorbeam( CHAR_DATA *ch, char *argument )
  */
 {
 
+	char arg[MIL];
 	char arg1[MAX_INPUT_LENGTH];
+	char arg2[MAX_INPUT_LENGTH];
 	int chance;
 	SHIP_DATA *ship;
 	SHIP_DATA *target;
 	char buf[MAX_STRING_LENGTH];
 
 	argument = one_argument(argument, arg1);
+	strcpy(arg, argument);
+	argument = one_argument(argument, arg2);
 
 	if( arg1[0] == '\0' )
 	{
@@ -14204,27 +14392,16 @@ void do_tractorbeam( CHAR_DATA *ch, char *argument )
 	}
 
 
-	if ( !argument || argument[0] == '\0')
+	if ( arg2[0] == '\0')
 	{
 
-		send_to_char( "Usage: tractor pull/stop/none <ship>\n\r", ch );
+		send_to_char( "Usage: tractor pull/stop/none <ship> [1-4]\n\r", ch );
 		return;
 	}
 
 	if (!str_cmp(arg1, "pull"))
 	{
-
-		if ( ship->hangar1 == 0 && ship->hangar2 == 0)
-		{
-			send_to_char("No hangar available.\n\r",ch);
-			return;
-		}
-
-		if ( !ship->bayopen )
-		{
-			send_to_char("Your hangar is closed.\n\r",ch);
-			return;
-		}
+		int i;
 
 		if ( (ship = ship_from_pilotseat(ch->in_room->vnum)) == NULL )
 		{
@@ -14262,7 +14439,8 @@ void do_tractorbeam( CHAR_DATA *ch, char *argument )
 			send_to_char("&RPlease wait until the ship has finished its current maneuver.\n\r",ch);
 			return;
 		}
-		target = get_ship_here( argument , ship->starsystem );
+
+		target = get_ship_here( arg2 , ship->starsystem );
 
 		if ( target == NULL )
 		{
@@ -14279,6 +14457,42 @@ void do_tractorbeam( CHAR_DATA *ch, char *argument )
 		if ( target->shipstate == SHIP_LAND )
 		{
 			send_to_char("&RThat ship is already in a landing sequence.\n\r", ch);
+			return;
+		}
+
+		if (!ship->hangar1 && !ship->hangar2 && !ship->hangar3 && !ship->hangar4)
+		{
+			send_to_char("No hangar available.\n\r",ch);
+			return;
+		}
+
+		i = atoi(argument);
+
+		if ((i == 1 && !ship->hangar1) ||
+		    (i == 2 && !ship->hangar2) ||
+		    (i == 3 && !ship->hangar3) ||
+		    (i == 4 && !ship->hangar4) ||
+		    (i < 1 || i > 4)) //bookmark
+		{
+			send_to_char("Invalid/non-existant hangar specified.\n\r",ch);
+			return;
+		}
+
+		if ((i == 1 && !ship->bayopen1) ||
+		    (i == 2 && !ship->bayopen2) ||
+		    (i == 3 && !ship->bayopen3) ||
+		    (i == 4 && !ship->bayopen4))
+		{
+			send_to_char("That bay is closed.\n\r",ch);
+			return;
+		}
+
+		if ((i == 1 && ((ship->hangar1space - get_ship_count( ship->hangar1 ) ) <= get_ship_size( target ))) ||
+		    (i == 2 && ((ship->hangar2space - get_ship_count( ship->hangar2 ) ) <= get_ship_size( target ))) ||
+		    (i == 3 && ((ship->hangar3space - get_ship_count( ship->hangar3 ) ) <= get_ship_size( target ))) ||
+		    (i == 4 && ((ship->hangar4space - get_ship_count( ship->hangar4 ) ) <= get_ship_size( target ))))
+		{
+			send_to_char("&RThere's not enough space in that hangar!\n\r", ch);
 			return;
 		}
 
@@ -14323,8 +14537,9 @@ void do_tractorbeam( CHAR_DATA *ch, char *argument )
 
 			if ( autofly(target) && !target->target0)
 				target->target0 = ship;
-
-			target->dest = STRALLOC(ship->name);
+			if (target->dest)
+				STRFREE(target->dest);
+			target->dest = STRALLOC(arg);
 			target->shipstate = SHIP_LAND;
 			target->currspeed = 0;
 			target->tractored_by = ship;
@@ -15382,6 +15597,7 @@ void do_request(CHAR_DATA *ch, char *argument)
 	char arg2[MAX_INPUT_LENGTH];
 	char buf[MAX_STRING_LENGTH];
 	bool open;
+	int i;
 
 	open = FALSE;
 	argument = one_argument(argument, arg1);
@@ -15389,7 +15605,7 @@ void do_request(CHAR_DATA *ch, char *argument)
 
 	if(arg1[0] == '\0')
 	{
-		send_to_char("Syntax:  request <ship> <open/close>.\n\r", ch);
+		send_to_char("Syntax:  request <ship> <open/close> <1-4>\n\r", ch);
 		return;
 	}
 	if((ship = ship_from_pilotseat(ch->in_room->vnum)) == NULL)
@@ -15402,9 +15618,24 @@ void do_request(CHAR_DATA *ch, char *argument)
 		send_to_char("That ship doesn't seem to be here.\n\r", ch);
 		return;
 	}
+
+	i = atoi(argument);
+	if ((i == 1 && !target->hangar1) ||
+	    (i == 2 && !target->hangar2) ||
+	    (i == 2 && !target->hangar3) ||
+	    (i == 2 && !target->hangar4) ||
+	    i < 1 || i > 4)
+	{
+		send_to_char("Invalid/non-existant hangar.\n\r", ch);
+		return;
+	}
+
 	if(!str_cmp(arg2, "open"))
 	{
-		if(target->bayopen == TRUE)
+		if((i == 1 && target->bayopen1) ||
+		   (i == 2 && target->bayopen2) ||
+		   (i == 3 && target->bayopen3) ||
+		   (i == 4 && target->bayopen4))
 		{
 			send_to_char("The bay doors are already open.\n\r", ch);
 			return;
@@ -15431,16 +15662,27 @@ void do_request(CHAR_DATA *ch, char *argument)
 			echo_to_system(AT_YELLOW, target, buf, NULL);
 			echo_to_cockpit(AT_WHITE, target, "&G[&gShip Computer&G]&w Opening bay doors.");
 
-			if(ship->hangar1 != 0)
-				echo_to_room(AT_WHITE, get_room_index(ship->hangar1), "&R&YThe bay doors slowly slide open.");
-			if(ship->hangar2 != 0)
-				echo_to_room(AT_WHITE, get_room_index(ship->hangar2), "&R&YThe bay doors slowly slide open.");
-			if(ship->hangar3 != 0)
-				echo_to_room(AT_WHITE, get_room_index(ship->hangar3), "&R&YThe bay doors slowly slide open.");
-			if(ship->hangar4 != 0)
-				echo_to_room(AT_WHITE, get_room_index(ship->hangar4), "&R&YThe bay doors slowly slide open.");
+			if(i == 1)
+			{
+				echo_to_room(AT_WHITE, get_room_index(target->hangar1), "&R&YThe bay doors slowly slide open.");
+				target->bayopen1 = TRUE;
+			}
+			if(i == 2)
+			{
+				echo_to_room(AT_WHITE, get_room_index(target->hangar2), "&R&YThe bay doors slowly slide open.");
+				target->bayopen2 = TRUE;
+			}
+			if(i == 3)
+			{
+				echo_to_room(AT_WHITE, get_room_index(target->hangar3), "&R&YThe bay doors slowly slide open.");
+				target->bayopen3 = TRUE;
+			}
+			if(i == 4)
+			{
+				echo_to_room(AT_WHITE, get_room_index(target->hangar4), "&R&YThe bay doors slowly slide open.");
+				target->bayopen4 = TRUE;
+			}
 
-			target->bayopen = TRUE;
 			return;
 		}
 		else
@@ -15454,7 +15696,10 @@ void do_request(CHAR_DATA *ch, char *argument)
 	}
 	else if(!str_cmp(arg2, "close"))
 	{
-		if(target->bayopen == FALSE)
+		if((i == 1 && !target->bayopen1) ||
+		   (i == 2 && !target->bayopen2) ||
+		   (i == 3 && !target->bayopen3) ||
+		   (i == 4 && !target->bayopen4))
 		{
 			send_to_char("The bay doors are already closed.\n\r", ch);
 			return;
@@ -15465,21 +15710,32 @@ void do_request(CHAR_DATA *ch, char *argument)
 		echo_to_cockpit(AT_WHITE, target, "&G[&gShip Computer&G]&W Closing bay doors.");
 		sprintf(buf, "The bay doors on %s slowly slide closed.", target->name);
 		echo_to_system(AT_YELLOW, target, buf, NULL);
-		if(ship->hangar1 != 0)
-			echo_to_room(AT_WHITE, get_room_index(ship->hangar1), "&R&YThe bay doors slowly slide closed.");
-		if(ship->hangar2 != 0)
-			echo_to_room(AT_WHITE, get_room_index(ship->hangar2), "&R&YThe bay doors slowly slide closed.");
-		if(ship->hangar3 != 0)
-			echo_to_room(AT_WHITE, get_room_index(ship->hangar3), "&R&YThe bay doors slowly slide closed.");
-		if(ship->hangar4 != 0)
-			echo_to_room(AT_WHITE, get_room_index(ship->hangar4), "&R&YThe bay doors slowly slide closed.");
-		target->bayopen = FALSE;
+		if(i == 1)
+		{
+			echo_to_room(AT_WHITE, get_room_index(target->hangar1), "&R&YThe bay doors slowly slide closed.");
+			target->bayopen1 = FALSE;
+		}
+		if(i == 2)
+		{
+			echo_to_room(AT_WHITE, get_room_index(target->hangar2), "&R&YThe bay doors slowly slide closed.");
+			target->bayopen2 = FALSE;
+		}
+		if(i == 3)
+		{
+			echo_to_room(AT_WHITE, get_room_index(target->hangar3), "&R&YThe bay doors slowly slide closed.");
+			target->bayopen3 = FALSE;
+		}
+		if(i == 4)
+		{
+			echo_to_room(AT_WHITE, get_room_index(target->hangar4), "&R&YThe bay doors slowly slide closed.");
+			target->bayopen4 = FALSE;
+		}
 
 		return;
 	}
 	else
 	{
-		send_to_char("Syntax: request <ship> <open/close>.\n\r", ch);
+		send_to_char("Syntax:  request <ship> <open/close> <1-4>\n\r", ch);
 		return;
 	}
 }
@@ -16758,7 +17014,11 @@ void do_transmit_status( CHAR_DATA *ch, char *argument)
 	send_to_char( "Remote status request transmitted. Receiving response now.\n\r", ch );
 	ch_printf( ch, "&w[&W %s &w]   &zShip Condition: %s\n\r\n\r",ship->name, ship->shipstate == SHIP_DISABLED ? "&RDisabled" : "&GRunning");
 	ch_printf( ch, "&zCurrent Coordinates:&w %.0f %.0f %.0f &zCurrent Heading:&w %.0f  %.0f %.0f\n\r", ship->vx, ship->vy, ship->vz, ship->hx, ship->hy, ship->hz );
-	ch_printf( ch, "&zSpeed:&w %d&W/%d   &zHyperdrive: &wClass %d %s %s\n\r", ship->currspeed , ship->realspeed, ship->hyperspeed, ship->class >= SHIP_LFRIGATE ? "&zBay doors:" : "", (ship->class >= SHIP_LFRIGATE && ship->bayopen == TRUE) ? "&wOpen" : (ship->class>= SHIP_LFRIGATE && ship->bayopen == FALSE) ? "&wClosed" : "" );
+	ch_printf( ch, "&zSpeed:&w %d&W/%d   &zHyperdrive: &wClass %d %s %s %s %s %s\n\r", ship->currspeed , ship->realspeed, ship->hyperspeed, ship->class >= SHIP_LFRIGATE ? "&zBay doors:" : "",
+		(ship->class >= SHIP_LFRIGATE && ship->bayopen1 == TRUE && ship->hangar1) ? "&wOpen" : (ship->class>= SHIP_LFRIGATE && ship->bayopen1 == FALSE && ship->hangar1) ? "&wClosed" : "",
+		(ship->class >= SHIP_LFRIGATE && ship->bayopen2 == TRUE && ship->hangar2) ? "&wOpen" : (ship->class>= SHIP_LFRIGATE && ship->bayopen2 == FALSE && ship->hangar2) ? "&wClosed" : "",
+		(ship->class >= SHIP_LFRIGATE && ship->bayopen3 == TRUE && ship->hangar3) ? "&wOpen" : (ship->class>= SHIP_LFRIGATE && ship->bayopen3 == FALSE && ship->hangar3) ? "&wClosed" : "",
+		(ship->class >= SHIP_LFRIGATE && ship->bayopen4 == TRUE && ship->hangar4) ? "&wOpen" : (ship->class>= SHIP_LFRIGATE && ship->bayopen4 == FALSE && ship->hangar4) ? "&wClosed" : "");
 	ch_printf( ch, "&zHull:&w %d&W/%d   &zShields:&w %d&W/%d    &zFuel:&w %d&W/%d\n\r\n\r", ship->hull, ship->maxhull, ship->shield, ship->maxshield, ship->energy, ship->maxenergy);
 	ch_printf( ch, "&zPrimary Weapon System:   &w%-7s&W::  &w%s\n\r", ship->primaryState == LASER_DAMAGED ? "&ROffline" : "&GOnline", primary_beam_name(ship));
 	switch(ship->primaryType)
