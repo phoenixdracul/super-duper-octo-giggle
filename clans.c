@@ -3238,26 +3238,26 @@ void do_members(CHAR_DATA *ch, char *argument)
 			send_to_char("&W          ", ch);
 
 		if(!str_cmp(buf, clan->leader))
-			sprintf(prefix, "%s[&W1%s]&W", color, color);
+			snprintf(prefix, MSL, "%s[&W1%s]&W", color, color);
 		else if(!str_cmp(buf, clan->number1))
-			sprintf(prefix, "%s[&W2%s]&W", color, color);
+			snprintf(prefix, MSL, "%s[&W2%s]&W", color, color);
 		else if(!str_cmp(buf, clan->number2))
-			sprintf(prefix, "%s[&W3%s]&W", color, color);
+			snprintf(prefix, MSL, "%s[&W3%s]&W", color, color);
 		else if(!str_cmp(buf, clan->number3))
-			sprintf(prefix, "%s[&W4%s]&W", color, color);
+			snprintf(prefix, MSL, "%s[&W4%s]&W", color, color);
 		else if(!str_cmp(buf, clan->number4))
-			sprintf(prefix, "%s[&W5%s]&W", color, color);
+			snprintf(prefix, MSL, "%s[&W5%s]&W", color, color);
 		else if(!str_cmp(buf, clan->number5))
-			sprintf(prefix, "%s[&W6%s]&W", color, color);
+			snprintf(prefix, MSL, "%s[&W6%s]&W", color, color);
 		else if(!str_cmp(buf, clan->number6))
-			sprintf(prefix, "%s[&W7%s]&W", color, color);
+			snprintf(prefix, MSL, "%s[&W7%s]&W", color, color);
 		else if(!str_cmp(buf, clan->number7))
-			sprintf(prefix, "%s[&W8%s]&W", color, color);
+			snprintf(prefix, MSL, "%s[&W8%s]&W", color, color);
 
 		else
-			sprintf(prefix, "   &W");
+			snprintf(prefix, MSL, "   &W");
 
-		sprintf(display, "%s%-20s", prefix, buf);
+		snprintf(display, MSL, "%s%-20s", prefix, buf);
 		send_to_char(display, ch);
 		++i;
 

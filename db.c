@@ -6895,7 +6895,7 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
   * Display vnums currently assigned to areas		-Altrag & Thoric
   * Sorted, and flagged if loaded.
   */
- void show_vnums( CHAR_DATA *ch, int low, int high, bool proto, bool shownl,
+ void show_vnums( CHAR_DATA *ch, int low, int high, bool proto, bool shownl, bool gaps,
 		 char *loadst, char *notloadst )
  {
 	 AREA_DATA *pArea, *first_sort;
@@ -6927,58 +6927,87 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 				 pArea->low_o_vnum, pArea->hi_o_vnum,
 				 pArea->low_m_vnum, pArea->hi_m_vnum,
 				 IS_SET(pArea->status, AREA_LOADED) ? loadst : notloadst );
+		 if (gaps && pArea->next_sort &&
+			(pArea->next_sort->low_r_vnum - pArea->hi_r_vnum > 1 ||
+			 pArea->next_sort->low_o_vnum - pArea->hi_o_vnum > 1 ||
+			 pArea->next_sort->low_m_vnum - pArea->hi_m_vnum > 1))
+			 pager_printf(ch, "&z%-15s&B| &GRooms: &z%5d &G- &z%-5d"
+					 " &GObjs: &z%5d &G- &z%-5d &GMobs: &z%5d &G- &z%-5d%s\n\r",
+					 " <<<GAP>>>",
+					 pArea->hi_r_vnum+1, pArea->next_sort->low_r_vnum-1,
+					 pArea->hi_o_vnum+1, pArea->next_sort->low_o_vnum-1,
+					 pArea->hi_m_vnum+1, pArea->next_sort->low_m_vnum-1,
+					 IS_SET(pArea->status, AREA_LOADED) ? loadst : notloadst );
 		 count++;
 	 }
 	 pager_printf( ch, "&GAreas listed: &W%d  &GLoaded: &W%d\n\r", count, loaded );
 	 return;
  }
 
- /*
-  * Shows prototype vnums ranges, and if loaded
-  */
+/*
+ * Shows prototype vnums ranges, and if loaded
+ */
+// Modified by Kasji -- Highlight gaps between areas.
+void do_vnums( CHAR_DATA *ch, char *argument )
+{
+	char arg1[MAX_INPUT_LENGTH];
+	char arg2[MAX_INPUT_LENGTH];
+	int low, high;
+	bool gaps = FALSE;
 
- void do_vnums( CHAR_DATA *ch, char *argument )
- {
-	 char arg1[MAX_INPUT_LENGTH];
-	 char arg2[MAX_INPUT_LENGTH];
-	 int low, high;
+	argument = one_argument( argument, arg1 );
+	argument = one_argument( argument, arg2 );
+	low = 0;	high = (MAX_VNUMS -1);
 
-	 argument = one_argument( argument, arg1 );
-	 argument = one_argument( argument, arg2 );
-	 low = 0;	high = (MAX_VNUMS -1);
-	 if ( arg1[0] != '\0' )
-	 {
-		 low = atoi(arg1);
-		 if ( arg2[0] != '\0' )
-			 high = atoi(arg2);
-	 }
-	 show_vnums( ch, low, high, TRUE, TRUE, " *", "" );
- }
+	if (!str_cmp(argument, "gaps") || !str_cmp(arg1, "gaps"))
+		gaps = TRUE;
 
- /*
-  * Shows installed areas, sorted.  Mark unloaded areas with an X
-  */
- void do_zones( CHAR_DATA *ch, char *argument )
- {
-	 char arg1[MAX_INPUT_LENGTH];
-	 char arg2[MAX_INPUT_LENGTH];
-	 int low, high;
+	if ( arg1[0] != '\0' )
+	{
+		low = atoi(arg1);
+		if ( arg2[0] != '\0' )
+			high = atoi(arg2);
+	}
 
-	 do_vnums( ch, argument);
+	if (high == 0)
+		high = MAX_VNUMS - 1;
 
-	 argument = one_argument( argument, arg1 );
-	 argument = one_argument( argument, arg2 );
-	 low = 0;	high = (MAX_VNUMS -1);
+	show_vnums( ch, low, high, TRUE, TRUE, gaps, " *", "" );
+}
 
-	 if ( arg1[0] != '\0' )
-	 {
-		 low = atoi(arg1);
-		 if ( arg2[0] != '\0' )
-			 high = atoi(arg2);
-	 }
+/*
+ * Shows installed areas, sorted.  Mark unloaded areas with an X
+ */
+// Modified by Kasji -- Highlight gaps between areas.
+void do_zones( CHAR_DATA *ch, char *argument )
+{
+	char arg1[MAX_INPUT_LENGTH];
+	char arg2[MAX_INPUT_LENGTH];
+	int low, high;
+	bool gaps = FALSE;
 
-	 show_vnums( ch, low, high, FALSE, TRUE, "", " X" );
+	do_vnums( ch, argument);
 
+	argument = one_argument( argument, arg1 );
+	argument = one_argument( argument, arg2 );
+	low = 0;	high = (MAX_VNUMS -1);
+
+	if (!str_cmp(argument, "gaps") || !str_cmp(arg1, "gaps"))
+		gaps = TRUE;
+
+	if ( arg1[0] != '\0' )
+	{
+		low = atoi(arg1);
+		if ( arg2[0] != '\0' )
+			high = atoi(arg2);
+	}
+
+	if (high == 0)
+		high = MAX_VNUMS - 1;
+
+	show_vnums( ch, low, high, FALSE, TRUE, gaps, "", " X" );
+
+	return;
  }
 
  /*
@@ -6989,17 +7018,26 @@ size_t mudstrlcat( char *dst, const char *src, size_t siz )
 	 char arg1[MAX_INPUT_LENGTH];
 	 char arg2[MAX_INPUT_LENGTH];
 	 int low, high;
+	 bool gaps = FALSE;
 
 	 argument = one_argument( argument, arg1 );
 	 argument = one_argument( argument, arg2 );
 	 low = 0;	high = (MAX_VNUMS-1);
+
+	if (!str_cmp(argument, "gaps") || !str_cmp(arg1, "gaps"))
+		gaps = TRUE;
+
 	 if ( arg1[0] != '\0' )
 	 {
 		 low = atoi(arg1);
 		 if ( arg2[0] != '\0' )
 			 high = atoi(arg2);
 	 }
-	 show_vnums( ch, low, high, TRUE, FALSE, "", " X" );
+
+	if (high == 0)
+		high = MAX_VNUMS - 1;
+
+	 show_vnums( ch, low, high, TRUE, FALSE, gaps, "", " X" );
  }
 
  /*
