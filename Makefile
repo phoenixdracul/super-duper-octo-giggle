@@ -13,7 +13,7 @@ NEED_DL = -ldl
 EXPORT_SYMBOLS = -export-dynamic
 
 C_FLAGS = -g2 -Wall $(EXPORT_SYMBOLS) $(CYGWIN_FLAG) $(PROF) $(NOCRYPT) $(DBUGFLG) $(EXPORT_SYMBOLS)
-L_FLAGS = $(PROF) $(EXPORT_SYMBOLS) $(CYGWIN_FLAG) $(NEED_DL) -lz -g2 -rdynamic
+L_FLAGS = $(PROF) $(EXPORT_SYMBOLS) $(CYGWIN_FLAG) $(NEED_DL) -lz -g2 -rdynamic -L./mod/lua/lua5.3.3/lib -llua
 
 #Comment out to disable cargo
 USECARGO = 1
@@ -32,7 +32,7 @@ C_FILES =  11.c       account.c     act_comm.c    act_info.c   act_move.c    act
          save.c         shell.c	       ships.c       shops.c     skills.c       slay.c     slicers.c       slotm.c 		 \
         space.c       special.c     swskills.c      tables.c       tech.c      track.c      update.c	      mentor.c 		 \
     act_comm2.c          dice.c     color256.c      ext_bv.c  variables.c     db_tga.c mud_terminal.c				 \
-    mod/misc/gauge.c
+    mod/misc/gauge.c mod/lua/mud_lua.c
 
 
 O_FILES := $(patsubst %.c,o/%.o,$(C_FILES))
